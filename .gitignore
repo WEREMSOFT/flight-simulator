@@ -1,0 +1,4 @@
+*.o
+*.opp
+.vscode
+bin
