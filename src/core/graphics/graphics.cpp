@@ -41,7 +41,7 @@ Graphics::Graphics(uint32_t width, uint32_t height)
         // positions       // texture coords
         ratioX * 1.0f, ratioY * 1.0f, 0.0f, 1.0f, 0.0f,   // top right
         ratioX * 1.0f, ratioY * -1.0f, 0.0f, 1.0f, 1.0f,  // bottom right
-        ratioX * -1.0f, ratioY * -1.0f, 0.0f, 0.0f, 1.0f, // bottom left
+        ratioX * -1.0f, ratioY * -0.8f, 0.0f, 0.0f, 1.0f, // bottom left
         ratioX * -1.0f, ratioY * 1.0f, 0.0f, 0.0f, 0.0f   // top left
     };
 
@@ -110,6 +110,8 @@ Graphics::~Graphics()
 
 void Graphics::render(void)
 {
+
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // Update texture
     glBindTexture(GL_TEXTURE_2D, this->textureId);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, this->imageData.size.x, this->imageData.size.y, GL_RGB, GL_UNSIGNED_BYTE, this->imageData.data);

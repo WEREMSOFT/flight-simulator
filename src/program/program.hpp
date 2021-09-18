@@ -5,10 +5,15 @@
 
 class Program
 {
-    Graphics *graphics;
+    std::unique_ptr<Graphics> graphics;
+    double deltaTime;
 
 public:
     Program();
     ~Program();
     void update(void);
+
+private:
+    void printFPS();
+    double getDeltaTime();
 };
