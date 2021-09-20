@@ -4,10 +4,11 @@
 Program::Program()
 {
     float aspectRatio = 4.0 / 3.0;
-    int wideSize = 800;
+    int wideSize = 320;
     graphics = std::make_unique<Graphics>(wideSize, wideSize / aspectRatio);
     glfwSwapInterval(0);
 }
+
 Program::~Program()
 {
     std::cout << "destroing program" << std::endl;
@@ -21,18 +22,10 @@ void Program::update(void)
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         deltaTime = getDeltaTime();
-        if (firstLoop)
-        {
-            graphics->imageData.clearColor((Color){255, 255, 0});
-            firstLoop = false;
-        }
-        else
-        {
-            graphics->imageData.clear();
-        }
-        // graphics->imageData.putPixel((PointI){.x = 0, .y = 0}, (Color){.r = 255, .g = 0, .b = 0});
-        // graphics->imageData.printFontTest();
-        // graphics->imageData.drawCircle((PointI){100, 100}, 50, (Color){255, 255, 0});
+        graphics->imageData.clear();
+        graphics->imageData.putPixel((PointI){.x = 0, .y = 0}, (Color){.r = 255, .g = 0, .b = 0});
+        graphics->imageData.printString((PointI){0, 100}, "Hello World!!");
+        graphics->imageData.drawCircle((PointI){100, 100}, 50, (Color){255, 255, 0});
         printFPS();
         graphics->render();
 

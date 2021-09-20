@@ -41,7 +41,7 @@ Graphics::Graphics(uint32_t width, uint32_t height)
         // positions       // texture coords
         ratioX * 1.0f, ratioY * 1.0f, 0.0f, 1.0f, 0.0f,   // top right
         ratioX * 1.0f, ratioY * -1.0f, 0.0f, 1.0f, 1.0f,  // bottom right
-        ratioX * -1.0f, ratioY * -0.8f, 0.0f, 0.0f, 1.0f, // bottom left
+        ratioX * -1.0f, ratioY * -1.0f, 0.0f, 0.0f, 1.0f, // bottom left
         ratioX * -1.0f, ratioY * 1.0f, 0.0f, 0.0f, 0.0f   // top left
     };
 
@@ -75,14 +75,14 @@ Graphics::Graphics(uint32_t width, uint32_t height)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    // Hide cursor
+    // glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     glfwSetCursorPos(this->window, 0, 0);
 }
 
 void Graphics::createTexture(void)
 {
-
     glGenTextures(1, &this->textureId);
     glBindTexture(GL_TEXTURE_2D, this->textureId);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 3);
@@ -97,7 +97,15 @@ void Graphics::createTexture(void)
         exit(-1);
     }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->imageData.size.x, this->imageData.size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, this->imageData.data);
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGB,
+                 this->imageData.size.x,
+                 this->imageData.size.y,
+                 0,
+                 GL_RGB,
+                 GL_UNSIGNED_BYTE,
+                 this->imageData.data);
 }
 
 Graphics::~Graphics()
@@ -111,6 +119,8 @@ Graphics::~Graphics()
 void Graphics::render(void)
 {
 
+    glClearColor(0, 0, 0, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT);
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // Update texture
     glBindTexture(GL_TEXTURE_2D, this->textureId);

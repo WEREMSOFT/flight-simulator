@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 typedef struct
 {
@@ -15,8 +16,8 @@ typedef struct
 
 typedef struct
 {
-    uint32_t x;
-    uint32_t y;
+    unsigned int x;
+    unsigned int y;
 } PointU;
 
 typedef struct
@@ -38,9 +39,9 @@ public:
     void clear(void);
     void clearColor(Color color);
     void clearTransparent(void);
-    void drawCharacter(PointI topLeftCorner, unsigned int letter, Color color);
+    void drawCharacter(PointI topLeftCorner, unsigned int letter, const Color color = (Color){0xFF, 0xFF, 0xFF});
     void printFontTest(void);
-    void printString(PointI topLeftCorner, char *string, Color color);
+    void printString(PointI topLeftCorner, const std::string string, const Color color = (Color){0xFF, 0xFF, 0xFF});
     void drawLine(PointI pointA, PointI pointB, Color color);
     void drawSquareFill(PointI topLeftCorner, PointI size, Color color);
 
