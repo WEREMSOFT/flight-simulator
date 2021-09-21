@@ -52,7 +52,7 @@ Graphics::Graphics(uint32_t width, uint32_t height)
 
     this->createTexture();
 
-    this->shaderProgram = new Shader("assets/shaders/default.vs", "assets/shaders/default.fs");
+    this->shaderProgram = new Shader("assets/shaders/default-.vs", "assets/shaders/default.fs");
     this->shaderProgram->use();
 
     unsigned int VBO, EBO;

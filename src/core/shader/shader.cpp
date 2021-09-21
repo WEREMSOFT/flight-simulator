@@ -1,6 +1,9 @@
 #include "shader.hpp"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <fstream>
+#include <streambuf>
+#include <cstring>
 
 Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath)
 {
@@ -60,41 +63,28 @@ uint32_t Shader::createFromFile(std::string fileName, uint32_t *vertexShader, in
 {
     int returnValue = 0;
     size_t fileSize = 0;
-    char *shaderCode = NULL;
+    std::string shaderCode;
     *vertexShader = glCreateShader(shaderType);
 
-    FILE *fp = fopen(fileName.c_str(), "r");
+    std::fstream shaderFile;
 
-    if (fp == NULL)
+    shaderFile.open(fileName);
+
+    if (shaderFile.fail())
     {
-        fprintf(stderr, "Error opening file\n");
-        returnValue = -1;
-        goto error_handler;
+        std::cerr << "Error opening shader file \"" << fileName << "\": " << strerror(errno) << std::endl;
+        std::exit(-1);
     }
 
-    if (fseek(fp, 0, SEEK_END) != 0)
-    {
-        perror("Error obtaining the file size ");
-        returnValue = -1;
-        goto error_handler;
-    }
+    shaderFile.seekg(0, std::ios::end);
 
-    fileSize = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
+    fileSize = shaderFile.tellg();
 
-    shaderCode = (char *)malloc(fileSize + 1 * sizeof(char));
+    shaderCode.reserve(fileSize + 1);
 
-    if (shaderCode == NULL)
-    {
-        returnValue = -1;
-        goto error_handler;
-    }
+    shaderFile.seekg(0, std::ios::beg);
 
-    if (fread(shaderCode, sizeof(char), fileSize, fp) != fileSize)
-    {
-        fprintf(stderr, "Error opening shader %s\n", fileName.c_str());
-        exit(-1);
-    }
+    shaderCode.assign((std::istreambuf_iterator<char>(shaderFile)), std::istreambuf_iterator<char>());
 
     glShaderSource(*vertexShader, 1, (const char **)&shaderCode, NULL);
 
@@ -114,11 +104,7 @@ uint32_t Shader::createFromFile(std::string fileName, uint32_t *vertexShader, in
     }
 
 error_handler:
-    if (shaderCode != NULL)
-        free(shaderCode);
-    if (fp != NULL)
-        fclose(fp);
-
+    shaderFile.close();
     return returnValue;
 }
 
