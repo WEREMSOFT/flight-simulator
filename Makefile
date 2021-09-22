@@ -4,8 +4,8 @@ OBJ := $(patsubst %.cpp,%.opp,$(SRC))
 OBJ_C := $(patsubst %.c,%.o,$(SRC_C))
 CC := clang
 INCLUDES := -Ilibs/include -Ilibs/GLAD/include
-FLAGS := -g -O0 -std=c++17 $(INCLUDES)
-FLAGS_C := -g -O0 $(INCLUDES)
+FLAGS := -g3 -O0 -std=c++17 $(INCLUDES)
+FLAGS_C := -g3 -O0 $(INCLUDES)
 LIBS := -lstdc++ -lm -lglfw -ldl -lGL
 TARGET := bin/main.bin
 

@@ -52,8 +52,8 @@ Graphics::Graphics(uint32_t width, uint32_t height)
 
     this->createTexture();
 
-    this->shaderProgram = new Shader("assets/shaders/default-.vs", "assets/shaders/default.fs");
-    this->shaderProgram->use();
+    this->shaderProgram = std::make_unique<Shader>("assets/shaders/default.vs", "assets/shaders/default.fs");
+    this->shaderProgram.get()->use();
 
     unsigned int VBO, EBO;
     glGenVertexArrays(1, &this->VAO);
@@ -110,6 +110,7 @@ void Graphics::createTexture(void)
 
 Graphics::~Graphics()
 {
+    std::cout << "destroying graphcis" << std::endl;
     glfwSetWindowShouldClose(this->window, true);
     free(this->imageData.data);
     glfwDestroyWindow(this->window);
@@ -121,7 +122,6 @@ void Graphics::render(void)
 
     glClearColor(0, 0, 0, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // Update texture
     glBindTexture(GL_TEXTURE_2D, this->textureId);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, this->imageData.size.x, this->imageData.size.y, GL_RGB, GL_UNSIGNED_BYTE, this->imageData.data);

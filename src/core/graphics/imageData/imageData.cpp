@@ -104,7 +104,7 @@ void ImageData::printFontTest(void)
     }
 }
 
-void ImageData::printString(PointI topLeftCorner, const std::string string, Color color)
+void ImageData::printString(PointI topLeftCorner, const std::string &string, const Color color)
 {
     size_t stringLen = string.length();
     for (int32_t i = 0; i < stringLen; i++)

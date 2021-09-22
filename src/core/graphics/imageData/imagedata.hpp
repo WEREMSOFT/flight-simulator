@@ -1,5 +1,4 @@
 #pragma once
-
 #include <cstdint>
 #include <string>
 
@@ -32,18 +31,18 @@ public:
     ImageData();
     ~ImageData();
 
-    void putPixel(PointI point, Color color);
-    void drawCircle(PointI center, double radious, Color color);
-    void drawCircleFill(PointI center, double radious, Color color);
-    void drawSquare(PointI topLeftCorner, PointI size, Color color);
+    void putPixel(PointI point, Color color = (Color){0xFF, 0xFF, 0xFF});
+    void drawCircle(PointI center, double radious, Color color = (Color){0xFF, 0xFF, 0xFF});
+    void drawCircleFill(PointI center, double radious, Color color = (Color){0xFF, 0xFF, 0xFF});
+    void drawSquare(PointI topLeftCorner, PointI size, Color color = (Color){0xFF, 0xFF, 0xFF});
     void clear(void);
     void clearColor(Color color);
     void clearTransparent(void);
     void drawCharacter(PointI topLeftCorner, unsigned int letter, const Color color = (Color){0xFF, 0xFF, 0xFF});
     void printFontTest(void);
-    void printString(PointI topLeftCorner, const std::string string, const Color color = (Color){0xFF, 0xFF, 0xFF});
-    void drawLine(PointI pointA, PointI pointB, Color color);
-    void drawSquareFill(PointI topLeftCorner, PointI size, Color color);
+    void printString(PointI topLeftCorner, const std::string &string, const Color color = (Color){0xFF, 0xFF, 0xFF});
+    void drawLine(PointI pointA, PointI pointB, Color color = (Color){0xFF, 0xFF, 0xFF});
+    void drawSquareFill(PointI topLeftCorner, PointI size, Color color = (Color){0xFF, 0xFF, 0xFF});
 
     Color getPixel(PointU point);
     PointI size;

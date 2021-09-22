@@ -1,6 +1,7 @@
 #pragma once
 #include "imageData/imagedata.hpp"
 #include "../shader/shader.hpp"
+#include <memory>
 #include <cstdint>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -20,7 +21,7 @@ public:
 private:
     uint32_t textureId;
     uint32_t VAO;
-    Shader *shaderProgram;
+    std::unique_ptr<Shader> shaderProgram;
     PointI mousePosition;
     bool mouseRightDown;
 

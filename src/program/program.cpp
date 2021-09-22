@@ -1,10 +1,14 @@
 #include "program.hpp"
+#include <algorithm>
 #include <cmath>
+#include "bouncingPoint/bouncingPoint.hpp"
+#include <vector>
 
 Program::Program()
 {
     float aspectRatio = 4.0 / 3.0;
     int wideSize = 320;
+    deltaTime = 0;
     graphics = std::make_unique<Graphics>(wideSize, wideSize / aspectRatio);
     glfwSwapInterval(0);
 }
@@ -16,16 +20,31 @@ Program::~Program()
 
 void Program::update(void)
 {
-    int32_t x = 0;
     Graphics *graphics = this->graphics.get();
-    bool firstLoop = true;
+    BouncingPointF lineStart(10.0, 10.0, {100.f, 200.f}, graphics->imageData.size);
+    BouncingPointF lineEnd(100.0, 100.0, {-100.f, -200.f}, graphics->imageData.size);
+
+    std::vector<std::reference_wrapper<BouncingPointF>> points;
+
+    points.reserve(2);
+
+    points.emplace_back(std::ref(lineStart));
+    points.emplace_back(std::ref(lineEnd));
+
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         deltaTime = getDeltaTime();
+
+        for (auto p : points)
+        {
+            p.get().update(deltaTime);
+        }
+
         graphics->imageData.clear();
-        graphics->imageData.putPixel((PointI){.x = 0, .y = 0}, (Color){.r = 255, .g = 0, .b = 0});
         graphics->imageData.printString((PointI){0, 100}, "Hello World!!");
         graphics->imageData.drawCircle((PointI){100, 100}, 50, (Color){255, 255, 0});
+
+        graphics->imageData.drawLine({(int)lineStart.x, (int)lineStart.y}, {(int)lineEnd.x, (int)lineEnd.y});
         printFPS();
         graphics->render();
 
@@ -40,7 +59,7 @@ void Program::printFPS()
     static int counter = 1;
     counter++;
     counter %= FPS_HISTORY;
-    fpsHistory[counter] = (1 / this->deltaTime);
+    fpsHistory[counter] = (1 / deltaTime);
 
     int sum = 0;
     for (int i = 0; i < FPS_HISTORY; i++)
