@@ -1,6 +1,9 @@
 #pragma once
 #include <cstdint>
 #include <string>
+#include <vector>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 typedef struct
 {
@@ -28,9 +31,11 @@ typedef struct
 class ImageData
 {
 public:
-    ImageData();
+    ImageData(PointI size);
     ~ImageData();
 
+    void init(void);
+    void updateTexture(void);
     void putPixel(PointI point, Color color = (Color){0xFF, 0xFF, 0xFF});
     void drawCircle(PointI center, double radious, Color color = (Color){0xFF, 0xFF, 0xFF});
     void drawCircleFill(PointI center, double radious, Color color = (Color){0xFF, 0xFF, 0xFF});
@@ -49,7 +54,9 @@ public:
 
     int bufferSize;
     int elementCount;
-    Color *data;
 
 private:
+    std::vector<Color> data;
+    uint32_t textureId;
+    void createTexture(void);
 };

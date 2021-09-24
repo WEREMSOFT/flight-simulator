@@ -4,12 +4,18 @@
 
 extern char fonts[][5];
 
-ImageData::ImageData()
+ImageData::ImageData(PointI pSize)
 {
+    size = pSize;
 }
 
 ImageData::~ImageData()
 {
+}
+
+void ImageData::init()
+{
+    createTexture();
 }
 
 void ImageData::putPixel(PointI point, Color color)
@@ -62,7 +68,7 @@ void ImageData::drawCircleFill(PointI center, double radious, Color color)
 
 void ImageData::clear(void)
 {
-    memset(this->data, 0, this->bufferSize);
+    memset(this->data.data(), 0, this->bufferSize);
 }
 
 void ImageData::clearTransparent(void)
@@ -149,6 +155,36 @@ void ImageData::drawSquareFill(PointI topLeftCorner, PointI size, Color color)
             this->putPixel((PointI){i, j}, color);
         }
     }
+}
+
+void ImageData::createTexture(void)
+{
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 3);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    bufferSize = size.x * size.y * sizeof(Color);
+    Color initialColor = {0};
+
+    data = std::vector<Color>(size.x * size.y, initialColor);
+
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGB,
+                 size.x,
+                 size.y,
+                 0,
+                 GL_RGB,
+                 GL_UNSIGNED_BYTE,
+                 data.data());
+}
+
+void ImageData::updateTexture(void)
+{
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size.x, size.y, GL_RGB, GL_UNSIGNED_BYTE, data.data());
 }
 
 inline PointI pointFToPointI(PointF source)

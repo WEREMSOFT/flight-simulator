@@ -3,14 +3,11 @@
 #include "../shader/shader.hpp"
 #include "imageData/imagedata.hpp"
 
-Graphics::Graphics(uint32_t width, uint32_t height)
+Graphics::Graphics(int32_t width, int32_t height) : imageData((PointI){width, height})
 {
-    this->imageData.size.x = width;
-    this->imageData.size.y = height;
 
     glfwInit();
     GLFWmonitor *monitor = glfwGetPrimaryMonitor();
-
     const GLFWvidmode *mode = glfwGetVideoMode(monitor);
 
     glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -31,6 +28,7 @@ Graphics::Graphics(uint32_t width, uint32_t height)
         std::cout << "Failed to initialize GLAD" << std::endl;
         exit(-1);
     }
+    imageData.init();
 
     float ratioX = ((float)this->imageData.size.x / (float)this->imageData.size.y) / ((float)mode->width / (float)mode->height);
     float ratioY = 1.0;
@@ -49,8 +47,6 @@ Graphics::Graphics(uint32_t width, uint32_t height)
         0, 1, 3, // first triangle
         1, 2, 3  // second triangle
     };
-
-    this->createTexture();
 
     this->shaderProgram = std::make_unique<Shader>("assets/shaders/default.vs", "assets/shaders/default.fs");
     this->shaderProgram.get()->use();
@@ -75,44 +71,13 @@ Graphics::Graphics(uint32_t width, uint32_t height)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    // Hide cursor
-    // glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
     glfwSetCursorPos(this->window, 0, 0);
-}
-
-void Graphics::createTexture(void)
-{
-    glGenTextures(1, &this->textureId);
-    glBindTexture(GL_TEXTURE_2D, this->textureId);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 3);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    this->imageData.bufferSize = this->imageData.size.x * this->imageData.size.y * sizeof(Color);
-    this->imageData.data = (Color *)malloc(this->imageData.bufferSize);
-    if (this->imageData.data == NULL)
-    {
-        fprintf(stderr, "Error allocating memory\n");
-        exit(-1);
-    }
-
-    glTexImage2D(GL_TEXTURE_2D,
-                 0,
-                 GL_RGB,
-                 this->imageData.size.x,
-                 this->imageData.size.y,
-                 0,
-                 GL_RGB,
-                 GL_UNSIGNED_BYTE,
-                 this->imageData.data);
 }
 
 Graphics::~Graphics()
 {
     std::cout << "destroying graphcis" << std::endl;
     glfwSetWindowShouldClose(this->window, true);
-    free(this->imageData.data);
     glfwDestroyWindow(this->window);
     glfwTerminate();
 }
@@ -122,9 +87,8 @@ void Graphics::render(void)
 
     glClearColor(0, 0, 0, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
-    // Update texture
-    glBindTexture(GL_TEXTURE_2D, this->textureId);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, this->imageData.size.x, this->imageData.size.y, GL_RGB, GL_UNSIGNED_BYTE, this->imageData.data);
+
+    imageData.updateTexture();
 
     // render container
     glBindVertexArray(this->VAO);
