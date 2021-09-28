@@ -55,8 +55,9 @@ public:
     int bufferSize;
     int elementCount;
 
-private:
     std::vector<Color> data;
+
+private:
     uint32_t textureId;
     void createTexture(void);
 };
