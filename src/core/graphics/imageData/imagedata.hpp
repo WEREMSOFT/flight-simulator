@@ -28,6 +28,13 @@ typedef struct
     double y;
 } PointF;
 
+typedef struct
+{
+    double x;
+    double y;
+    double z;
+} PointF3;
+
 class ImageData
 {
 public:

@@ -10,7 +10,7 @@ class Sprite
 
 public:
     bool animated;
-    PointF position;
+    PointF position = {0};
     std::unique_ptr<ImageData> imageData;
     Sprite(std::string fileName);
     // Creates a checker boarrd for placeholding
