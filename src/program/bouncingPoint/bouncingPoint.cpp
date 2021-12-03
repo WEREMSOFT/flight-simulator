@@ -21,11 +21,11 @@ void BouncingPointF::update(float deltaTime)
     x += speed.x * deltaTime;
     y += speed.y * deltaTime;
 
-    if (x > bounds.x - 10 || x < 0)
+    if (x > bounds.x || x < 0)
         speed.x *= -1;
-    if (y > bounds.y - 10 || y < 0)
+    if (y > bounds.y || y < 0)
         speed.y *= -1;
 
-    x = std::min<double>(std::max<double>(0, x), bounds.x - 1);
-    y = std::min<double>(std::max<double>(0, y), bounds.y - 1);
+    x = std::min<double>(std::max<double>(0, x), bounds.x);
+    y = std::min<double>(std::max<double>(0, y), bounds.y);
 }

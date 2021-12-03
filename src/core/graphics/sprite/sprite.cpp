@@ -29,7 +29,6 @@ Sprite::Sprite(std::string fileName)
 
 Sprite::Sprite(PointI size, int checkerWidth, Color color1, Color color2)
 {
-    Color currentColor = color1;
     imageData = std::make_unique<ImageData>((PointI){0});
     auto im = imageData.get();
 
@@ -38,6 +37,7 @@ Sprite::Sprite(PointI size, int checkerWidth, Color color1, Color color2)
 
     for (int y = 0; y < im->size.y; y++)
     {
+        Color currentColor = color1;
         for (int x = 0; x < im->size.x; x++)
         {
             if ((y / checkerWidth + x / checkerWidth) % 2)

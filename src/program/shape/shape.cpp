@@ -1,5 +1,7 @@
 #include "shape.hpp"
 #include <iostream>
+#include <cmath>
+
 Shape::Shape(int vertexNum)
 {
     vertices.reserve(vertexNum);
@@ -28,6 +30,7 @@ void Shape::draw(ImageData &pImageData)
     {
         recalculateTranslationMatrix();
         transform();
+        isTransformDirty = false;
     }
 
     auto size = vertices.size();
@@ -97,4 +100,14 @@ void Shape::recalculateTranslationMatrix()
                                scaleMatrix[i].y * translationMatrix[1].z +
                                scaleMatrix[i].z * translationMatrix[2].z;
     }
+}
+
+void Shape::rotateZ(float angle)
+{
+    translationMatrix[0].x = cos(angle);
+    translationMatrix[0].y = -sin(angle);
+
+    translationMatrix[1].x = sin(angle);
+    translationMatrix[1].y = cos(angle);
+    isTransformDirty = true;
 }

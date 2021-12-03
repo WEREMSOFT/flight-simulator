@@ -31,50 +31,67 @@ void Program::update(void)
     points.emplace_back(100.0, 100.0, (PointF){-100.f, -200.f}, graphics->imageData.size);
     points.emplace_back(110.0, 200.0, (PointF){-10.f, -20.f}, graphics->imageData.size);
 
-    Shape shape(4);
-
-    shape.vertices.emplace_back((PointF3){0, 0, 1});
-    shape.vertices.emplace_back((PointF3){100.f, 0, 1});
-    shape.vertices.emplace_back((PointF3){100.f, 100.f, 1});
-    shape.vertices.emplace_back((PointF3){0, 100.f, 1});
-
-    shape.translate({100, 100, 1});
-    shape.scale({0.5, 0.5, 1});
+    auto square = createSquareShape();
 
     Sprite checker({320, 240}, 5, {0x77, 0, 0x77}, {0, 0x77, 0x77});
     Sprite map("assets/color.png");
-
+    float angle = 0;
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         deltaTime = getDeltaTime();
         graphics->imageData.clear();
-        checker.draw(graphics->imageData);
-        map.drawClipped(graphics->imageData);
 
+        checker.draw(graphics->imageData);
+        // map.drawClipped(graphics->imageData);
         graphics->imageData.printString((PointI){0, 100}, "Hello World!!");
         graphics->imageData.drawCircle((PointI){100, 100}, 50, (Color){255, 255, 0});
+        updatePoints(points);
+        drawLines(points);
 
-        for (auto &i : points)
-        {
-            i.update(deltaTime);
-        }
-
-        for (auto i = 0; i < points.size(); i += 3)
-        {
-            const auto &point1 = points[i];
-            const auto &point2 = points[i + 1];
-            const auto &point3 = points[i + 2];
-
-            graphics->imageData.drawLine({(int)point1.x, (int)point1.y}, {(int)point2.x, (int)point2.y});
-            graphics->imageData.drawLine({(int)point2.x, (int)point2.y}, {(int)point3.x, (int)point3.y});
-            graphics->imageData.drawLine({(int)point3.x, (int)point3.y}, {(int)point1.x, (int)point1.y});
-        }
-
-        shape.draw(graphics->imageData);
+        angle += 0.5 * deltaTime;
+        square.rotateZ(angle);
+        square.draw(graphics->imageData);
         printFPS();
-        graphics->render();
 
+        graphics->render();
         glfwPollEvents();
+    }
+}
+
+Shape Program::createSquareShape()
+{
+    Shape shape(4);
+
+    shape.vertices.emplace_back((PointF3){-50, -50, 1});
+    shape.vertices.emplace_back((PointF3){50.f, -50, 1});
+    shape.vertices.emplace_back((PointF3){50.f, 50.f, 1});
+    shape.vertices.emplace_back((PointF3){-50, 50.f, 1});
+
+    shape.translate({100, 100, 1});
+    shape.scale({0.5, 0.5, 1});
+
+    return shape;
+}
+
+void Program::updatePoints(std::vector<BouncingPointF> &points)
+{
+    for (auto &i : points)
+    {
+        i.update(deltaTime);
+    }
+}
+
+void Program::drawLines(std::vector<BouncingPointF> points)
+{
+    for (auto i = 0; i < points.size(); i += 3)
+    {
+        const auto &point1 = points[i];
+        const auto &point2 = points[i + 1];
+        const auto &point3 = points[i + 2];
+
+        graphics->imageData.drawLine({(int)point1.x, (int)point1.y}, {(int)point2.x, (int)point2.y});
+        graphics->imageData.drawLine({(int)point2.x, (int)point2.y}, {(int)point3.x, (int)point3.y});
+        graphics->imageData.drawLine({(int)point3.x, (int)point3.y}, {(int)point1.x, (int)point1.y});
     }
 }
 

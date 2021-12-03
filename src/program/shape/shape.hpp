@@ -19,5 +19,5 @@ public:
     void draw(ImageData &pImageData);
     void translate(PointF3);
     void scale(PointF3);
-    void rotate(float angle);
+    void rotateZ(float angle);
 };
