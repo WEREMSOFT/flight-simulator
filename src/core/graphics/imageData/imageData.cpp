@@ -127,7 +127,7 @@ void ImageData::drawLine(PointI pointA, PointI pointB, Color color)
     int dy = abs(pointB.y - pointA.y), sy = pointA.y < pointB.y ? 1 : -1;
     int err = (dx > dy ? dx : -dy) / 2, e2;
 
-    for (;;)
+    while (true)
     {
         this->putPixel(pointA, color);
         if (pointA.x == pointB.x && pointA.y == pointB.y)

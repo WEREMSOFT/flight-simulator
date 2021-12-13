@@ -9,7 +9,7 @@ class Shape
     PointF3 scaleMatrix[3] = {0};
     std::vector<PointF3> transformedVertices;
     void transform();
-    void recalculateTranslationMatrix();
+    void recalculateTransformMatrix();
     bool isTransformDirty = true;
 
 public:
@@ -20,4 +20,5 @@ public:
     void translate(PointF3);
     void scale(PointF3);
     void rotateZ(float angle);
+    void project(float distance);
 };

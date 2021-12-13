@@ -31,7 +31,7 @@ void Program::update(void)
     points.emplace_back(100.0, 100.0, (PointF){-100.f, -200.f}, graphics->imageData.size);
     points.emplace_back(110.0, 200.0, (PointF){-10.f, -20.f}, graphics->imageData.size);
 
-    auto square = createSquareShape();
+    auto square = createSquareShape(1);
 
     Sprite checker({320, 240}, 5, {0x77, 0, 0x77}, {0, 0x77, 0x77});
     Sprite map("assets/color.png");
@@ -41,12 +41,10 @@ void Program::update(void)
         deltaTime = getDeltaTime();
         graphics->imageData.clear();
 
-        checker.draw(graphics->imageData);
+        // checker.draw(graphics->imageData);
         // map.drawClipped(graphics->imageData);
         graphics->imageData.printString((PointI){0, 100}, "Hello World!!");
-        graphics->imageData.drawCircle((PointI){100, 100}, 50, (Color){255, 255, 0});
-        updatePoints(points);
-        drawLines(points);
+        // updatePoints(points);
 
         angle += 0.5 * deltaTime;
         square.rotateZ(angle);
@@ -58,14 +56,14 @@ void Program::update(void)
     }
 }
 
-Shape Program::createSquareShape()
+Shape Program::createSquareShape(float distance = 1.0)
 {
     Shape shape(4);
 
-    shape.vertices.emplace_back((PointF3){-50, -50, 1});
-    shape.vertices.emplace_back((PointF3){50.f, -50, 1});
-    shape.vertices.emplace_back((PointF3){50.f, 50.f, 1});
-    shape.vertices.emplace_back((PointF3){-50, 50.f, 1});
+    shape.vertices.emplace_back((PointF3){-50, -50, distance});
+    shape.vertices.emplace_back((PointF3){50.f, -50, distance});
+    shape.vertices.emplace_back((PointF3){50.f, 50.f, distance});
+    shape.vertices.emplace_back((PointF3){-50, 50.f, distance});
 
     shape.translate({100, 100, 1});
     shape.scale({0.5, 0.5, 1});

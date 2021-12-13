@@ -2,6 +2,21 @@
 #include <iostream>
 #include <cmath>
 
+void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[3])
+{
+    vertDestination.x = vertSource.x * mat[0].x +
+                        vertSource.y * mat[1].x +
+                        vertSource.z * mat[2].x;
+
+    vertDestination.y = vertSource.x * mat[0].y +
+                        vertSource.y * mat[1].y +
+                        vertSource.z * mat[2].y;
+
+    vertDestination.z = vertSource.x * mat[0].z +
+                        vertSource.y * mat[1].z +
+                        vertSource.z * mat[2].z;
+}
+
 Shape::Shape(int vertexNum)
 {
     vertices.reserve(vertexNum);
@@ -28,7 +43,7 @@ void Shape::draw(ImageData &pImageData)
 {
     if (isTransformDirty)
     {
-        recalculateTranslationMatrix();
+        recalculateTransformMatrix();
         transform();
         isTransformDirty = false;
     }
@@ -49,17 +64,7 @@ void Shape::transform()
     auto vertexSize = vertices.size();
     for (auto i = 0; i < vertexSize; i++)
     {
-        transformedVertices[i].x = vertices[i].x * transformMatrix[0].x +
-                                   vertices[i].y * transformMatrix[1].x +
-                                   vertices[i].z * transformMatrix[2].x;
-
-        transformedVertices[i].y = vertices[i].x * transformMatrix[0].y +
-                                   vertices[i].y * transformMatrix[1].y +
-                                   vertices[i].z * transformMatrix[2].y;
-
-        transformedVertices[i].z = vertices[i].x * transformMatrix[0].z +
-                                   vertices[i].y * transformMatrix[1].z +
-                                   vertices[i].z * transformMatrix[2].z;
+        multiplyVertexByMatrix(transformedVertices[i], vertices[i], transformMatrix);
     }
 }
 
@@ -79,7 +84,7 @@ void Shape::scale(PointF3 scale)
     isTransformDirty = true;
 }
 
-void Shape::recalculateTranslationMatrix()
+void Shape::recalculateTransformMatrix()
 {
     PointF3 identityMatrix[4] = {0};
     identityMatrix[0].x = 1;
@@ -88,17 +93,7 @@ void Shape::recalculateTranslationMatrix()
 
     for (int i = 0; i < 3; i++)
     {
-        transformMatrix[i].x = scaleMatrix[i].x * translationMatrix[0].x +
-                               scaleMatrix[i].y * translationMatrix[1].x +
-                               scaleMatrix[i].z * translationMatrix[2].x;
-
-        transformMatrix[i].y = scaleMatrix[i].x * translationMatrix[0].y +
-                               scaleMatrix[i].y * translationMatrix[1].y +
-                               scaleMatrix[i].z * translationMatrix[2].y;
-
-        transformMatrix[i].z = scaleMatrix[i].x * translationMatrix[0].z +
-                               scaleMatrix[i].y * translationMatrix[1].z +
-                               scaleMatrix[i].z * translationMatrix[2].z;
+        multiplyVertexByMatrix(transformMatrix[i], scaleMatrix[i], translationMatrix);
     }
 }
 
@@ -110,4 +105,12 @@ void Shape::rotateZ(float angle)
     translationMatrix[1].x = sin(angle);
     translationMatrix[1].y = cos(angle);
     isTransformDirty = true;
+}
+
+void Shape::project(float distance)
+{
+    for (int i = 0; i < vertices.size(); i++)
+    {
+        auto ver = vertices[i];
+    }
 }
