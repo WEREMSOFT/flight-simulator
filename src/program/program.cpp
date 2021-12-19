@@ -43,7 +43,7 @@ void Program::update(void)
 
         // checker.draw(graphics->imageData);
         // map.drawClipped(graphics->imageData);
-        graphics->imageData.printString((PointI){0, 100}, "Hello World!!");
+        graphics->imageData.printString((PointI){160, 100}, "X");
         // updatePoints(points);
 
         angle += 0.5 * deltaTime;
@@ -65,18 +65,10 @@ Shape Program::createSquareShape(float distance = 1.0)
     shape.vertices.emplace_back((PointF3){50.f, 50.f, distance});
     shape.vertices.emplace_back((PointF3){-50, 50.f, distance});
 
-    shape.translate({100, 100, 1});
-    shape.scale({0.5, 0.5, 1});
+    shape.translate({160, 100, 1});
+    shape.scale({.5, .5, 1});
 
     return shape;
-}
-
-void Program::updatePoints(std::vector<BouncingPointF> &points)
-{
-    for (auto &i : points)
-    {
-        i.update(deltaTime);
-    }
 }
 
 void Program::drawLines(std::vector<BouncingPointF> points)

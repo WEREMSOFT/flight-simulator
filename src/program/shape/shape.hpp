@@ -6,6 +6,7 @@ class Shape
 {
     PointF3 transformMatrix[3] = {0};
     PointF3 translationMatrix[3] = {0};
+    PointF3 rotationMatrix[3] = {0};
     PointF3 scaleMatrix[3] = {0};
     std::vector<PointF3> transformedVertices;
     void transform();

@@ -28,12 +28,13 @@ typedef struct
     double y;
 } PointF;
 
-typedef struct
+template <typename T>
+struct Point
 {
-    double x;
-    double y;
-    double z;
-} PointF3;
+    T x, y, z;
+};
+
+typedef Point<float> PointF3;
 
 class ImageData
 {

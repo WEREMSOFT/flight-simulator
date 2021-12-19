@@ -1,6 +1,7 @@
 #include "shape.hpp"
 #include <iostream>
 #include <cmath>
+#include <array>
 
 void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[3])
 {
@@ -17,6 +18,37 @@ void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, Point
                         vertSource.z * mat[2].z;
 }
 
+void setMatrixAsIdentity(PointF3 matrix[3])
+{
+    for (int i = 0; i < 4; i++)
+    {
+        matrix[0].x = 1.0;
+        matrix[1].y = 1.0;
+        matrix[2].z = 1.0;
+    }
+}
+
+void copyMatrix(PointF3 destination[3], PointF3 source[3])
+{
+    for (int i = 0; i < 4; i++)
+    {
+        destination[i] = source[i];
+    }
+}
+
+void multiplyMatrix(PointF3 mat1[3], PointF3 mat2[3])
+{
+    PointF3 returnValue[3] = {0};
+    setMatrixAsIdentity(returnValue);
+
+    for (int i = 0; i < 4; i++)
+    {
+        multiplyVertexByMatrix(returnValue[i], mat1[i], mat2);
+    }
+
+    copyMatrix(mat1, returnValue);
+}
+
 Shape::Shape(int vertexNum)
 {
     vertices.reserve(vertexNum);
@@ -25,6 +57,10 @@ Shape::Shape(int vertexNum)
     transformMatrix[0].x = 1.0;
     transformMatrix[1].y = 1.0;
     transformMatrix[2].z = 1.0;
+
+    rotationMatrix[0].x = 1.0;
+    rotationMatrix[1].y = 1.0;
+    rotationMatrix[2].z = 1.0;
 
     translationMatrix[0].x = 1.0;
     translationMatrix[1].y = 1.0;
@@ -86,24 +122,17 @@ void Shape::scale(PointF3 scale)
 
 void Shape::recalculateTransformMatrix()
 {
-    PointF3 identityMatrix[4] = {0};
-    identityMatrix[0].x = 1;
-    identityMatrix[1].y = 1;
-    identityMatrix[2].z = 1;
-
-    for (int i = 0; i < 3; i++)
-    {
-        multiplyVertexByMatrix(transformMatrix[i], scaleMatrix[i], translationMatrix);
-    }
+    multiplyMatrix(transformMatrix, rotationMatrix);
+    multiplyMatrix(transformMatrix, scaleMatrix);
 }
 
 void Shape::rotateZ(float angle)
 {
-    translationMatrix[0].x = cos(angle);
-    translationMatrix[0].y = -sin(angle);
+    rotationMatrix[0].x = cos(angle);
+    rotationMatrix[0].y = -sin(angle);
 
-    translationMatrix[1].x = sin(angle);
-    translationMatrix[1].y = cos(angle);
+    rotationMatrix[1].x = sin(angle);
+    rotationMatrix[1].y = cos(angle);
     isTransformDirty = true;
 }
 

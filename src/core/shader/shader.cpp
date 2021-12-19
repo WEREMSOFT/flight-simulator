@@ -39,26 +39,6 @@ Shader::~Shader()
 {
 }
 
-void Shader::setUniformValueMatrix4F(uint32_t shaderProgram, std::string uniformName, const float *value)
-{
-}
-
-void Shader::setUniformValueMatrix3F(uint32_t shaderProgram, std::string uniformName, const float *value)
-{
-}
-
-void Shader::setUniformValue3F(uint32_t shaderProgram, std::string uniformName, const float *value)
-{
-}
-
-void Shader::setUniformValueF(uint32_t shaderProgram, std::string uniformName, const float value)
-{
-}
-
-void Shader::setUniformValueI(uint32_t shaderProgram, std::string uniformName, const int value)
-{
-}
-
 uint32_t Shader::createFromFile(std::string fileName, uint32_t *vertexShader, int32_t shaderType)
 {
     int returnValue = 0;
