@@ -10,31 +10,22 @@ typedef struct
     unsigned char r, g, b;
 } Color;
 
-typedef struct
+template <typename T>
+struct Point2
 {
-    int32_t x;
-    int32_t y;
-} PointI;
-
-typedef struct
-{
-    unsigned int x;
-    unsigned int y;
-} PointU;
-
-typedef struct
-{
-    double x;
-    double y;
-} PointF;
+    T x, y;
+};
 
 template <typename T>
-struct Point
+struct Point3
 {
     T x, y, z;
 };
 
-typedef Point<float> PointF3;
+typedef Point3<float> PointF3;
+typedef Point2<int32_t> PointI;
+typedef Point2<uint32_t> PointU;
+typedef Point2<float> PointF;
 
 class ImageData
 {

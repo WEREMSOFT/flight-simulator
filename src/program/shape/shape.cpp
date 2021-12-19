@@ -20,17 +20,18 @@ void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, Point
 
 void setMatrixAsIdentity(PointF3 matrix[3])
 {
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 3; i++)
     {
-        matrix[0].x = 1.0;
-        matrix[1].y = 1.0;
-        matrix[2].z = 1.0;
+        matrix[i] = {0};
     }
+    matrix[0].x = 1.0;
+    matrix[1].y = 1.0;
+    matrix[2].z = 1.0;
 }
 
 void copyMatrix(PointF3 destination[3], PointF3 source[3])
 {
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 3; i++)
     {
         destination[i] = source[i];
     }
@@ -41,7 +42,7 @@ void multiplyMatrix(PointF3 mat1[3], PointF3 mat2[3])
     PointF3 returnValue[3] = {0};
     setMatrixAsIdentity(returnValue);
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 3; i++)
     {
         multiplyVertexByMatrix(returnValue[i], mat1[i], mat2);
     }
@@ -122,8 +123,10 @@ void Shape::scale(PointF3 scale)
 
 void Shape::recalculateTransformMatrix()
 {
+    setMatrixAsIdentity(transformMatrix);
     multiplyMatrix(transformMatrix, rotationMatrix);
     multiplyMatrix(transformMatrix, scaleMatrix);
+    multiplyMatrix(transformMatrix, translationMatrix);
 }
 
 void Shape::rotateZ(float angle)
