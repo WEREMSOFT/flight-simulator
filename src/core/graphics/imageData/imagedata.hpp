@@ -19,7 +19,7 @@ struct Point2
 template <typename T>
 struct Point3
 {
-    T x, y, z;
+    T x, y, z, w;
 };
 
 typedef Point3<float> PointF3;

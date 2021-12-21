@@ -7,42 +7,51 @@ void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, Point
 {
     vertDestination.x = vertSource.x * mat[0].x +
                         vertSource.y * mat[1].x +
-                        vertSource.z * mat[2].x;
+                        vertSource.z * mat[2].x +
+                        vertSource.w * mat[3].x;
 
     vertDestination.y = vertSource.x * mat[0].y +
                         vertSource.y * mat[1].y +
-                        vertSource.z * mat[2].y;
+                        vertSource.z * mat[2].y +
+                        vertSource.w * mat[3].y;
 
     vertDestination.z = vertSource.x * mat[0].z +
                         vertSource.y * mat[1].z +
-                        vertSource.z * mat[2].z;
+                        vertSource.z * mat[2].z +
+                        vertSource.w * mat[3].z;
+
+    vertDestination.w = vertSource.x * mat[0].w +
+                        vertSource.y * mat[1].w +
+                        vertSource.z * mat[2].w +
+                        vertSource.w * mat[3].w;
 }
 
-void setMatrixAsIdentity(PointF3 matrix[3])
+void setMatrixAsIdentity(PointF3 matrix[4])
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
         matrix[i] = {0};
     }
     matrix[0].x = 1.0;
     matrix[1].y = 1.0;
     matrix[2].z = 1.0;
+    matrix[3].w = 1.0;
 }
 
-void copyMatrix(PointF3 destination[3], PointF3 source[3])
+void copyMatrix(PointF3 destination[4], PointF3 source[4])
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
         destination[i] = source[i];
     }
 }
 
-void multiplyMatrix(PointF3 mat1[3], PointF3 mat2[3])
+void multiplyMatrix(PointF3 mat1[4], PointF3 mat2[4])
 {
-    PointF3 returnValue[3] = {0};
+    PointF3 returnValue[4] = {0};
     setMatrixAsIdentity(returnValue);
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
         multiplyVertexByMatrix(returnValue[i], mat1[i], mat2);
     }
@@ -55,21 +64,10 @@ Shape::Shape(int vertexNum)
     vertices.reserve(vertexNum);
     transformedVertices.reserve(vertexNum);
 
-    transformMatrix[0].x = 1.0;
-    transformMatrix[1].y = 1.0;
-    transformMatrix[2].z = 1.0;
-
-    rotationMatrix[0].x = 1.0;
-    rotationMatrix[1].y = 1.0;
-    rotationMatrix[2].z = 1.0;
-
-    translationMatrix[0].x = 1.0;
-    translationMatrix[1].y = 1.0;
-    translationMatrix[2].z = 1.0;
-
-    scaleMatrix[0].x = 1.0;
-    scaleMatrix[1].y = 1.0;
-    scaleMatrix[2].z = 1.0;
+    setMatrixAsIdentity(transformMatrix);
+    setMatrixAsIdentity(rotationMatrix);
+    setMatrixAsIdentity(scaleMatrix);
+    setMatrixAsIdentity(translationMatrix);
 }
 
 Shape::~Shape()
@@ -85,7 +83,9 @@ void Shape::draw(ImageData &pImageData)
         isTransformDirty = false;
     }
 
-    auto size = vertices.size();
+    project(150);
+
+    auto size = transformedVertices.size();
     for (int i = 0; i < size; i++)
     {
         auto nextIndex = (i + 1) % size;
@@ -107,17 +107,21 @@ void Shape::transform()
 
 void Shape::translate(PointF3 translation)
 {
+    setMatrixAsIdentity(translationMatrix);
     translationMatrix[2].x = translation.x;
     translationMatrix[2].y = translation.y;
     translationMatrix[2].z = translation.z;
+    translationMatrix[2].w = 1.f;
     isTransformDirty = true;
 }
 
 void Shape::scale(PointF3 scale)
 {
+    setMatrixAsIdentity(scaleMatrix);
     scaleMatrix[0].x = scale.x;
     scaleMatrix[1].y = scale.y;
     scaleMatrix[2].z = scale.z;
+    scaleMatrix[3].w = 1.f;
     isTransformDirty = true;
 }
 
@@ -141,8 +145,10 @@ void Shape::rotateZ(float angle)
 
 void Shape::project(float distance)
 {
-    for (int i = 0; i < vertices.size(); i++)
+    auto size = transformedVertices.size();
+    for (int i = 0; i < size; i++)
     {
-        auto ver = vertices[i];
+        transformedVertices[i].x = distance * transformedVertices[i].x / transformedVertices[i].z + 160;
+        transformedVertices[i].y = distance * transformedVertices[i].y / transformedVertices[i].z + 100;
     }
 }

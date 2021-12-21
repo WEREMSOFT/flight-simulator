@@ -17,21 +17,15 @@ Program::Program()
 
 Program::~Program()
 {
-    std::cout << "destroing program" << std::endl;
+    std::cout << "destroying program" << std::endl;
 }
 
 void Program::update(void)
 {
     Graphics *graphics = this->graphics.get();
-    std::vector<BouncingPointF> points;
 
-    points.reserve(3);
-
-    points.emplace_back(10.0, 10.0, (PointF){100.f, 200.f}, graphics->imageData.size);
-    points.emplace_back(100.0, 100.0, (PointF){-100.f, -200.f}, graphics->imageData.size);
-    points.emplace_back(110.0, 200.0, (PointF){-10.f, -20.f}, graphics->imageData.size);
-
-    auto square = createSquareShape(1);
+    // auto square = createSquareShape(2.f);
+    auto square = createCubeShape();
 
     Sprite checker({320, 240}, 5, {0x77, 0, 0x77}, {0, 0x77, 0x77});
     Sprite map("assets/color.png");
@@ -41,7 +35,7 @@ void Program::update(void)
         deltaTime = getDeltaTime();
         graphics->imageData.clear();
 
-        // checker.draw(graphics->imageData);
+        checker.draw(graphics->imageData);
         // map.drawClipped(graphics->imageData);
         graphics->imageData.printString((PointI){160, 120}, "X");
         // updatePoints(points);
@@ -60,13 +54,37 @@ Shape Program::createSquareShape(float distance = 1.0)
 {
     Shape shape(4);
 
-    shape.vertices.emplace_back((PointF3){-50, -50, distance});
-    shape.vertices.emplace_back((PointF3){50.f, -50, distance});
-    shape.vertices.emplace_back((PointF3){50.f, 50.f, distance});
-    shape.vertices.emplace_back((PointF3){-50, 50.f, distance});
+    shape.vertices.emplace_back((PointF3){-50, -50, distance, 1.f});
+    shape.vertices.emplace_back((PointF3){50.f, -50, distance, 1.f});
+    shape.vertices.emplace_back((PointF3){50.f, 50.f, distance, 1.f});
+    shape.vertices.emplace_back((PointF3){-50, 50.f, distance, 1.f});
 
-    shape.translate({160, 120, 1});
-    shape.scale({.5, .5, 1});
+    shape.transformedVertices.resize(shape.vertices.size());
+
+    shape.translate({160, 120, 0});
+    shape.scale({.5, .5, .5});
+
+    return shape;
+}
+
+Shape Program::createCubeShape()
+{
+    Shape shape(8);
+
+    shape.vertices.emplace_back((PointF3){-10, -10, 20.f, 1.f});
+    shape.vertices.emplace_back((PointF3){10.f, -10, 20.f, 1.f});
+    shape.vertices.emplace_back((PointF3){10.f, 10.f, 20.f, 1.f});
+    shape.vertices.emplace_back((PointF3){-10, 10.f, 20.f, 1.f});
+
+    shape.vertices.emplace_back((PointF3){-10, -10, -10.f, 1.f});
+    shape.vertices.emplace_back((PointF3){10.f, -10, -10.f, 1.f});
+    shape.vertices.emplace_back((PointF3){10.f, 10.f, -10.f, 1.f});
+    shape.vertices.emplace_back((PointF3){-10, 10.f, -10.f, 1.f});
+
+    shape.transformedVertices.resize(shape.vertices.size());
+
+    shape.translate({0, 0, 5});
+    shape.scale({1., 1., 1.});
 
     return shape;
 }

@@ -8,13 +8,13 @@ class Shape
     PointF3 translationMatrix[4] = {0};
     PointF3 rotationMatrix[4] = {0};
     PointF3 scaleMatrix[4] = {0};
-    std::vector<PointF3> transformedVertices;
     void transform();
     void recalculateTransformMatrix();
     bool isTransformDirty = true;
 
 public:
     std::vector<PointF3> vertices;
+    std::vector<PointF3> transformedVertices;
     Shape(int vertexNum);
     ~Shape();
     void draw(ImageData &pImageData);

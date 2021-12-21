@@ -1,0 +1,67 @@
+[
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/program/bouncingPoint/bouncingPoint.cpp -o src/program/bouncingPoint/bouncingPoint.opp",
+    "file": "src/program/bouncingPoint/bouncingPoint.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/program/program.cpp -o src/program/program.opp",
+    "file": "src/program/program.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/program/shape/shape.cpp -o src/program/shape/shape.opp",
+    "file": "src/program/shape/shape.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/main.cpp -o src/main.opp",
+    "file": "src/main.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/shader/shader.cpp -o src/core/shader/shader.opp",
+    "file": "src/core/shader/shader.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/fonts/fonts.cpp -o src/core/fonts/fonts.opp",
+    "file": "src/core/fonts/fonts.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/input/keyboard.cpp -o src/core/input/keyboard.opp",
+    "file": "src/core/input/keyboard.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/input/mouse.cpp -o src/core/input/mouse.opp",
+    "file": "src/core/input/mouse.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/graphics/graphics.cpp -o src/core/graphics/graphics.opp",
+    "file": "src/core/graphics/graphics.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/graphics/imageData/imageData.cpp -o src/core/graphics/imageData/imageData.opp",
+    "file": "src/core/graphics/imageData/imageData.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/graphics/sprite/sprite.cpp -o src/core/graphics/sprite/sprite.opp",
+    "file": "src/core/graphics/sprite/sprite.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/graphics/sprite/animation/animation.cpp -o src/core/graphics/sprite/animation/animation.opp",
+    "file": "src/core/graphics/sprite/animation/animation.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -c -g3 -O0 -Ilibs/include -Ilibs/GLAD/include libs/GLAD/src/glad.c -o libs/GLAD/src/glad.o",
+    "file": "libs/GLAD/src/glad.o"
+  }
+]
