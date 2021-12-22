@@ -80,19 +80,30 @@ void Shape::draw(ImageData &pImageData)
     {
         recalculateTransformMatrix();
         transform();
+        project(50);
         isTransformDirty = false;
     }
 
-    project(150);
+    // for (int i = 0; i < size; i++)
+    // {
+    //     auto nextIndex = (i + 1) % size;
+    //     PointI p1 = {static_cast<int>(transformedVertices[i].x), static_cast<int>(transformedVertices[i].y)};
+    //     PointI p2 = {static_cast<int>(transformedVertices[nextIndex].x), static_cast<int>(transformedVertices[nextIndex].y)};
 
-    auto size = transformedVertices.size();
-    for (int i = 0; i < size; i++)
+    //     pImageData.drawLine(p1, p2);
+    // }
+
+    auto size = vertexIndex.size();
+    for (int i; i < size; i++)
     {
-        auto nextIndex = (i + 1) % size;
-        PointI p1 = {static_cast<int>(transformedVertices[i].x), static_cast<int>(transformedVertices[i].y)};
-        PointI p2 = {static_cast<int>(transformedVertices[nextIndex].x), static_cast<int>(transformedVertices[nextIndex].y)};
+        auto index = vertexIndex[i];
+        PointI p1 = {static_cast<int>(transformedVertices[index[0]].x), static_cast<int>(transformedVertices[index[0]].y)};
+        PointI p2 = {static_cast<int>(transformedVertices[index[1]].x), static_cast<int>(transformedVertices[index[1]].y)};
+        PointI p3 = {static_cast<int>(transformedVertices[index[2]].x), static_cast<int>(transformedVertices[index[2]].y)};
 
-        pImageData.drawLine(p1, p2);
+        pImageData.drawLine(p1, p2, {255, 0, 0});
+        pImageData.drawLine(p2, p3, {0, 255, 0});
+        pImageData.drawLine(p3, p1, {0, 0, 255});
     }
 }
 
@@ -140,6 +151,43 @@ void Shape::rotateZ(float angle)
 
     rotationMatrix[1].x = sin(angle);
     rotationMatrix[1].y = cos(angle);
+    isTransformDirty = true;
+}
+
+void Shape::rotate(float x, float y, float z)
+{
+    PointF3 rotationMatrixX[4] = {0};
+    setMatrixAsIdentity(rotationMatrixX);
+
+    rotationMatrixX[1].y = cos(x);
+    rotationMatrixX[1].z = sin(x);
+
+    rotationMatrixX[2].y = -sin(x);
+    rotationMatrixX[2].z = cos(x);
+
+    PointF3 rotationMatrixY[4] = {0};
+    setMatrixAsIdentity(rotationMatrixY);
+
+    rotationMatrixY[0].x = cos(y);
+    rotationMatrixY[0].z = -sin(y);
+
+    rotationMatrixY[2].x = sin(y);
+    rotationMatrixY[2].z = cos(y);
+
+    PointF3 rotationMatrixZ[4] = {0};
+    setMatrixAsIdentity(rotationMatrixZ);
+
+    rotationMatrixZ[0].x = cos(z);
+    rotationMatrixZ[0].y = sin(z);
+
+    rotationMatrixZ[1].x = -sin(z);
+    rotationMatrixZ[1].y = cos(z);
+
+    setMatrixAsIdentity(rotationMatrix);
+    multiplyMatrix(rotationMatrixY, rotationMatrixX);
+    multiplyMatrix(rotationMatrixZ, rotationMatrixY);
+    multiplyMatrix(rotationMatrix, rotationMatrixZ);
+
     isTransformDirty = true;
 }
 

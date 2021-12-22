@@ -25,23 +25,45 @@ void Program::update(void)
     Graphics *graphics = this->graphics.get();
 
     // auto square = createSquareShape(2.f);
-    auto square = createCubeShape();
+    float zPosition = 1.f;
+    auto square = createCubeShape(zPosition);
 
     Sprite checker({320, 240}, 5, {0x77, 0, 0x77}, {0, 0x77, 0x77});
     Sprite map("assets/color.png");
     float angle = 0;
+    float rotationX = 0.0;
+
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         deltaTime = getDeltaTime();
         graphics->imageData.clear();
+
+        if (glfwGetKey(graphics->window, GLFW_KEY_UP))
+        {
+            square.translate({0.f, 0.f, zPosition += 10.f * deltaTime});
+        }
+
+        if (glfwGetKey(graphics->window, GLFW_KEY_DOWN))
+        {
+            square.translate({0.f, 0.f, zPosition -= 10.f * deltaTime});
+        }
 
         checker.draw(graphics->imageData);
         // map.drawClipped(graphics->imageData);
         graphics->imageData.printString((PointI){160, 120}, "X");
         // updatePoints(points);
 
+        if (glfwGetKey(graphics->window, GLFW_KEY_LEFT))
+        {
+            rotationX += 0.5 * deltaTime;
+        }
+        if (glfwGetKey(graphics->window, GLFW_KEY_RIGHT))
+        {
+            rotationX -= 0.5 * deltaTime;
+        }
+
         angle += 0.5 * deltaTime;
-        square.rotateZ(angle);
+        square.rotate(rotationX, 0, angle);
         square.draw(graphics->imageData);
         printFPS();
 
@@ -67,24 +89,43 @@ Shape Program::createSquareShape(float distance = 1.0)
     return shape;
 }
 
-Shape Program::createCubeShape()
+Shape Program::createCubeShape(float zPosition)
 {
     Shape shape(8);
 
-    shape.vertices.emplace_back((PointF3){-10, -10, 20.f, 1.f});
-    shape.vertices.emplace_back((PointF3){10.f, -10, 20.f, 1.f});
-    shape.vertices.emplace_back((PointF3){10.f, 10.f, 20.f, 1.f});
-    shape.vertices.emplace_back((PointF3){-10, 10.f, 20.f, 1.f});
+    const int cubeSize = 50;
 
-    shape.vertices.emplace_back((PointF3){-10, -10, -10.f, 1.f});
-    shape.vertices.emplace_back((PointF3){10.f, -10, -10.f, 1.f});
-    shape.vertices.emplace_back((PointF3){10.f, 10.f, -10.f, 1.f});
-    shape.vertices.emplace_back((PointF3){-10, 10.f, -10.f, 1.f});
+    shape.vertices.emplace_back((PointF3){-cubeSize, -cubeSize, cubeSize * 2, 1.f});
+    shape.vertices.emplace_back((PointF3){cubeSize, -cubeSize, cubeSize * 2, 1.f});
+    shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, cubeSize * 2, 1.f});
+    shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, cubeSize * 2, 1.f});
+
+    shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, -cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, -cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){-cubeSize, -cubeSize, -cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){cubeSize, -cubeSize, -cubeSize, 1.f});
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 1, 2}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 3, 2}));
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 6}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 6}));
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 3}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 3}));
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 1}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 1}));
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({1, 5, 6}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({1, 2, 6}));
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 2, 6}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 7, 6}));
 
     shape.transformedVertices.resize(shape.vertices.size());
 
-    shape.translate({0, 0, 5});
-    shape.scale({1., 1., 1.});
+    shape.translate({0, 0, zPosition});
 
     return shape;
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <array>
 #include "../../core/graphics/imageData/imagedata.hpp"
 
 class Shape
@@ -14,6 +15,7 @@ class Shape
 
 public:
     std::vector<PointF3> vertices;
+    std::vector<std::array<uint32_t, 3>> vertexIndex;
     std::vector<PointF3> transformedVertices;
     Shape(int vertexNum);
     ~Shape();
@@ -21,5 +23,6 @@ public:
     void translate(PointF3);
     void scale(PointF3);
     void rotateZ(float angle);
+    void rotate(float x, float y, float z);
     void project(float distance);
 };

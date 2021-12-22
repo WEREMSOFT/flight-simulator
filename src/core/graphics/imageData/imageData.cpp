@@ -20,10 +20,10 @@ void ImageData::init()
 
 void ImageData::putPixel(PointI point, Color color)
 {
-    if (point.x < 0 ||
-        point.y < 0 ||
-        point.x > size.x ||
-        point.y > size.y)
+    if (!(point.x > 0 &&
+          point.y > 0 &&
+          point.x < size.x &&
+          point.y < size.y))
         return;
     int position = (point.x + point.y * this->size.x);
     this->data[position] = color;
