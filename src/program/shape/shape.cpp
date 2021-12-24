@@ -63,6 +63,7 @@ Shape::Shape(int vertexNum)
 {
     vertices.reserve(vertexNum);
     transformedVertices.reserve(vertexNum);
+    projectedVertices.reserve(vertexNum);
 
     setMatrixAsIdentity(transformMatrix);
     setMatrixAsIdentity(rotationMatrix);
@@ -80,30 +81,25 @@ void Shape::draw(ImageData &pImageData)
     {
         recalculateTransformMatrix();
         transform();
-        project(50);
+        project(150);
         isTransformDirty = false;
     }
-
-    // for (int i = 0; i < size; i++)
-    // {
-    //     auto nextIndex = (i + 1) % size;
-    //     PointI p1 = {static_cast<int>(transformedVertices[i].x), static_cast<int>(transformedVertices[i].y)};
-    //     PointI p2 = {static_cast<int>(transformedVertices[nextIndex].x), static_cast<int>(transformedVertices[nextIndex].y)};
-
-    //     pImageData.drawLine(p1, p2);
-    // }
 
     auto size = vertexIndex.size();
     for (int i; i < size; i++)
     {
         auto index = vertexIndex[i];
-        PointI p1 = {static_cast<int>(transformedVertices[index[0]].x), static_cast<int>(transformedVertices[index[0]].y)};
-        PointI p2 = {static_cast<int>(transformedVertices[index[1]].x), static_cast<int>(transformedVertices[index[1]].y)};
-        PointI p3 = {static_cast<int>(transformedVertices[index[2]].x), static_cast<int>(transformedVertices[index[2]].y)};
+        PointI p1 = {static_cast<int>(projectedVertices[index[0]].x), static_cast<int>(projectedVertices[index[0]].y)};
+        PointI p2 = {static_cast<int>(projectedVertices[index[1]].x), static_cast<int>(projectedVertices[index[1]].y)};
+        PointI p3 = {static_cast<int>(projectedVertices[index[2]].x), static_cast<int>(projectedVertices[index[2]].y)};
 
         pImageData.drawLine(p1, p2, {255, 0, 0});
         pImageData.drawLine(p2, p3, {0, 255, 0});
         pImageData.drawLine(p3, p1, {0, 0, 255});
+
+        pImageData.drawCharacter(p1, index[0] + '0');
+        pImageData.drawCharacter(p2, index[1] + '0');
+        pImageData.drawCharacter(p3, index[2] + '0');
     }
 }
 
@@ -118,11 +114,11 @@ void Shape::transform()
 
 void Shape::translate(PointF3 translation)
 {
-    setMatrixAsIdentity(translationMatrix);
-    translationMatrix[2].x = translation.x;
-    translationMatrix[2].y = translation.y;
-    translationMatrix[2].z = translation.z;
-    translationMatrix[2].w = 1.f;
+    translationMatrix[0] = {1, 0, 0, 0};
+    translationMatrix[1] = {0, 1, 0, 0};
+    translationMatrix[2] = {0, 0, 1, 0};
+    translationMatrix[3] = {translation.x, translation.y, translation.z, 1};
+
     isTransformDirty = true;
 }
 
@@ -144,49 +140,33 @@ void Shape::recalculateTransformMatrix()
     multiplyMatrix(transformMatrix, translationMatrix);
 }
 
-void Shape::rotateZ(float angle)
-{
-    rotationMatrix[0].x = cos(angle);
-    rotationMatrix[0].y = -sin(angle);
-
-    rotationMatrix[1].x = sin(angle);
-    rotationMatrix[1].y = cos(angle);
-    isTransformDirty = true;
-}
-
 void Shape::rotate(float x, float y, float z)
 {
     PointF3 rotationMatrixX[4] = {0};
-    setMatrixAsIdentity(rotationMatrixX);
 
-    rotationMatrixX[1].y = cos(x);
-    rotationMatrixX[1].z = sin(x);
-
-    rotationMatrixX[2].y = -sin(x);
-    rotationMatrixX[2].z = cos(x);
+    rotationMatrixX[0] = {1, 0, 0, 0};
+    rotationMatrixX[1] = {0, cosf(x), sinf(x), 0};
+    rotationMatrixX[2] = {0, -sinf(x), cosf(x), 0};
+    rotationMatrixX[3] = {0, 0, 0, 1};
 
     PointF3 rotationMatrixY[4] = {0};
-    setMatrixAsIdentity(rotationMatrixY);
 
-    rotationMatrixY[0].x = cos(y);
-    rotationMatrixY[0].z = -sin(y);
-
-    rotationMatrixY[2].x = sin(y);
-    rotationMatrixY[2].z = cos(y);
+    rotationMatrixY[0] = {cosf(y), 0, -sinf(y), 0};
+    rotationMatrixY[1] = {0, 1, 0, 0};
+    rotationMatrixY[2] = {sinf(y), 0, cosf(y), 0};
+    rotationMatrixY[3] = {0, 0, 0, 1};
 
     PointF3 rotationMatrixZ[4] = {0};
-    setMatrixAsIdentity(rotationMatrixZ);
 
-    rotationMatrixZ[0].x = cos(z);
-    rotationMatrixZ[0].y = sin(z);
-
-    rotationMatrixZ[1].x = -sin(z);
-    rotationMatrixZ[1].y = cos(z);
+    rotationMatrixZ[0] = {cosf(z), sinf(z), 0, 0};
+    rotationMatrixZ[1] = {-sinf(z), cosf(z), 0, 0};
+    rotationMatrixZ[2] = {0, 0, 1, 0};
+    rotationMatrixZ[3] = {0, 0, 0, 1};
 
     setMatrixAsIdentity(rotationMatrix);
-    multiplyMatrix(rotationMatrixY, rotationMatrixX);
-    multiplyMatrix(rotationMatrixZ, rotationMatrixY);
     multiplyMatrix(rotationMatrix, rotationMatrixZ);
+    multiplyMatrix(rotationMatrix, rotationMatrixX);
+    multiplyMatrix(rotationMatrix, rotationMatrixY);
 
     isTransformDirty = true;
 }
@@ -196,7 +176,9 @@ void Shape::project(float distance)
     auto size = transformedVertices.size();
     for (int i = 0; i < size; i++)
     {
-        transformedVertices[i].x = distance * transformedVertices[i].x / transformedVertices[i].z + 160;
-        transformedVertices[i].y = distance * transformedVertices[i].y / transformedVertices[i].z + 100;
+        projectedVertices[i].x = transformedVertices[i].x + 160;
+        projectedVertices[i].y = transformedVertices[i].y + 100;
+        // projectedVertices[i].x = distance * transformedVertices[i].x / transformedVertices[i].z + 160;
+        // projectedVertices[i].y = distance * transformedVertices[i].y / transformedVertices[i].z + 100;
     }
 }

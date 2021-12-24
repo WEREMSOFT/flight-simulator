@@ -17,6 +17,7 @@ public:
     std::vector<PointF3> vertices;
     std::vector<std::array<uint32_t, 3>> vertexIndex;
     std::vector<PointF3> transformedVertices;
+    std::vector<PointF3> projectedVertices;
     Shape(int vertexNum);
     ~Shape();
     void draw(ImageData &pImageData);

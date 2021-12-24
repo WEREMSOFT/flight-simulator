@@ -30,9 +30,10 @@ void Program::update(void)
 
     Sprite checker({320, 240}, 5, {0x77, 0, 0x77}, {0, 0x77, 0x77});
     Sprite map("assets/color.png");
-    float angle = 0;
+    float rotationZ = 0;
     float rotationX = 0.0;
-
+    float rotationY = 0.0;
+    float translationX = 0, translationY = 0;
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         deltaTime = getDeltaTime();
@@ -40,30 +41,53 @@ void Program::update(void)
 
         if (glfwGetKey(graphics->window, GLFW_KEY_UP))
         {
-            square.translate({0.f, 0.f, zPosition += 10.f * deltaTime});
+            zPosition += 10.f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_DOWN))
         {
-            square.translate({0.f, 0.f, zPosition -= 10.f * deltaTime});
+            zPosition -= 10.f * deltaTime;
         }
-
-        checker.draw(graphics->imageData);
-        // map.drawClipped(graphics->imageData);
-        graphics->imageData.printString((PointI){160, 120}, "X");
-        // updatePoints(points);
 
         if (glfwGetKey(graphics->window, GLFW_KEY_LEFT))
         {
-            rotationX += 0.5 * deltaTime;
-        }
-        if (glfwGetKey(graphics->window, GLFW_KEY_RIGHT))
-        {
-            rotationX -= 0.5 * deltaTime;
+            translationX += 50.f * deltaTime;
         }
 
-        angle += 0.5 * deltaTime;
-        square.rotate(rotationX, 0, angle);
+        if (glfwGetKey(graphics->window, GLFW_KEY_RIGHT))
+        {
+            translationX -= 50.f * deltaTime;
+        }
+
+        if (glfwGetKey(graphics->window, GLFW_KEY_A))
+        {
+            rotationY -= .5f * deltaTime;
+        }
+
+        if (glfwGetKey(graphics->window, GLFW_KEY_D))
+        {
+            rotationY += .5f * deltaTime;
+        }
+
+        if (glfwGetKey(graphics->window, GLFW_KEY_W))
+        {
+            rotationX -= .5f * deltaTime;
+        }
+
+        if (glfwGetKey(graphics->window, GLFW_KEY_S))
+        {
+            rotationX += .5f * deltaTime;
+        }
+
+        square.translate({translationX, 0.f, zPosition});
+
+        checker.draw(graphics->imageData);
+        graphics->imageData.printString((PointI){160, 120}, "X");
+
+        // rotationY += 0.5 * deltaTime;
+        // rotationX += 0.5 * deltaTime;
+        // rotationZ += 0.5 * deltaTime;
+        square.rotate(rotationX, rotationY, rotationZ);
         square.draw(graphics->imageData);
         printFPS();
 
@@ -72,41 +96,24 @@ void Program::update(void)
     }
 }
 
-Shape Program::createSquareShape(float distance = 1.0)
-{
-    Shape shape(4);
-
-    shape.vertices.emplace_back((PointF3){-50, -50, distance, 1.f});
-    shape.vertices.emplace_back((PointF3){50.f, -50, distance, 1.f});
-    shape.vertices.emplace_back((PointF3){50.f, 50.f, distance, 1.f});
-    shape.vertices.emplace_back((PointF3){-50, 50.f, distance, 1.f});
-
-    shape.transformedVertices.resize(shape.vertices.size());
-
-    shape.translate({160, 120, 0});
-    shape.scale({.5, .5, .5});
-
-    return shape;
-}
-
 Shape Program::createCubeShape(float zPosition)
 {
     Shape shape(8);
 
     const int cubeSize = 50;
 
-    shape.vertices.emplace_back((PointF3){-cubeSize, -cubeSize, cubeSize * 2, 1.f});
-    shape.vertices.emplace_back((PointF3){cubeSize, -cubeSize, cubeSize * 2, 1.f});
-    shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, cubeSize * 2, 1.f});
-    shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, cubeSize * 2, 1.f});
+    shape.vertices.emplace_back((PointF3){-cubeSize, -cubeSize, cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){cubeSize, -cubeSize, cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, cubeSize, 1.f});
 
-    shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, -cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, -cubeSize, 1.f});
     shape.vertices.emplace_back((PointF3){-cubeSize, -cubeSize, -cubeSize, 1.f});
     shape.vertices.emplace_back((PointF3){cubeSize, -cubeSize, -cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, -cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, -cubeSize, 1.f});
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 1, 2}));
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 3, 2}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 2, 3}));
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 6}));
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 6}));
@@ -117,15 +124,16 @@ Shape Program::createCubeShape(float zPosition)
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 1}));
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 1}));
 
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({1, 5, 6}));
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({1, 2, 6}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 6}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 1}));
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 2, 6}));
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 7, 6}));
 
     shape.transformedVertices.resize(shape.vertices.size());
+    shape.projectedVertices.resize(shape.vertices.size());
 
-    shape.translate({0, 0, zPosition});
+    shape.translate({0.f, 0.f, zPosition});
 
     return shape;
 }
