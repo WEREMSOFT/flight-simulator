@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <vector>
 
+// #define WIREFRAME
+
 void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[3])
 {
     vertDestination.x = vertSource.x * mat[0].x +
@@ -95,11 +97,13 @@ void Shape::draw(ImageData &pImageData)
         PointI p2 = {static_cast<int>(projectedVertices[index[1]].x), static_cast<int>(projectedVertices[index[1]].y)};
         PointI p3 = {static_cast<int>(projectedVertices[index[2]].x), static_cast<int>(projectedVertices[index[2]].y)};
 
+#ifndef WIREFRAME
         rasterizeTriangleTop({p1, p2, p3}, pImageData);
-
+#else
         pImageData.drawLine(p1, p2, {255, 0, 0});
         pImageData.drawLine(p2, p3, {0, 255, 0});
         pImageData.drawLine(p3, p1, {0, 0, 255});
+#endif
 
         pImageData.drawCharacter(p1, index[0] + '0');
         pImageData.drawCharacter(p2, index[1] + '0');
@@ -204,20 +208,20 @@ Shape Shape::createCube(float zPosition)
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 1, 2}));
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 2, 3}));
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 6}));
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 6}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 6}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 6}));
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 3}));
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 3}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 3}));
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 1}));
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 1}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 1}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 1}));
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 6}));
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 1}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 6}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 1}));
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 2, 6}));
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 7, 6}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 2, 6}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 7, 6}));
 
     shape.transformedVertices.resize(shape.vertices.size());
     shape.projectedVertices.resize(shape.vertices.size());
@@ -229,6 +233,8 @@ Shape Shape::createCube(float zPosition)
 
 bool sortTriangleY(PointI a, PointI b)
 {
+    if (a.y == b.y)
+        return a.x < b.x;
     return a.y < b.y;
 }
 
@@ -260,16 +266,25 @@ void Shape::rasterizeTriangleTop(std::array<PointI, 3> triangle, ImageData &pIma
         end += incrementY;
     }
 
+    if (height != 0)
+    {
+        dy = (float)(triangle[2].y - triangle[1].y);
+        incrementY = dy ? (float)(triangle[2].x - triangle[1].x) / dy : 0;
+    }
+    else
+    {
+        incrementY = incrementXLimit;
+        dy = (float)(triangle[2].y - triangle[1].y);
+        incrementXLimit = dy ? (float)(triangle[2].x - triangle[1].x) / dy : 0;
+        start = triangle[1].x - triangle[0].x;
+    }
     height = triangle[2].y - triangle[1].y;
-
-    dy = (float)(triangle[2].y - triangle[1].y);
-    incrementY = dy ? (float)(triangle[2].x - triangle[1].x) / dy : 0;
 
     for (int i = 0; i < height; i++)
     {
         int localStart = floor(start);
         int localEnd = floor(end);
-        pImageData.drawLine({triangle[0].x + localStart, triangle[1].y + i}, {triangle[0].x + localEnd, triangle[1].y + i}, {0xFF, 0xFF, 0});
+        pImageData.drawLine({triangle[0].x + localStart, triangle[1].y + i}, {triangle[0].x + localEnd, triangle[1].y + i}, {0xFF, 0, 0});
         start += incrementXLimit;
         end += incrementY;
     }
@@ -295,7 +310,7 @@ void Shape::rasterizeTriangleBottom(std::array<PointI, 3> triangle, ImageData &p
     {
         int localStart = floor(start);
         int localEnd = floor(end);
-        pImageData.drawLine({triangle[1].x + localStart, triangle[1].y + i}, {triangle[1].x + localEnd, triangle[1].y + i}, {0xFF, 0xFF, 0});
+        pImageData.drawLine({triangle[1].x + localStart, triangle[1].y + i}, {triangle[1].x + localEnd, triangle[1].y + i}, {0xFF, 0, 0});
         start += incrementXLimit;
         end += incrementY;
     }
