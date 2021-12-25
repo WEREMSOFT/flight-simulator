@@ -24,12 +24,10 @@ void Program::update(void)
 {
     Graphics *graphics = this->graphics.get();
 
-    // auto square = createSquareShape(2.f);
-    float zPosition = 1.f;
-    auto square = createCubeShape(zPosition);
+    float zPosition = 125.f;
+    auto square = Shape::createCube(zPosition);
 
-    Sprite checker({320, 240}, 5, {0x77, 0, 0x77}, {0, 0x77, 0x77});
-    Sprite map("assets/color.png");
+    Sprite checker({320, 240}, 20, {0x77, 0x77, 0x77}, {0, 0, 0});
     float rotationZ = 0;
     float rotationX = 0.0;
     float rotationY = 0.0;
@@ -41,114 +39,58 @@ void Program::update(void)
 
         if (glfwGetKey(graphics->window, GLFW_KEY_UP))
         {
-            zPosition += 10.f * deltaTime;
+            zPosition += 70.f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_DOWN))
         {
-            zPosition -= 10.f * deltaTime;
+            zPosition -= 70.f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_LEFT))
         {
-            translationX += 50.f * deltaTime;
+            translationX += 70.f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_RIGHT))
         {
-            translationX -= 50.f * deltaTime;
+            translationX -= 70.f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_A))
         {
-            rotationY -= .5f * deltaTime;
+            rotationY -= 1.5f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_D))
         {
-            rotationY += .5f * deltaTime;
+            rotationY += 1.5f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_W))
         {
-            rotationX -= .5f * deltaTime;
+            rotationX -= 1.5f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_S))
         {
-            rotationX += .5f * deltaTime;
+            rotationX += 1.5f * deltaTime;
         }
+
+        // rotationX += 1.5f * deltaTime;
+        // rotationY += 1.5f * deltaTime;
+        // rotationZ += 1.5f * deltaTime;
 
         square.translate({translationX, 0.f, zPosition});
 
         checker.draw(graphics->imageData);
-        graphics->imageData.printString((PointI){160, 120}, "X");
 
-        // rotationY += 0.5 * deltaTime;
-        // rotationX += 0.5 * deltaTime;
-        // rotationZ += 0.5 * deltaTime;
         square.rotate(rotationX, rotationY, rotationZ);
         square.draw(graphics->imageData);
         printFPS();
 
         graphics->render();
         glfwPollEvents();
-    }
-}
-
-Shape Program::createCubeShape(float zPosition)
-{
-    Shape shape(8);
-
-    const int cubeSize = 50;
-
-    shape.vertices.emplace_back((PointF3){-cubeSize, -cubeSize, cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){cubeSize, -cubeSize, cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, cubeSize, 1.f});
-
-    shape.vertices.emplace_back((PointF3){-cubeSize, -cubeSize, -cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){cubeSize, -cubeSize, -cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, -cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, -cubeSize, 1.f});
-
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 1, 2}));
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 2, 3}));
-
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 6}));
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 6}));
-
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 3}));
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 3}));
-
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 1}));
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 1}));
-
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 6}));
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 1}));
-
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 2, 6}));
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 7, 6}));
-
-    shape.transformedVertices.resize(shape.vertices.size());
-    shape.projectedVertices.resize(shape.vertices.size());
-
-    shape.translate({0.f, 0.f, zPosition});
-
-    return shape;
-}
-
-void Program::drawLines(std::vector<BouncingPointF> points)
-{
-    for (auto i = 0; i < points.size(); i += 3)
-    {
-        const auto &point1 = points[i];
-        const auto &point2 = points[i + 1];
-        const auto &point3 = points[i + 2];
-
-        graphics->imageData.drawLine({(int)point1.x, (int)point1.y}, {(int)point2.x, (int)point2.y});
-        graphics->imageData.drawLine({(int)point2.x, (int)point2.y}, {(int)point3.x, (int)point3.y});
-        graphics->imageData.drawLine({(int)point3.x, (int)point3.y}, {(int)point1.x, (int)point1.y});
     }
 }
 
@@ -172,7 +114,7 @@ void Program::printFPS()
     {
         char text[1000] = {0};
         snprintf(text, 1000, "fps: %d", (int)floor(avg));
-        this->graphics->imageData.printString((PointI){100, 0}, text, (Color){0, 0xff, 0xff});
+        this->graphics->imageData.printString((PointI){100, 10}, text, (Color){0, 0xff, 0xff});
     }
 }
 

@@ -20,6 +20,4 @@ private:
     double getDeltaTime();
     void updatePoints(std::vector<BouncingPointF> &);
     void drawLines(std::vector<BouncingPointF>);
-    Shape createSquareShape(float distance);
-    Shape createCubeShape(float zPosition);
 };

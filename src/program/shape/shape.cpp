@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cmath>
 #include <array>
+#include <algorithm>
+#include <vector>
 
 void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[3])
 {
@@ -81,7 +83,7 @@ void Shape::draw(ImageData &pImageData)
     {
         recalculateTransformMatrix();
         transform();
-        project(150);
+        project(100);
         isTransformDirty = false;
     }
 
@@ -92,6 +94,9 @@ void Shape::draw(ImageData &pImageData)
         PointI p1 = {static_cast<int>(projectedVertices[index[0]].x), static_cast<int>(projectedVertices[index[0]].y)};
         PointI p2 = {static_cast<int>(projectedVertices[index[1]].x), static_cast<int>(projectedVertices[index[1]].y)};
         PointI p3 = {static_cast<int>(projectedVertices[index[2]].x), static_cast<int>(projectedVertices[index[2]].y)};
+
+        rasterizeTriangleTop({p1, p2, p3}, pImageData);
+        rasterizeTriangleBottom({p1, p2, p3}, pImageData);
 
         pImageData.drawLine(p1, p2, {255, 0, 0});
         pImageData.drawLine(p2, p3, {0, 255, 0});
@@ -176,9 +181,111 @@ void Shape::project(float distance)
     auto size = transformedVertices.size();
     for (int i = 0; i < size; i++)
     {
-        projectedVertices[i].x = transformedVertices[i].x + 160;
-        projectedVertices[i].y = transformedVertices[i].y + 100;
-        // projectedVertices[i].x = distance * transformedVertices[i].x / transformedVertices[i].z + 160;
-        // projectedVertices[i].y = distance * transformedVertices[i].y / transformedVertices[i].z + 100;
+        projectedVertices[i].x = distance * transformedVertices[i].x / transformedVertices[i].z + 160;
+        projectedVertices[i].y = distance * transformedVertices[i].y / transformedVertices[i].z + 120;
     }
+}
+
+Shape Shape::createCube(float zPosition)
+{
+    Shape shape(8);
+
+    const int cubeSize = 50;
+
+    shape.vertices.emplace_back((PointF3){-cubeSize, -cubeSize, cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){cubeSize, -cubeSize, cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, cubeSize, 1.f});
+
+    shape.vertices.emplace_back((PointF3){-cubeSize, -cubeSize, -cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){cubeSize, -cubeSize, -cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, -cubeSize, 1.f});
+    shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, -cubeSize, 1.f});
+
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 1, 2}));
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 2, 3}));
+
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 6}));
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 6}));
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 3}));
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 3}));
+
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 1}));
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 1}));
+
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 6}));
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 1}));
+
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 2, 6}));
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 7, 6}));
+
+    shape.transformedVertices.resize(shape.vertices.size());
+    shape.projectedVertices.resize(shape.vertices.size());
+
+    shape.translate({0.f, 0.f, zPosition});
+
+    return shape;
+}
+
+bool sortTriangleY(PointI a, PointI b)
+{
+    return a.y < b.y;
+}
+
+bool sortTriangleX(PointI a, PointI b)
+{
+    return a.x < b.x;
+}
+
+void Shape::rasterizeTriangleTop(std::array<PointI, 3> triangle, ImageData &pImageData)
+{
+    std::sort(triangle.begin(), triangle.end(), sortTriangleY);
+
+    int height = triangle[1].y - triangle[0].y;
+
+    float dy = (float)(triangle[1].y - triangle[0].y);
+    float dx = (float)(triangle[2].y - triangle[0].y);
+
+    float incrementY = dy ? (float)(triangle[1].x - triangle[0].x) / dy : 0;
+    float incrementXLimit = dx ? (float)(triangle[2].x - triangle[0].x) / dx : 0;
+    float start = 0;
+    float end = 0;
+
+    for (int i = 0; i < height; i++)
+    {
+        int localStart = floor(start);
+        int localEnd = floor(end);
+        pImageData.drawLine({triangle[0].x + localStart, triangle[0].y + i}, {triangle[0].x + localEnd, triangle[0].y + i}, {0xFF, 0, 0});
+        start += incrementXLimit;
+        end += incrementY;
+    }
+
+    return;
+}
+
+void Shape::rasterizeTriangleBottom(std::array<PointI, 3> triangle, ImageData &pImageData)
+{
+    std::sort(triangle.begin(), triangle.end(), sortTriangleY);
+
+    int height = triangle[2].y - triangle[1].y;
+
+    float dy = (float)(triangle[1].y - triangle[0].y);
+    float dx = (float)(triangle[2].y - triangle[0].y);
+
+    float incrementY = dy ? (float)(triangle[1].x - triangle[0].x) / dy : 0;
+    float incrementXLimit = dx ? (float)(triangle[2].x - triangle[0].x) / dx : 0;
+    float start = 0;
+    float end = 0;
+
+    for (int i = 0; i < height; i++)
+    {
+        int localStart = floor(start);
+        int localEnd = floor(end);
+        pImageData.drawLine({triangle[1].x + localStart, triangle[1].y + i}, {triangle[1].x + localEnd, triangle[1].y + i}, {0xFF, 0xFF, 0});
+        start += incrementXLimit;
+        end += incrementY;
+    }
+
+    return;
 }
