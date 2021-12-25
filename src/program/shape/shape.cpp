@@ -96,7 +96,6 @@ void Shape::draw(ImageData &pImageData)
         PointI p3 = {static_cast<int>(projectedVertices[index[2]].x), static_cast<int>(projectedVertices[index[2]].y)};
 
         rasterizeTriangleTop({p1, p2, p3}, pImageData);
-        rasterizeTriangleBottom({p1, p2, p3}, pImageData);
 
         pImageData.drawLine(p1, p2, {255, 0, 0});
         pImageData.drawLine(p2, p3, {0, 255, 0});
@@ -261,6 +260,20 @@ void Shape::rasterizeTriangleTop(std::array<PointI, 3> triangle, ImageData &pIma
         end += incrementY;
     }
 
+    height = triangle[2].y - triangle[1].y;
+
+    dy = (float)(triangle[2].y - triangle[1].y);
+    incrementY = dy ? (float)(triangle[2].x - triangle[1].x) / dy : 0;
+
+    for (int i = 0; i < height; i++)
+    {
+        int localStart = floor(start);
+        int localEnd = floor(end);
+        pImageData.drawLine({triangle[0].x + localStart, triangle[1].y + i}, {triangle[0].x + localEnd, triangle[1].y + i}, {0xFF, 0xFF, 0});
+        start += incrementXLimit;
+        end += incrementY;
+    }
+
     return;
 }
 
@@ -273,8 +286,8 @@ void Shape::rasterizeTriangleBottom(std::array<PointI, 3> triangle, ImageData &p
     float dy = (float)(triangle[1].y - triangle[0].y);
     float dx = (float)(triangle[2].y - triangle[0].y);
 
-    float incrementY = dy ? (float)(triangle[1].x - triangle[0].x) / dy : 0;
-    float incrementXLimit = dx ? (float)(triangle[2].x - triangle[0].x) / dx : 0;
+    float incrementY = dx ? (float)(triangle[2].x - triangle[0].x) / dx : 0;
+    float incrementXLimit = dy ? (float)(triangle[0].x - triangle[2].x) / dy : 0;
     float start = 0;
     float end = 0;
 
