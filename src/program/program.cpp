@@ -77,9 +77,9 @@ void Program::update(void)
             rotationX += 1.5f * deltaTime;
         }
 
-        // rotationX += 1.5f * deltaTime;
-        // rotationY += 1.5f * deltaTime;
-        // rotationZ += 1.5f * deltaTime;
+        rotationX += 1.5f * deltaTime;
+        rotationY += 1.5f * deltaTime;
+        rotationZ += 1.5f * deltaTime;
 
         square.translate({translationX, 0.f, zPosition});
 
