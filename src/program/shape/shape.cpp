@@ -201,8 +201,8 @@ Shape Shape::createCube(float zPosition)
     shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, -cubeSize, 1.f});
     shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, -cubeSize, 1.f});
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 1, 2}));
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 2, 3}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 1, 2}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 2, 3}));
 
     // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 6}));
     // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 6}));
