@@ -27,7 +27,7 @@ void Program::update(void)
     float zPosition = 125.f;
     auto square = Shape::createCube(zPosition);
 
-    Sprite checker({320, 240}, 20, {0x77, 0x77, 0x77}, {0, 0, 0});
+    Sprite checker({320, 240}, 20, {0x77, 0x55, 0x33}, {0x77, 0, 0});
     float rotationZ = 0;
     float rotationX = 0.0;
     float rotationY = 0.0;
@@ -35,7 +35,7 @@ void Program::update(void)
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         deltaTime = getDeltaTime();
-        graphics->imageData.clear();
+        // graphics->imageData.clear();
 
         if (glfwGetKey(graphics->window, GLFW_KEY_UP))
         {
@@ -77,9 +77,9 @@ void Program::update(void)
             rotationX += 1.5f * deltaTime;
         }
 
-        rotationX += 1.5f * deltaTime;
-        rotationY += 1.5f * deltaTime;
-        rotationZ += 1.5f * deltaTime;
+        rotationX += 1.0f * deltaTime;
+        rotationY += 1.0f * deltaTime;
+        rotationZ += 1.0f * deltaTime;
 
         square.translate({translationX, 0.f, zPosition});
 

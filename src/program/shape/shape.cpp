@@ -79,6 +79,19 @@ Shape::~Shape()
 {
 }
 
+bool isBackFace(std::array<PointF3, 3> triangle)
+{
+    auto z = (triangle[1].x - triangle[0].x) * (triangle[2].y - triangle[0].y) - (triangle[1].y - triangle[0].y) * (triangle[2].x - triangle[0].x);
+    return z < 0;
+}
+
+bool isInTheShadow(std::array<PointF3, 3> triangle)
+{
+    auto z = (triangle[1].y - triangle[0].y) * (triangle[2].z - triangle[0].z) - (triangle[1].z - triangle[0].z) * (triangle[2].y - triangle[0].y);
+    std::cout << z << std::endl;
+    return z > 0;
+}
+
 void Shape::draw(ImageData &pImageData)
 {
     if (isTransformDirty)
@@ -90,29 +103,45 @@ void Shape::draw(ImageData &pImageData)
     }
 
     auto size = vertexIndex.size();
-    for (int i; i < size; i++)
+    Color color = {0, 0, 255};
+    for (int i = 0; i < size; i++)
     {
+        // if (transformedNormals[normalIndex[i]].z < 0)
+
         auto index = vertexIndex[i];
         PointI p1 = {static_cast<int>(projectedVertices[index[0]].x), static_cast<int>(projectedVertices[index[0]].y)};
         PointI p2 = {static_cast<int>(projectedVertices[index[1]].x), static_cast<int>(projectedVertices[index[1]].y)};
         PointI p3 = {static_cast<int>(projectedVertices[index[2]].x), static_cast<int>(projectedVertices[index[2]].y)};
 
+        if (isBackFace({projectedVertices[index[0]], projectedVertices[index[1]], projectedVertices[index[2]]}))
+            continue;
+
+        if (isInTheShadow({projectedVertices[index[0]], projectedVertices[index[1]], projectedVertices[index[2]]}))
+            color = {0, 0, 0xFF};
+        else
+            color = {0, 0, 0x99};
+
 #ifndef WIREFRAME
-        rasterizeTriangleTop({p1, p2, p3}, pImageData);
+        rasterizeTriangle({p1, p2, p3}, pImageData, color);
 #else
         pImageData.drawLine(p1, p2, {255, 0, 0});
         pImageData.drawLine(p2, p3, {0, 255, 0});
         pImageData.drawLine(p3, p1, {0, 0, 255});
 #endif
 
-        pImageData.drawCharacter(p1, index[0] + '0');
-        pImageData.drawCharacter(p2, index[1] + '0');
-        pImageData.drawCharacter(p3, index[2] + '0');
+        // pImageData.drawCharacter(p1, index[0] + '0');
+        // pImageData.drawCharacter(p2, index[1] + '0');
+        // pImageData.drawCharacter(p3, index[2] + '0');
     }
 }
 
 void Shape::transform()
 {
+    auto normalsSize = normals.size();
+    for (auto i = 0; i < normalsSize; i++)
+    {
+        multiplyVertexByMatrix(transformedNormals[i], normals[i], rotationMatrix);
+    }
     auto vertexSize = vertices.size();
     for (auto i = 0; i < vertexSize; i++)
     {
@@ -186,6 +215,7 @@ void Shape::project(float distance)
     {
         projectedVertices[i].x = distance * transformedVertices[i].x / transformedVertices[i].z + 160;
         projectedVertices[i].y = distance * transformedVertices[i].y / transformedVertices[i].z + 120;
+        projectedVertices[i].z = transformedVertices[i].z;
     }
 }
 
@@ -205,23 +235,45 @@ Shape Shape::createCube(float zPosition)
     shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, -cubeSize, 1.f});
     shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, -cubeSize, 1.f});
 
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 1, 2}));
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 2, 3}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 2, 1}));
+    shape.normalIndex.emplace_back(2);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 3, 2}));
+    shape.normalIndex.emplace_back(2);
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 6}));
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 6}));
+    shape.normalIndex.emplace_back(5);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 6, 7}));
+    shape.normalIndex.emplace_back(5);
 
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 3}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 4, 3}));
+    shape.normalIndex.emplace_back(3);
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 3}));
+    shape.normalIndex.emplace_back(3);
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 1}));
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 5, 1}));
+    shape.normalIndex.emplace_back(1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 1, 5}));
+    shape.normalIndex.emplace_back(1);
 
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 6}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 6, 5}));
+    shape.normalIndex.emplace_back(4);
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 1}));
+    shape.normalIndex.emplace_back(4);
 
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 2, 6}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 6, 2}));
+    shape.normalIndex.emplace_back(5);
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 7, 6}));
+    shape.normalIndex.emplace_back(5);
+
+    shape.normals.emplace_back((PointF3){1, 0, 0, 1.f});
+    shape.normals.emplace_back((PointF3){0, 1, 0, 1.f});
+    shape.normals.emplace_back((PointF3){0, 0, 1, 1.f});
+
+    shape.normals.emplace_back((PointF3){-1, 0, 0, 1.f});
+    shape.normals.emplace_back((PointF3){0, -1, 0, 1.f});
+    shape.normals.emplace_back((PointF3){0, 0, -1, 1.f});
+
+    shape.transformedNormals.resize(shape.normals.size());
 
     shape.transformedVertices.resize(shape.vertices.size());
     shape.projectedVertices.resize(shape.vertices.size());
@@ -243,7 +295,7 @@ bool sortTriangleX(PointI a, PointI b)
     return a.x < b.x;
 }
 
-void Shape::rasterizeTriangleTop(std::array<PointI, 3> triangle, ImageData &pImageData)
+void Shape::rasterizeTriangle(std::array<PointI, 3> triangle, ImageData &pImageData, Color color)
 {
     std::sort(triangle.begin(), triangle.end(), sortTriangleY);
 
@@ -261,7 +313,7 @@ void Shape::rasterizeTriangleTop(std::array<PointI, 3> triangle, ImageData &pIma
     {
         int localStart = floor(start);
         int localEnd = floor(end);
-        pImageData.drawLine({triangle[0].x + localStart, triangle[0].y + i}, {triangle[0].x + localEnd, triangle[0].y + i}, {0xFF, 0, 0});
+        pImageData.drawLine({triangle[0].x + localStart, triangle[0].y + i}, {triangle[0].x + localEnd, triangle[0].y + i}, color);
         start += incrementXLimit;
         end += incrementY;
     }
@@ -284,33 +336,7 @@ void Shape::rasterizeTriangleTop(std::array<PointI, 3> triangle, ImageData &pIma
     {
         int localStart = floor(start);
         int localEnd = floor(end);
-        pImageData.drawLine({triangle[0].x + localStart, triangle[1].y + i}, {triangle[0].x + localEnd, triangle[1].y + i}, {0xFF, 0, 0});
-        start += incrementXLimit;
-        end += incrementY;
-    }
-
-    return;
-}
-
-void Shape::rasterizeTriangleBottom(std::array<PointI, 3> triangle, ImageData &pImageData)
-{
-    std::sort(triangle.begin(), triangle.end(), sortTriangleY);
-
-    int height = triangle[2].y - triangle[1].y;
-
-    float dy = (float)(triangle[1].y - triangle[0].y);
-    float dx = (float)(triangle[2].y - triangle[0].y);
-
-    float incrementY = dx ? (float)(triangle[2].x - triangle[0].x) / dx : 0;
-    float incrementXLimit = dy ? (float)(triangle[0].x - triangle[2].x) / dy : 0;
-    float start = 0;
-    float end = 0;
-
-    for (int i = 0; i < height; i++)
-    {
-        int localStart = floor(start);
-        int localEnd = floor(end);
-        pImageData.drawLine({triangle[1].x + localStart, triangle[1].y + i}, {triangle[1].x + localEnd, triangle[1].y + i}, {0xFF, 0, 0});
+        pImageData.drawLine({triangle[0].x + localStart, triangle[1].y + i}, {triangle[0].x + localEnd, triangle[1].y + i}, color);
         start += incrementXLimit;
         end += incrementY;
     }

@@ -15,8 +15,11 @@ class Shape
 
 public:
     std::vector<PointF3> vertices;
+    std::vector<PointF3> normals;
     std::vector<std::array<uint32_t, 3>> vertexIndex;
+    std::vector<uint32_t> normalIndex;
     std::vector<PointF3> transformedVertices;
+    std::vector<PointF3> transformedNormals;
     std::vector<PointF3> projectedVertices;
     Shape(int vertexNum);
     ~Shape();
@@ -27,6 +30,5 @@ public:
     void rotate(float x, float y, float z);
     void project(float distance);
     static Shape createCube(float zPosition);
-    void rasterizeTriangleTop(std::array<PointI, 3> triangle, ImageData &pImageData);
-    void rasterizeTriangleBottom(std::array<PointI, 3> triangle, ImageData &pImageData);
+    void rasterizeTriangle(std::array<PointI, 3> triangle, ImageData &pImageData, Color color);
 };
