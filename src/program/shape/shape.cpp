@@ -79,6 +79,14 @@ Shape::~Shape()
 {
 }
 
+float angleBetweenVectors(PointF3 a, PointF3 b)
+{
+    auto dot = a.x * b.x + a.y * b.y + a.z * b.z;
+    auto lenSq1 = a.x * a.x + a.y * a.y + a.z * a.z;
+    auto lenSq2 = b.x * b.x + b.y * b.y + b.z * b.z;
+    return acos(dot / sqrt(lenSq1 * lenSq2));
+}
+
 bool isBackFace(std::array<PointF3, 3> triangle)
 {
     auto z = (triangle[1].x - triangle[0].x) * (triangle[2].y - triangle[0].y) - (triangle[1].y - triangle[0].y) * (triangle[2].x - triangle[0].x);
@@ -88,7 +96,6 @@ bool isBackFace(std::array<PointF3, 3> triangle)
 bool isInTheShadow(std::array<PointF3, 3> triangle)
 {
     auto z = (triangle[1].y - triangle[0].y) * (triangle[2].z - triangle[0].z) - (triangle[1].z - triangle[0].z) * (triangle[2].y - triangle[0].y);
-    std::cout << z << std::endl;
     return z > 0;
 }
 
@@ -106,8 +113,6 @@ void Shape::draw(ImageData &pImageData)
     Color color = {0, 0, 255};
     for (int i = 0; i < size; i++)
     {
-        // if (transformedNormals[normalIndex[i]].z < 0)
-
         auto index = vertexIndex[i];
         PointI p1 = {static_cast<int>(projectedVertices[index[0]].x), static_cast<int>(projectedVertices[index[0]].y)};
         PointI p2 = {static_cast<int>(projectedVertices[index[1]].x), static_cast<int>(projectedVertices[index[1]].y)};
