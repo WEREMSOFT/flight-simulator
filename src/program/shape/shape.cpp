@@ -5,8 +5,11 @@
 #include <algorithm>
 #include <vector>
 
-// #define WIREFRAME
-
+#define WIREFRAME 0
+#define SHOW_VERTEX_NUMBER 0
+#define DRAW_NORMALS 0
+#define USE_HACKY_SHADING 0
+#define ANGLE_RATIO 3.1416 * 255
 void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[3])
 {
     vertDestination.x = vertSource.x * mat[0].x +
@@ -120,23 +123,38 @@ void Shape::draw(ImageData &pImageData)
 
         if (isBackFace({projectedVertices[index[0]], projectedVertices[index[1]], projectedVertices[index[2]]}))
             continue;
-
+#if USE_HACKY_SHADING
         if (isInTheShadow({projectedVertices[index[0]], projectedVertices[index[1]], projectedVertices[index[2]]}))
             color = {0, 0, 0xFF};
         else
             color = {0, 0, 0x99};
-
-#ifndef WIREFRAME
-        rasterizeTriangle({p1, p2, p3}, pImageData, color);
 #else
+        auto component = angleBetweenVectors(transformedNormals[normalIndex[i]], {1, 1, 1}) / ANGLE_RATIO;
+        color = {static_cast<unsigned char>(component),
+                 static_cast<unsigned char>(component),
+                 static_cast<unsigned char>(component)};
+#endif
+#if WIREFRAME
         pImageData.drawLine(p1, p2, {255, 0, 0});
         pImageData.drawLine(p2, p3, {0, 255, 0});
         pImageData.drawLine(p3, p1, {0, 0, 255});
+#else
+        rasterizeTriangle({p1, p2, p3}, pImageData, color);
 #endif
 
-        // pImageData.drawCharacter(p1, index[0] + '0');
-        // pImageData.drawCharacter(p2, index[1] + '0');
-        // pImageData.drawCharacter(p3, index[2] + '0');
+#if DRAW_NORMALS
+
+        pImageData.drawLine({p2.x, p2.y}, {p2.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p2.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
+        pImageData.drawLine({p2.x, p2.y}, {p2.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p2.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
+        pImageData.drawLine({p3.x, p3.y}, {p3.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p3.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
+
+#endif
+
+#if SHOW_VERTEX_NUMBER
+        pImageData.drawCharacter(p1, index[0] + '0');
+        pImageData.drawCharacter(p2, index[1] + '0');
+        pImageData.drawCharacter(p3, index[2] + '0');
+#endif
     }
 }
 
@@ -145,7 +163,7 @@ void Shape::transform()
     auto normalsSize = normals.size();
     for (auto i = 0; i < normalsSize; i++)
     {
-        multiplyVertexByMatrix(transformedNormals[i], normals[i], rotationMatrix);
+        multiplyVertexByMatrix(transformedNormals[i], normals[i], transformMatrix);
     }
     auto vertexSize = vertices.size();
     for (auto i = 0; i < vertexSize; i++)
@@ -256,27 +274,27 @@ Shape Shape::createCube(float zPosition)
     shape.normalIndex.emplace_back(3);
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 1}));
-    shape.normalIndex.emplace_back(1);
+    shape.normalIndex.emplace_back(4);
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 1, 5}));
-    shape.normalIndex.emplace_back(1);
+    shape.normalIndex.emplace_back(4);
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 6, 5}));
-    shape.normalIndex.emplace_back(4);
+    shape.normalIndex.emplace_back(0);
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 1}));
-    shape.normalIndex.emplace_back(4);
+    shape.normalIndex.emplace_back(0);
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 6, 2}));
-    shape.normalIndex.emplace_back(5);
+    shape.normalIndex.emplace_back(1);
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 7, 6}));
-    shape.normalIndex.emplace_back(5);
+    shape.normalIndex.emplace_back(1);
 
-    shape.normals.emplace_back((PointF3){1, 0, 0, 1.f});
-    shape.normals.emplace_back((PointF3){0, 1, 0, 1.f});
-    shape.normals.emplace_back((PointF3){0, 0, 1, 1.f});
+    shape.normals.emplace_back((PointF3){1, 0, 0, 0});
+    shape.normals.emplace_back((PointF3){0, 1, 0, 0});
+    shape.normals.emplace_back((PointF3){0, 0, 1, 0});
 
-    shape.normals.emplace_back((PointF3){-1, 0, 0, 1.f});
-    shape.normals.emplace_back((PointF3){0, -1, 0, 1.f});
-    shape.normals.emplace_back((PointF3){0, 0, -1, 1.f});
+    shape.normals.emplace_back((PointF3){-1, 0, 0, 0});
+    shape.normals.emplace_back((PointF3){0, -1, 0, 0});
+    shape.normals.emplace_back((PointF3){0, 0, -1, 0});
 
     shape.transformedNormals.resize(shape.normals.size());
 
@@ -316,7 +334,7 @@ void Shape::rasterizeTriangle(std::array<PointI, 3> triangle, ImageData &pImageD
 
     for (int i = 0; i < height; i++)
     {
-        int localStart = floor(start);
+        int localStart = floor(start) + 1;
         int localEnd = floor(end);
         pImageData.drawLine({triangle[0].x + localStart, triangle[0].y + i}, {triangle[0].x + localEnd, triangle[0].y + i}, color);
         start += incrementXLimit;

@@ -35,7 +35,7 @@ public:
 
     void init(void);
     void updateTexture(void);
-    void putPixel(PointI point, Color color = (Color){0xFF, 0xFF, 0xFF});
+    bool putPixel(PointI point, Color color = (Color){0xFF, 0xFF, 0xFF});
     void drawCircle(PointI center, double radious, Color color = (Color){0xFF, 0xFF, 0xFF});
     void drawCircleFill(PointI center, double radious, Color color = (Color){0xFF, 0xFF, 0xFF});
     void drawSquare(PointI topLeftCorner, PointI size, Color color = (Color){0xFF, 0xFF, 0xFF});

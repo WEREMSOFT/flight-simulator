@@ -18,15 +18,16 @@ void ImageData::init()
     createTexture();
 }
 
-void ImageData::putPixel(PointI point, Color color)
+bool ImageData::putPixel(PointI point, Color color)
 {
     if (!(point.x > 0 &&
           point.y > 0 &&
           point.x < size.x &&
           point.y < size.y))
-        return;
+        return false;
     int position = (point.x + point.y * this->size.x);
     this->data[position] = color;
+    return true;
 }
 
 Color ImageData::getPixel(PointU point)
@@ -134,7 +135,9 @@ void ImageData::drawLine(PointI pointA, PointI pointB, Color color)
 
     while (true)
     {
-        this->putPixel(pointA, color);
+        if (!this->putPixel(pointA, color))
+            return;
+
         if (pointA.x == pointB.x && pointA.y == pointB.y)
             break;
         e2 = err;

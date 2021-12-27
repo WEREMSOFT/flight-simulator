@@ -6,6 +6,8 @@
 #include <cmath>
 #include <vector>
 
+#define DEMO_MODE 1
+
 Program::Program()
 {
     float aspectRatio = 4.0 / 3.0;
@@ -28,14 +30,13 @@ void Program::update(void)
     auto square = Shape::createCube(zPosition);
 
     Sprite checker({320, 240}, 20, {0x77, 0x55, 0x33}, {0x77, 0, 0});
-    float rotationZ = 0;
+    float rotationZ = 0.0;
     float rotationX = 0.0;
     float rotationY = 0.0;
     float translationX = 0, translationY = 0;
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         deltaTime = getDeltaTime();
-        // graphics->imageData.clear();
 
         if (glfwGetKey(graphics->window, GLFW_KEY_UP))
         {
@@ -77,10 +78,11 @@ void Program::update(void)
             rotationX += 1.5f * deltaTime;
         }
 
+#if DEMO_MODE
         rotationX += 1.0f * deltaTime;
         rotationY += 1.0f * deltaTime;
         rotationZ += 1.0f * deltaTime;
-
+#endif
         square.translate({translationX, 0.f, zPosition});
 
         checker.draw(graphics->imageData);
