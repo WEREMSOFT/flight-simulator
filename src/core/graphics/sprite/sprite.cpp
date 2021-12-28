@@ -27,18 +27,24 @@ Sprite::Sprite(std::string fileName)
     }
 }
 
-Sprite::Sprite(PointI size, int checkerWidth, Color color1, Color color2)
+Sprite::Sprite(PointI size)
 {
     imageData = std::make_unique<ImageData>((PointI){0});
     auto im = imageData.get();
 
     im->size = size;
-    im->data = std::vector<Color>(im->size.x * im->size.y, (Color){0});
+    im->data = std::vector<Color>(im->size.x * im->size.y, (Color){0xFF, 0, 0xFF});
+}
 
-    for (int y = 0; y < im->size.y; y++)
+std::unique_ptr<Sprite> Sprite::createChecker(PointI size, int checkerWidth, Color color1, Color color2)
+{
+    auto returnValue = std::make_unique<Sprite>(size);
+    auto ret = returnValue.get();
+
+    for (int y = 0; y < ret->imageData->size.y; y++)
     {
         Color currentColor = color1;
-        for (int x = 0; x < im->size.x; x++)
+        for (int x = 0; x < ret->imageData->size.x; x++)
         {
             if ((y / checkerWidth + x / checkerWidth) % 2)
             {
@@ -48,9 +54,26 @@ Sprite::Sprite(PointI size, int checkerWidth, Color color1, Color color2)
             {
                 currentColor = color2;
             }
-            im->data[x + y * size.x] = currentColor;
+            ret->imageData->data[x + y * size.x] = currentColor;
         }
     }
+    return returnValue;
+}
+
+std::unique_ptr<Sprite> Sprite::createSplit(PointI size, int topHeight, Color color1, Color color2)
+{
+    auto returnValue = std::make_unique<Sprite>(size);
+    auto ret = returnValue.get();
+
+    for (int y = 0; y < ret->imageData->size.y; y++)
+    {
+        Color currentColor = y < topHeight ? color1 : color2;
+        for (int x = 0; x < size.x; x++)
+        {
+            ret->imageData->data[x + y * size.x] = currentColor;
+        }
+    }
+    return returnValue;
 }
 
 Sprite::~Sprite()

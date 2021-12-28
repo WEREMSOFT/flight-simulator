@@ -6,6 +6,7 @@
 #include <vector>
 
 #define WIREFRAME 0
+#define BACKFACE_CULlING 1
 #define SHOW_VERTEX_NUMBER 0
 #define DRAW_NORMALS 0
 #define USE_HACKY_SHADING 0
@@ -121,8 +122,13 @@ void Shape::draw(ImageData &pImageData)
         PointI p2 = {static_cast<int>(projectedVertices[index[1]].x), static_cast<int>(projectedVertices[index[1]].y)};
         PointI p3 = {static_cast<int>(projectedVertices[index[2]].x), static_cast<int>(projectedVertices[index[2]].y)};
 
+#if BACKFACE_CULlING
         if (isBackFace({projectedVertices[index[0]], projectedVertices[index[1]], projectedVertices[index[2]]}))
             continue;
+#endif
+
+            // if (transformedNormals[normalIndex[i]].z > 0)
+            //     continue;
 #if USE_HACKY_SHADING
         if (isInTheShadow({projectedVertices[index[0]], projectedVertices[index[1]], projectedVertices[index[2]]}))
             color = {0, 0, 0xFF};
@@ -242,11 +248,75 @@ void Shape::project(float distance)
     }
 }
 
-Shape Shape::createCube(float zPosition)
+Shape Shape::createPyramid(float baseSize, float height, float zPosition)
 {
     Shape shape(8);
 
-    const int cubeSize = 50;
+    shape.vertices.emplace_back((PointF3){-baseSize, 0, -baseSize, 1.f});
+    shape.vertices.emplace_back((PointF3){-baseSize, 0, baseSize, 1.f});
+    shape.vertices.emplace_back((PointF3){baseSize, 0, baseSize, 1.f});
+    shape.vertices.emplace_back((PointF3){baseSize, 0, -baseSize, 1.f});
+    shape.vertices.emplace_back((PointF3){0, -height, 0, 1.f});
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 2, 1}));
+    shape.normalIndex.emplace_back(2);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 3, 2}));
+    shape.normalIndex.emplace_back(2);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 1, 2}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 1}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 3, 0}));
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 2, 3}));
+    shape.normalIndex.emplace_back(6);
+    shape.normalIndex.emplace_back(7);
+    shape.normalIndex.emplace_back(8);
+    shape.normalIndex.emplace_back(9);
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 4, 3}));
+    // shape.normalIndex.emplace_back(3);
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 7, 3}));
+    // shape.normalIndex.emplace_back(3);
+
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 1}));
+    // shape.normalIndex.emplace_back(4);
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 1, 5}));
+    // shape.normalIndex.emplace_back(4);
+
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 6, 5}));
+    // shape.normalIndex.emplace_back(0);
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({2, 5, 1}));
+    // shape.normalIndex.emplace_back(0);
+
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 6, 2}));
+    // shape.normalIndex.emplace_back(1);
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 7, 6}));
+    // shape.normalIndex.emplace_back(1);
+
+    shape.normals.emplace_back((PointF3){1, 0, 0, 0});
+    shape.normals.emplace_back((PointF3){0, 1, 0, 0});
+    shape.normals.emplace_back((PointF3){0, 0, 1, 0});
+
+    shape.normals.emplace_back((PointF3){-1, 0, 0, 0});
+    shape.normals.emplace_back((PointF3){0, -1, 0, 0});
+    shape.normals.emplace_back((PointF3){0, 0, -1, 0});
+
+    shape.normals.emplace_back((PointF3){-1, 1, 0, 0});
+    shape.normals.emplace_back((PointF3){1, 1, 0, 0});
+    shape.normals.emplace_back((PointF3){-1, -1, 0, 0});
+    shape.normals.emplace_back((PointF3){-1, 1, 0, 0});
+
+    shape.transformedNormals.resize(shape.normals.size());
+
+    shape.transformedVertices.resize(shape.vertices.size());
+    shape.projectedVertices.resize(shape.vertices.size());
+
+    shape.translate({0.f, 0.f, zPosition});
+
+    return shape;
+}
+
+Shape Shape::createCube(float cubeSize = 50, float zPosition = 140)
+{
+    Shape shape(8);
 
     shape.vertices.emplace_back((PointF3){-cubeSize, -cubeSize, cubeSize, 1.f});
     shape.vertices.emplace_back((PointF3){cubeSize, -cubeSize, cubeSize, 1.f});

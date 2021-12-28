@@ -29,6 +29,7 @@ public:
     void rotateZ(float angle);
     void rotate(float x, float y, float z);
     void project(float distance);
-    static Shape createCube(float zPosition);
+    static Shape createCube(float cubeSize, float zPosition);
+    static Shape createPyramid(float baseSize = 50, float height = 50, float zPosition = 140);
     void rasterizeTriangle(std::array<PointI, 3> triangle, ImageData &pImageData, Color color);
 };

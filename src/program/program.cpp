@@ -6,7 +6,8 @@
 #include <cmath>
 #include <vector>
 
-#define DEMO_MODE 1
+#define DEMO_MODE 0
+#define CREATE_CHECKER 0
 
 Program::Program()
 {
@@ -26,10 +27,16 @@ void Program::update(void)
 {
     Graphics *graphics = this->graphics.get();
 
-    float zPosition = 125.f;
-    auto square = Shape::createCube(zPosition);
+    float zPosition = 130.f;
+    // auto square = Shape::createCube(50, zPosition);
+    auto square = Shape::createPyramid(50, 100, 130);
 
-    Sprite checker({320, 240}, 20, {0x77, 0x55, 0x33}, {0x77, 0, 0});
+#if CREATE_CHECKER
+    auto tempChecker = Sprite::createChecker({320, 240}, 20, {0x77, 0x55, 0x33}, {0x77, 0, 0});
+#else
+    auto tempChecker = Sprite::createSplit({320, 240}, 115, {0x77, 0x77, 0xAA}, {0, 0x77, 0});
+#endif
+    auto checker = tempChecker.get();
     float rotationZ = 0.0;
     float rotationX = 0.0;
     float rotationY = 0.0;
@@ -50,12 +57,12 @@ void Program::update(void)
 
         if (glfwGetKey(graphics->window, GLFW_KEY_LEFT))
         {
-            translationX += 70.f * deltaTime;
+            translationX -= 70.f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_RIGHT))
         {
-            translationX -= 70.f * deltaTime;
+            translationX += 70.f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_A))
@@ -85,7 +92,7 @@ void Program::update(void)
 #endif
         square.translate({translationX, 0.f, zPosition});
 
-        checker.draw(graphics->imageData);
+        checker->draw(graphics->imageData);
 
         square.rotate(rotationX, rotationY, rotationZ);
         square.draw(graphics->imageData);
