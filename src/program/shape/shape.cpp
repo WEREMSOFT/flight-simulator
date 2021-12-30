@@ -11,60 +11,72 @@
 #define DRAW_NORMALS 0
 #define USE_HACKY_SHADING 0
 #define ANGLE_RATIO 3.1416 * 255
-void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[3])
+
+namespace MathUtils
 {
-    vertDestination.x = vertSource.x * mat[0].x +
-                        vertSource.y * mat[1].x +
-                        vertSource.z * mat[2].x +
-                        vertSource.w * mat[3].x;
-
-    vertDestination.y = vertSource.x * mat[0].y +
-                        vertSource.y * mat[1].y +
-                        vertSource.z * mat[2].y +
-                        vertSource.w * mat[3].y;
-
-    vertDestination.z = vertSource.x * mat[0].z +
-                        vertSource.y * mat[1].z +
-                        vertSource.z * mat[2].z +
-                        vertSource.w * mat[3].z;
-
-    vertDestination.w = vertSource.x * mat[0].w +
-                        vertSource.y * mat[1].w +
-                        vertSource.z * mat[2].w +
-                        vertSource.w * mat[3].w;
-}
-
-void setMatrixAsIdentity(PointF3 matrix[4])
-{
-    for (int i = 0; i < 4; i++)
+    PointF3 dotProduct(PointF3 u, PointF3 v)
     {
-        matrix[i] = {0};
-    }
-    matrix[0].x = 1.0;
-    matrix[1].y = 1.0;
-    matrix[2].z = 1.0;
-    matrix[3].w = 1.0;
-}
-
-void copyMatrix(PointF3 destination[4], PointF3 source[4])
-{
-    for (int i = 0; i < 4; i++)
-    {
-        destination[i] = source[i];
-    }
-}
-
-void multiplyMatrix(PointF3 mat1[4], PointF3 mat2[4])
-{
-    PointF3 returnValue[4] = {0};
-    setMatrixAsIdentity(returnValue);
-
-    for (int i = 0; i < 4; i++)
-    {
-        multiplyVertexByMatrix(returnValue[i], mat1[i], mat2);
+        return {
+            u.y * v.z - u.z * v.y,
+            u.z * v.x - u.x * v.z,
+            u.x * v.y - u.y * v.x};
     }
 
-    copyMatrix(mat1, returnValue);
+    void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[3])
+    {
+        vertDestination.x = vertSource.x * mat[0].x +
+                            vertSource.y * mat[1].x +
+                            vertSource.z * mat[2].x +
+                            vertSource.w * mat[3].x;
+
+        vertDestination.y = vertSource.x * mat[0].y +
+                            vertSource.y * mat[1].y +
+                            vertSource.z * mat[2].y +
+                            vertSource.w * mat[3].y;
+
+        vertDestination.z = vertSource.x * mat[0].z +
+                            vertSource.y * mat[1].z +
+                            vertSource.z * mat[2].z +
+                            vertSource.w * mat[3].z;
+
+        vertDestination.w = vertSource.x * mat[0].w +
+                            vertSource.y * mat[1].w +
+                            vertSource.z * mat[2].w +
+                            vertSource.w * mat[3].w;
+    }
+
+    void setMatrixAsIdentity(PointF3 matrix[4])
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            matrix[i] = {0};
+        }
+        matrix[0].x = 1.0;
+        matrix[1].y = 1.0;
+        matrix[2].z = 1.0;
+        matrix[3].w = 1.0;
+    }
+
+    void copyMatrix(PointF3 destination[4], PointF3 source[4])
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            destination[i] = source[i];
+        }
+    }
+
+    void multiplyMatrix(PointF3 mat1[4], PointF3 mat2[4])
+    {
+        PointF3 returnValue[4] = {0};
+        setMatrixAsIdentity(returnValue);
+
+        for (int i = 0; i < 4; i++)
+        {
+            multiplyVertexByMatrix(returnValue[i], mat1[i], mat2);
+        }
+
+        copyMatrix(mat1, returnValue);
+    }
 }
 
 Shape::Shape(int vertexNum)
@@ -73,10 +85,10 @@ Shape::Shape(int vertexNum)
     transformedVertices.reserve(vertexNum);
     projectedVertices.reserve(vertexNum);
 
-    setMatrixAsIdentity(transformMatrix);
-    setMatrixAsIdentity(rotationMatrix);
-    setMatrixAsIdentity(scaleMatrix);
-    setMatrixAsIdentity(translationMatrix);
+    MathUtils::setMatrixAsIdentity(transformMatrix);
+    MathUtils::setMatrixAsIdentity(rotationMatrix);
+    MathUtils::setMatrixAsIdentity(scaleMatrix);
+    MathUtils::setMatrixAsIdentity(translationMatrix);
 }
 
 Shape::~Shape()
@@ -169,12 +181,12 @@ void Shape::transform()
     auto normalsSize = normals.size();
     for (auto i = 0; i < normalsSize; i++)
     {
-        multiplyVertexByMatrix(transformedNormals[i], normals[i], transformMatrix);
+        MathUtils::multiplyVertexByMatrix(transformedNormals[i], normals[i], transformMatrix);
     }
     auto vertexSize = vertices.size();
     for (auto i = 0; i < vertexSize; i++)
     {
-        multiplyVertexByMatrix(transformedVertices[i], vertices[i], transformMatrix);
+        MathUtils::multiplyVertexByMatrix(transformedVertices[i], vertices[i], transformMatrix);
     }
 }
 
@@ -190,7 +202,7 @@ void Shape::translate(PointF3 translation)
 
 void Shape::scale(PointF3 scale)
 {
-    setMatrixAsIdentity(scaleMatrix);
+    MathUtils::setMatrixAsIdentity(scaleMatrix);
     scaleMatrix[0].x = scale.x;
     scaleMatrix[1].y = scale.y;
     scaleMatrix[2].z = scale.z;
@@ -200,10 +212,10 @@ void Shape::scale(PointF3 scale)
 
 void Shape::recalculateTransformMatrix()
 {
-    setMatrixAsIdentity(transformMatrix);
-    multiplyMatrix(transformMatrix, rotationMatrix);
-    multiplyMatrix(transformMatrix, scaleMatrix);
-    multiplyMatrix(transformMatrix, translationMatrix);
+    MathUtils::setMatrixAsIdentity(transformMatrix);
+    MathUtils::multiplyMatrix(transformMatrix, rotationMatrix);
+    MathUtils::multiplyMatrix(transformMatrix, scaleMatrix);
+    MathUtils::multiplyMatrix(transformMatrix, translationMatrix);
 }
 
 void Shape::rotate(float x, float y, float z)
@@ -229,10 +241,10 @@ void Shape::rotate(float x, float y, float z)
     rotationMatrixZ[2] = {0, 0, 1, 0};
     rotationMatrixZ[3] = {0, 0, 0, 1};
 
-    setMatrixAsIdentity(rotationMatrix);
-    multiplyMatrix(rotationMatrix, rotationMatrixZ);
-    multiplyMatrix(rotationMatrix, rotationMatrixX);
-    multiplyMatrix(rotationMatrix, rotationMatrixY);
+    MathUtils::setMatrixAsIdentity(rotationMatrix);
+    MathUtils::multiplyMatrix(rotationMatrix, rotationMatrixZ);
+    MathUtils::multiplyMatrix(rotationMatrix, rotationMatrixX);
+    MathUtils::multiplyMatrix(rotationMatrix, rotationMatrixY);
 
     isTransformDirty = true;
 }
