@@ -4,6 +4,7 @@
 #include <vector>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <array>
 
 typedef struct
 {
@@ -23,7 +24,7 @@ struct Point3
 };
 
 typedef Point3<float> PointF3;
-typedef Point2<int32_t> PointI;
+typedef Point3<int32_t> PointI;
 typedef Point2<uint32_t> PointU;
 typedef Point2<float> PointF;
 
@@ -40,21 +41,26 @@ public:
     void drawCircleFill(PointI center, double radious, Color color = (Color){0xFF, 0xFF, 0xFF});
     void drawSquare(PointI topLeftCorner, PointI size, Color color = (Color){0xFF, 0xFF, 0xFF});
     void clear(void);
+    void clearZBuffer(void);
     void clearColor(Color color);
     void clearTransparent(void);
     void drawCharacter(PointI topLeftCorner, unsigned int letter, const Color color = (Color){0xFF, 0xFF, 0xFF});
     void printFontTest(void);
     void printString(PointI topLeftCorner, const std::string &string, const Color color = (Color){0xFF, 0xFF, 0xFF});
     void drawLine(PointI pointA, PointI pointB, Color color = (Color){0xFF, 0xFF, 0xFF});
+    void drawLineZ(PointI pointA, PointI pointB, std::array<PointI, 3> triangle, Color color);
     void drawSquareFill(PointI topLeftCorner, PointI size, Color color = (Color){0xFF, 0xFF, 0xFF});
 
-    Color getPixel(PointU point);
-    PointI size;
+    Color getPixel(PointU position);
+    bool putPixelZbuffer(PointI point, int32_t color);
+    int32_t getPixelZBuffer(PointI position);
 
+    PointI size;
     int bufferSize;
     int elementCount;
 
     std::vector<Color> data;
+    std::vector<int32_t> zBuffer;
 
 private:
     uint32_t textureId;

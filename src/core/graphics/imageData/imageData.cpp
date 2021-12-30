@@ -1,7 +1,8 @@
 #include "imagedata.hpp"
 #include <cmath>
 #include <cstring>
-
+#include <array>
+#include <iostream>
 extern char fonts[][5];
 
 ImageData::ImageData(PointI pSize)
@@ -30,10 +31,33 @@ bool ImageData::putPixel(PointI point, Color color)
     return true;
 }
 
+bool ImageData::putPixelZbuffer(PointI point, int32_t color)
+{
+    if (!(point.x > 0 &&
+          point.y > 0 &&
+          point.x < size.x &&
+          point.y < size.y))
+        return false;
+    int position = (point.x + point.y * this->size.x);
+    this->zBuffer[position] = color;
+    return true;
+}
+
 Color ImageData::getPixel(PointU point)
 {
     int position = point.x + point.y * this->size.x;
     return this->data[position];
+}
+
+int32_t ImageData::getPixelZBuffer(PointI point)
+{
+    if (!(point.x > 0 &&
+          point.y > 0 &&
+          point.x < size.x &&
+          point.y < size.y))
+        return INT32_MIN;
+    int position = point.x + point.y * this->size.x;
+    return this->zBuffer[position];
 }
 
 void ImageData::drawCircle(PointI center, double radious, Color color)
@@ -75,6 +99,11 @@ void ImageData::drawCircleFill(PointI center, double radious, Color color)
 void ImageData::clear(void)
 {
     memset(this->data.data(), 0, this->bufferSize);
+}
+
+void ImageData::clearZBuffer(void)
+{
+    std::fill(zBuffer.begin(), zBuffer.end(), INT32_MAX);
 }
 
 void ImageData::clearTransparent(void)
@@ -123,6 +152,67 @@ void ImageData::printString(PointI topLeftCorner, const std::string &string, con
     {
         int charOffset = string[i];
         this->drawCharacter((PointI){topLeftCorner.x + i * 6, topLeftCorner.y}, charOffset, color);
+    }
+}
+
+// z = (z3(x-x1)(y-y2) + z1(x-x2)(y-y3) + z2(x-x3)(y-y1) - z2(x-x1)(y-y3) - z3(x-x2)(y-y1) - z1(x-x3)(y-y2)) / (  (x-x1)(y-y2) +   (x-x2)(y-y3) +   (x-x3)(y-y1) -   (x-x1)(y-y3) -   (x-x2)(y-y1) -   (x-x3)(y-y2))
+
+int32_t getZForTriangle(PointI position, std::array<PointI, 3> triangle)
+{
+    auto x1 = triangle[0].x;
+    auto x2 = triangle[1].x;
+    auto x3 = triangle[2].x;
+
+    auto y1 = triangle[0].y;
+    auto y2 = triangle[1].y;
+    auto y3 = triangle[2].y;
+
+    auto z1 = triangle[0].z;
+    auto z2 = triangle[1].z;
+    auto z3 = triangle[2].z;
+
+    auto x = position.x;
+    auto y = position.y;
+
+    auto divisor = ((x - x1) * (y - y2) + (x - x2) * (y - y3) + (x - x3) * (y - y1) - (x - x1) * (y - y3) - (x - x2) * (y - y1) - (x - x3) * (y - y2));
+
+    int32_t z = (z3 * (x - x1) * (y - y2) + z1 * (x - x2) * (y - y3) + z2 * (x - x3) * (y - y1) - z2 * (x - x1) * (y - y3) - z3 * (x - x2) * (y - y1) - z1 * (x - x3) * (y - y2)) / (divisor != 0 ? divisor : 1);
+    // auto z = (triangle[0].z + triangle[1].z + triangle[2].z) / 3;
+    return z;
+}
+
+void ImageData::drawLineZ(PointI pointA, PointI pointB, std::array<PointI, 3> triangle, Color color)
+{
+
+    int dx = abs(pointB.x - pointA.x), sx = pointA.x < pointB.x ? 1 : -1;
+    int dy = abs(pointB.y - pointA.y), sy = pointA.y < pointB.y ? 1 : -1;
+    int err = (dx > dy ? dx : -dy) / 2, e2;
+
+    while (true)
+    {
+        auto z = getZForTriangle(pointA, triangle);
+        auto zBufferValue = getPixelZBuffer(pointA);
+        if (z < zBufferValue)
+        {
+            putPixelZbuffer(pointA, z);
+            if (!this->putPixel(pointA, color))
+                return;
+        }
+
+        if (pointA.x == pointB.x && pointA.y == pointB.y)
+            break;
+
+        e2 = err;
+        if (e2 > -dx)
+        {
+            err -= dy;
+            pointA.x += sx;
+        }
+        if (e2 < dy)
+        {
+            err += dx;
+            pointA.y += sy;
+        }
     }
 }
 
@@ -177,6 +267,7 @@ void ImageData::createTexture(void)
     Color initialColor = {0};
 
     data = std::vector<Color>(size.x * size.y, initialColor);
+    zBuffer = std::vector<int32_t>(size.x * size.y, INT32_MIN);
 
     glTexImage2D(GL_TEXTURE_2D,
                  0,

@@ -27,9 +27,13 @@ void Program::update(void)
 {
     Graphics *graphics = this->graphics.get();
 
-    float zPosition = 130.f;
+    float zPosition = 200.f;
     // auto square = Shape::createCube(50, zPosition);
-    auto square = Shape::createPyramid(50, 100, 130);
+    // auto shape = Shape::createPyramid(50, 100, 130);
+    Shape shape(1);
+    Shape::appendPiramid(shape, 50, 100, {0, 0, -100});
+    Shape::appendPiramid(shape, 50, 100, {0, 0, 0});
+    Shape::appendPiramid(shape, 50, 100, {0, 0, 100});
 
 #if CREATE_CHECKER
     auto tempChecker = Sprite::createChecker({320, 240}, 20, {0x77, 0x55, 0x33}, {0x77, 0, 0});
@@ -39,11 +43,12 @@ void Program::update(void)
     auto checker = tempChecker.get();
     float rotationZ = 0.0;
     float rotationX = 0.0;
-    float rotationY = 0.0;
+    float rotationY = 0.91;
     float translationX = 0, translationY = 0;
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         deltaTime = getDeltaTime();
+        graphics->imageData.clearZBuffer();
 
         if (glfwGetKey(graphics->window, GLFW_KEY_UP))
         {
@@ -90,12 +95,12 @@ void Program::update(void)
         rotationY += 1.0f * deltaTime;
         rotationZ += 1.0f * deltaTime;
 #endif
-        square.translate({translationX, 0.f, zPosition});
+        shape.translate({translationX, 0.f, zPosition});
 
         checker->draw(graphics->imageData);
 
-        square.rotate(rotationX, rotationY, rotationZ);
-        square.draw(graphics->imageData);
+        shape.rotate(rotationX, rotationY, rotationZ);
+        shape.draw(graphics->imageData);
         printFPS();
 
         graphics->render();
