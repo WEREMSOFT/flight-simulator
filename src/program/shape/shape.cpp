@@ -265,38 +265,7 @@ Shape Shape::createPyramid(float baseSize, float height, float zPosition)
 {
     Shape shape(8);
 
-    shape.vertices.emplace_back((PointF3){-baseSize, 0, -baseSize, 1.f});
-    shape.vertices.emplace_back((PointF3){-baseSize, 0, baseSize, 1.f});
-    shape.vertices.emplace_back((PointF3){baseSize, 0, baseSize, 1.f});
-    shape.vertices.emplace_back((PointF3){baseSize, 0, -baseSize, 1.f});
-    shape.vertices.emplace_back((PointF3){0, -height, 0, 1.f});
-
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 2, 1}));
-    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[0], shape.vertices[1]));
-    shape.normalIndex.emplace_back(shape.normals.size() - 1);
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 3, 2}));
-    shape.normalIndex.emplace_back(shape.normals.size() - 1);
-
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 1, 2}));
-    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[4], shape.vertices[2]));
-    shape.normalIndex.emplace_back(shape.normals.size() - 1);
-
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 0, 1}));
-    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[4], shape.vertices[1]));
-    shape.normalIndex.emplace_back(shape.normals.size() - 1);
-
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 3, 0}));
-    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[4], shape.vertices[0]));
-    shape.normalIndex.emplace_back(shape.normals.size() - 1);
-
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({4, 2, 3}));
-    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[4], shape.vertices[3]));
-    shape.normalIndex.emplace_back(shape.normals.size() - 1);
-
-    shape.transformedNormals.resize(shape.normals.size());
-
-    shape.transformedVertices.resize(shape.vertices.size());
-    shape.projectedVertices.resize(shape.vertices.size());
+    Shape::appendPiramid(shape, baseSize, height, {0, 0, 0});
 
     shape.translate({0.f, 0.f, zPosition});
 
@@ -332,6 +301,70 @@ void Shape::appendPiramid(Shape &shape, float baseSize, float height, PointF3 po
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 2, vertexOffset + 3}));
     shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 3]));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.transformedNormals.resize(shape.normals.size());
+
+    shape.transformedVertices.resize(shape.vertices.size());
+    shape.projectedVertices.resize(shape.vertices.size());
+
+    shape.translate({0.f, 0.f, position.z});
+}
+
+void Shape::appendCube(Shape &shape, float cubeSize, PointF3 position)
+{
+    uint32_t vertexOffset = shape.vertices.size();
+
+    shape.vertices.emplace_back(MathUtils::addVertex({-cubeSize, -cubeSize, cubeSize, 1.f}, position));
+    shape.vertices.emplace_back(MathUtils::addVertex({cubeSize, -cubeSize, cubeSize, 1.f}, position));
+    shape.vertices.emplace_back(MathUtils::addVertex({cubeSize, cubeSize, cubeSize, 1.f}, position));
+    shape.vertices.emplace_back(MathUtils::addVertex({-cubeSize, cubeSize, cubeSize, 1.f}, position));
+
+    shape.vertices.emplace_back(MathUtils::addVertex({-cubeSize, -cubeSize, -cubeSize, 1.f}, position));
+    shape.vertices.emplace_back(MathUtils::addVertex({cubeSize, -cubeSize, -cubeSize, 1.f}, position));
+    shape.vertices.emplace_back(MathUtils::addVertex({cubeSize, cubeSize, -cubeSize, 1.f}, position));
+    shape.vertices.emplace_back(MathUtils::addVertex({-cubeSize, cubeSize, -cubeSize, 1.f}, position));
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 2, vertexOffset + 1}));
+    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[vertexOffset], shape.vertices[vertexOffset + 1]));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 3, vertexOffset + 2}));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 5, vertexOffset + 6}));
+    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 7]));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 6, vertexOffset + 7}));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 4, vertexOffset + 3}));
+    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[vertexOffset], shape.vertices[vertexOffset + 3]));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 7, vertexOffset + 3}));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 0, vertexOffset + 1}));
+    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 5]));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 1, vertexOffset + 5}));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 2, vertexOffset + 6, vertexOffset + 5}));
+    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[vertexOffset + 2], shape.vertices[vertexOffset + 1]));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 2, vertexOffset + 5, vertexOffset + 1}));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 3, vertexOffset + 6, vertexOffset + 2}));
+    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[vertexOffset + 3], shape.vertices[vertexOffset + 2]));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 3, vertexOffset + 7, vertexOffset + 6}));
     shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
     shape.transformedNormals.resize(shape.normals.size());

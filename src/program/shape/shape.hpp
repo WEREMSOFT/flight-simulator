@@ -34,5 +34,5 @@ public:
     static Shape createCube(float cubeSize, float zPosition);
     static Shape createPyramid(float baseSize = 50, float height = 50, float zPosition = 140);
     static void appendPiramid(Shape &shape, float baseSize, float height, PointF3 zPosition);
-    static void appendCube(Shape &shape, float cubeSize, float zPosition);
+    static void appendCube(Shape &shape, float cubeSize, PointF3 zPosition);
 };

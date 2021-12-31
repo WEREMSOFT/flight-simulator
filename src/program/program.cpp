@@ -28,12 +28,16 @@ void Program::update(void)
     Graphics *graphics = this->graphics.get();
 
     float zPosition = 200.f;
+    Shape shape(1);
+    Shape::appendPiramid(shape, 60, 100, {0, -40, 0});
+    Shape::appendCube(shape, 45, {0, 0, 0});
+
     // auto square = Shape::createCube(50, zPosition);
     // auto shape = Shape::createPyramid(50, 100, 130);
-    Shape shape(1);
-    Shape::appendPiramid(shape, 50, 100, {0, 0, -100});
-    Shape::appendPiramid(shape, 50, 100, {0, 0, 0});
-    Shape::appendPiramid(shape, 50, 100, {0, 0, 100});
+    // Shape shape(1);
+    // Shape::appendPiramid(shape, 50, 100, {0, 0, -100});
+    // Shape::appendPiramid(shape, 50, 100, {0, 0, 0});
+    // Shape::appendPiramid(shape, 50, 100, {0, 0, 100});
 
 #if CREATE_CHECKER
     auto tempChecker = Sprite::createChecker({320, 240}, 20, {0x77, 0x55, 0x33}, {0x77, 0, 0});
