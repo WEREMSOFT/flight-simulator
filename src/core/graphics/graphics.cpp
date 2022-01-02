@@ -2,6 +2,26 @@
 #include <iostream>
 #include "../shader/shader.hpp"
 #include "imageData/imagedata.hpp"
+#include "../../imgui/imgui.h"
+#include "../../imgui/imgui_impl_glfw.h"
+#include "../../imgui/imgui_impl_opengl3.h"
+
+void Graphics::initImGUI()
+{
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+
+    // GL 3.0 + GLSL 130
+    const char *glsl_version = "#version 130";
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init(glsl_version);
+}
 
 Graphics::Graphics(int32_t width, int32_t height) : imageData((PointI){width, height})
 {
@@ -14,7 +34,7 @@ Graphics::Graphics(int32_t width, int32_t height) : imageData((PointI){width, he
     glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
     glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
     glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-    glfwWindowHint(GLFW_DOUBLEBUFFER, GL_FALSE);
+    // glfwWindowHint(GLFW_DOUBLEBUFFER, GL_FALSE);
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -72,27 +92,36 @@ Graphics::Graphics(int32_t width, int32_t height) : imageData((PointI){width, he
     glEnableVertexAttribArray(1);
 
     glfwSetCursorPos(this->window, 0, 0);
+    initImGUI();
 }
 
 Graphics::~Graphics()
 {
-    std::cout << "destroying graphcis" << std::endl;
+    std::cout << "destroying graphics" << std::endl;
     glfwSetWindowShouldClose(this->window, true);
     glfwDestroyWindow(this->window);
     glfwTerminate();
 }
+void Graphics::newFrame(void)
+{
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    imageData.clearZBuffer();
+}
 
-void Graphics::render(void)
+void Graphics::endFrame(void)
 {
 
     glClearColor(0, 0, 0, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     imageData.updateTexture();
-
     // render container
     glBindVertexArray(this->VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    glFlush();
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    glfwSwapBuffers(window);
 }

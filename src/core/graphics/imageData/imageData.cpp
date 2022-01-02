@@ -191,6 +191,7 @@ void ImageData::drawLineZ(PointI pointA, PointI pointB, std::array<PointI, 3> tr
     while (true)
     {
         auto z = getZForTriangle(pointA, triangle);
+
         auto zBufferValue = getPixelZBuffer(pointA);
         if (z < zBufferValue)
         {

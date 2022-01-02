@@ -13,7 +13,8 @@ public:
 
     Graphics(int32_t width, int32_t height);
     ~Graphics();
-    void render();
+    void newFrame();
+    void endFrame();
     void updateMouseCoordinates();
 
     GLFWwindow *window;
@@ -23,4 +24,5 @@ private:
     std::unique_ptr<Shader> shaderProgram;
     PointI mousePosition;
     bool mouseRightDown;
+    void initImGUI(void);
 };

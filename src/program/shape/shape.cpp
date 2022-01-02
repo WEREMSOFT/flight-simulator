@@ -326,14 +326,14 @@ void Shape::appendCube(Shape &shape, float cubeSize, PointF3 position)
     shape.vertices.emplace_back(MathUtils::addVertex({-cubeSize, cubeSize, -cubeSize, 1.f}, position));
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 2, vertexOffset + 1}));
-    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[vertexOffset], shape.vertices[vertexOffset + 1]));
+    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[vertexOffset], shape.vertices[vertexOffset + 2]));
     shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 3, vertexOffset + 2}));
     shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 5, vertexOffset + 6}));
-    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 7]));
+    shape.normals.emplace_back(MathUtils::dotProduct(shape.vertices[vertexOffset + 2], shape.vertices[vertexOffset + 1]));
     shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 6, vertexOffset + 7}));

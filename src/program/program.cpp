@@ -5,6 +5,9 @@
 #include <algorithm>
 #include <cmath>
 #include <vector>
+#include "../imgui/imgui.h"
+#include "../imgui/imgui_impl_glfw.h"
+#include "../imgui/imgui_impl_opengl3.h"
 
 #define DEMO_MODE 0
 #define CREATE_CHECKER 0
@@ -20,6 +23,9 @@ Program::Program()
 
 Program::~Program()
 {
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     std::cout << "destroying program" << std::endl;
 }
 
@@ -51,8 +57,9 @@ void Program::update(void)
     float translationX = 0, translationY = 0;
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
+        graphics->newFrame();
+
         deltaTime = getDeltaTime();
-        graphics->imageData.clearZBuffer();
 
         if (glfwGetKey(graphics->window, GLFW_KEY_UP))
         {
@@ -107,7 +114,26 @@ void Program::update(void)
         shape.draw(graphics->imageData);
         printFPS();
 
-        graphics->render();
+        {
+            static float f = 0.0f;
+            static int counter = 0;
+
+            ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
+
+            ImGui::Text("This is some useful text."); // Display some text (you can use a format strings too)
+
+            ImGui::SliderFloat("float", &f, 0.0f, 1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+
+            if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
+                counter++;
+            ImGui::SameLine();
+            ImGui::Text("counter = %d", counter);
+
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::End();
+        }
+
+        graphics->endFrame();
         glfwPollEvents();
     }
 }
