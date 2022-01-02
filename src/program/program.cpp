@@ -12,6 +12,30 @@
 #define DEMO_MODE 0
 #define CREATE_CHECKER 0
 
+void showGUI(Shape &shape, bool &demoMode)
+{
+    static bool showDebugWindow = false;
+    if (ImGui::BeginMainMenuBar())
+    {
+        if (ImGui::BeginMenu("Debug"))
+        {
+            ImGui::MenuItem("Show Debug Window", "", &showDebugWindow);
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+        if (showDebugWindow)
+        {
+            ImGui::Begin("Debug");
+            ImGui::Checkbox("Show Wireframe", &shape.wireFrame);
+            ImGui::Checkbox("Disable BackFaceCuling", &shape.backFaceCulingDisabled);
+            ImGui::Checkbox("Show Vertex Number", &shape.showVertexNumber);
+            ImGui::Checkbox("Draw Normals", &shape.drawNormals);
+            ImGui::Checkbox("Demo Mode", &demoMode);
+            ImGui::End();
+        }
+    }
+}
+
 Program::Program()
 {
     float aspectRatio = 4.0 / 3.0;
@@ -32,18 +56,12 @@ Program::~Program()
 void Program::update(void)
 {
     Graphics *graphics = this->graphics.get();
+    bool demoMode = false;
 
     float zPosition = 200.f;
     Shape shape(1);
     Shape::appendPiramid(shape, 60, 100, {0, -40, 0});
     Shape::appendCube(shape, 45, {0, 0, 0});
-
-    // auto square = Shape::createCube(50, zPosition);
-    // auto shape = Shape::createPyramid(50, 100, 130);
-    // Shape shape(1);
-    // Shape::appendPiramid(shape, 50, 100, {0, 0, -100});
-    // Shape::appendPiramid(shape, 50, 100, {0, 0, 0});
-    // Shape::appendPiramid(shape, 50, 100, {0, 0, 100});
 
 #if CREATE_CHECKER
     auto tempChecker = Sprite::createChecker({320, 240}, 20, {0x77, 0x55, 0x33}, {0x77, 0, 0});
@@ -101,11 +119,14 @@ void Program::update(void)
             rotationX += 1.5f * deltaTime;
         }
 
-#if DEMO_MODE
-        rotationX += 1.0f * deltaTime;
-        rotationY += 1.0f * deltaTime;
-        rotationZ += 1.0f * deltaTime;
-#endif
+        if (demoMode)
+        {
+
+            rotationX += 1.0f * deltaTime;
+            rotationY += 1.0f * deltaTime;
+            rotationZ += 1.0f * deltaTime;
+        }
+
         shape.translate({translationX, 0.f, zPosition});
 
         checker->draw(graphics->imageData);
@@ -113,25 +134,7 @@ void Program::update(void)
         shape.rotate(rotationX, rotationY, rotationZ);
         shape.draw(graphics->imageData);
         printFPS();
-
-        {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text."); // Display some text (you can use a format strings too)
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
-
-            if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
+        showGUI(shape, demoMode);
 
         graphics->endFrame();
         glfwPollEvents();

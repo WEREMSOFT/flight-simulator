@@ -4,6 +4,7 @@
 #include <array>
 #include <algorithm>
 #include <vector>
+#include <string>
 
 #define WIREFRAME 0
 #define BACKFACE_CULlING 1
@@ -137,43 +138,43 @@ void Shape::draw(ImageData &pImageData)
         PointI p2 = {static_cast<int32_t>(projectedVertices[index[1]].x), static_cast<int32_t>(projectedVertices[index[1]].y), static_cast<int32_t>(projectedVertices[index[1]].z)};
         PointI p3 = {static_cast<int32_t>(projectedVertices[index[2]].x), static_cast<int32_t>(projectedVertices[index[2]].y), static_cast<int32_t>(projectedVertices[index[2]].z)};
 
-#if BACKFACE_CULlING
-        if (isBackFace({projectedVertices[index[0]], projectedVertices[index[1]], projectedVertices[index[2]]}))
-            continue;
-#endif
+        if (!backFaceCulingDisabled)
+            if (isBackFace({projectedVertices[index[0]], projectedVertices[index[1]], projectedVertices[index[2]]}))
+                continue;
 
-#if USE_HACKY_SHADING
-        if (isInTheShadow({projectedVertices[index[0]], projectedVertices[index[1]], projectedVertices[index[2]]}))
-            color = {0, 0, 0xFF};
-        else
-            color = {0, 0, 0x99};
-#else
         auto component = angleBetweenVectors(transformedNormals[normalIndex[i]], {1, 1, 1}) / ANGLE_RATIO;
         color = {static_cast<unsigned char>(component),
                  static_cast<unsigned char>(component),
                  static_cast<unsigned char>(component)};
-#endif
-#if WIREFRAME
-        pImageData.drawLine(p1, p2, {255, 0, 0});
-        pImageData.drawLine(p2, p3, {0, 255, 0});
-        pImageData.drawLine(p3, p1, {0, 0, 255});
-#else
-        rasterizeTriangle({p1, p2, p3}, pImageData, color);
-#endif
 
-#if DRAW_NORMALS
+        if (wireFrame)
+        {
+            pImageData.drawLine(p1, p2, {255, 0, 0});
+            pImageData.drawLine(p2, p3, {0, 255, 0});
+            pImageData.drawLine(p3, p1, {0, 0, 255});
+        }
+        else
+        {
+            rasterizeTriangle({p1, p2, p3}, pImageData, color);
+        }
 
-        pImageData.drawLine({p2.x, p2.y}, {p2.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p2.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
-        pImageData.drawLine({p2.x, p2.y}, {p2.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p2.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
-        pImageData.drawLine({p3.x, p3.y}, {p3.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p3.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
+        if (drawNormals)
+        {
+            pImageData.drawLine({p2.x, p2.y}, {p2.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p2.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
+            pImageData.drawLine({p2.x, p2.y}, {p2.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p2.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
+            pImageData.drawLine({p3.x, p3.y}, {p3.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p3.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
+        }
 
-#endif
-
-#if SHOW_VERTEX_NUMBER
-        pImageData.drawCharacter(p1, index[0] + '0');
-        pImageData.drawCharacter(p2, index[1] + '0');
-        pImageData.drawCharacter(p3, index[2] + '0');
-#endif
+        if (showVertexNumber)
+        {
+            char numberString[50] = {0};
+            snprintf(numberString, 50, "%d", index[0]);
+            pImageData.printString(p1, numberString);
+            snprintf(numberString, 50, "%d", index[1]);
+            pImageData.printString(p2, numberString);
+            snprintf(numberString, 50, "%d", index[2]);
+            pImageData.printString(p3, numberString);
+        }
     }
 }
 
