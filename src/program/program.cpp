@@ -8,8 +8,8 @@
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_glfw.h"
 #include "../imgui/imgui_impl_opengl3.h"
+#include "../core/gameObject/gameObject.hpp"
 
-#define DEMO_MODE 0
 #define CREATE_CHECKER 0
 
 void showGUI(Shape &shape, bool &demoMode)
@@ -55,6 +55,12 @@ Program::~Program()
 
 void Program::update(void)
 {
+    GameObject parent;
+    GameObject child;
+    parent.children.emplace_back(child);
+
+    parent.update(10.0);
+
     Graphics *graphics = this->graphics.get();
     bool demoMode = false;
 

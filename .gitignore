@@ -2,3 +2,4 @@
 *.opp
 .vscode
 bin
+build
