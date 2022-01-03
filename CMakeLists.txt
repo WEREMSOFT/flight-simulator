@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
-SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_REQUIRED ON)
 set(VERBOSE 1)
