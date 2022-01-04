@@ -5,9 +5,9 @@ set(VERBOSE 1)
 
 
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
-file(GLOB_RECURSE SRC *.cpp)
-file(GLOB_RECURSE HDR *.hpp)
-file(GLOB_RECURSE SRC_C *.c)
+file(GLOB_RECURSE SRC src/*.cpp)
+file(GLOB_RECURSE HDR src/*.hpp)
+file(GLOB_RECURSE SRC_C libs/*.c src/*.c)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Ilibs/include -Ilibs/GLAD/include")
 
