@@ -67,7 +67,7 @@ void ImageData::drawCircle(PointI center, double radious, Color color)
         for (int j = center.y - radious; j <= center.y + radious; j++)
         {
             if (floor(sqrt(pow(center.x - i, 2) + pow(center.y - j, 2))) == radious)
-                this->putPixel((PointI){i, j}, color);
+                this->putPixel({i, j}, color);
         }
     }
 }
@@ -79,7 +79,7 @@ void ImageData::drawSquare(PointI topLeftCorner, PointI size, Color color)
         for (int j = topLeftCorner.y; j <= topLeftCorner.y + size.y; j++)
         {
             if (j == topLeftCorner.y || j == topLeftCorner.y + size.y || i == topLeftCorner.x || i == topLeftCorner.x + size.x)
-                this->putPixel((PointI){i, j}, color);
+                this->putPixel({i, j}, color);
         }
     }
 }
@@ -91,7 +91,7 @@ void ImageData::drawCircleFill(PointI center, double radious, Color color)
         for (int j = center.y - radious; j <= center.y + radious; j++)
         {
             if (floor(sqrt(pow(center.x - i, 2) + pow(center.y - j, 2))) == radious)
-                this->putPixel((PointI){i, j}, color);
+                this->putPixel({i, j}, color);
         }
     }
 }
@@ -111,7 +111,7 @@ void ImageData::clearTransparent(void)
     const int limit = this->size.x * this->size.y;
     for (int i = 0; i < limit; i++)
     {
-        this->data[i] = (Color){0xFF, 0, 0xFF};
+        this->data[i] = {0xFF, 0, 0xFF};
     }
 }
 
@@ -131,7 +131,7 @@ void ImageData::drawCharacter(PointI topLeftCorner, unsigned int letter, Color c
         for (int j = 0; j <= 8; j++)
         {
             if (fonts[letter][i] & (0b1000000 >> j))
-                this->putPixel((PointI){topLeftCorner.x + j, topLeftCorner.y + i}, color);
+                this->putPixel({topLeftCorner.x + j, topLeftCorner.y + i}, color);
         }
     }
 }
@@ -141,7 +141,7 @@ void ImageData::printFontTest(void)
     static Color color = {0xff, 0xff, 0xff};
     for (int i = 0; i < 255; i++)
     {
-        this->drawCharacter((PointI){i * 6, 100}, i, color);
+        this->drawCharacter({i * 6, 100}, i, color);
     }
 }
 
@@ -151,7 +151,7 @@ void ImageData::printString(PointI topLeftCorner, const std::string &string, con
     for (int32_t i = 0; i < stringLen; i++)
     {
         int charOffset = string[i];
-        this->drawCharacter((PointI){topLeftCorner.x + i * 6, topLeftCorner.y}, charOffset, color);
+        this->drawCharacter({topLeftCorner.x + i * 6, topLeftCorner.y}, charOffset, color);
     }
 }
 
@@ -251,7 +251,7 @@ void ImageData::drawSquareFill(PointI topLeftCorner, PointI size, Color color)
     {
         for (int j = topLeftCorner.y; j <= topLeftCorner.y + size.y; j++)
         {
-            this->putPixel((PointI){i, j}, color);
+            this->putPixel({i, j}, color);
         }
     }
 }
@@ -289,15 +289,15 @@ void ImageData::updateTexture(void)
 
 inline PointI pointFToPointI(PointF source)
 {
-    return (PointI){(int)source.x, (int)source.y};
+    return {(int)source.x, (int)source.y};
 }
 
 inline PointU pointIToPointU(PointI source)
 {
-    return (PointU){(unsigned int)abs(source.x), (unsigned int)abs(source.y)};
+    return {(unsigned int)abs(source.x), (unsigned int)abs(source.y)};
 }
 
 inline PointU pointFToPointU(PointF source)
 {
-    return (PointU){(unsigned int)abs((int)round(source.x)), (unsigned int)abs((int)round(source.y))};
+    return {(unsigned int)abs((int)round(source.x)), (unsigned int)abs((int)round(source.y))};
 }

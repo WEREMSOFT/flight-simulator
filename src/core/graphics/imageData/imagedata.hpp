@@ -36,20 +36,20 @@ public:
 
     void init(void);
     void updateTexture(void);
-    bool putPixel(PointI point, Color color = (Color){0xFF, 0xFF, 0xFF});
-    void drawCircle(PointI center, double radious, Color color = (Color){0xFF, 0xFF, 0xFF});
-    void drawCircleFill(PointI center, double radious, Color color = (Color){0xFF, 0xFF, 0xFF});
-    void drawSquare(PointI topLeftCorner, PointI size, Color color = (Color){0xFF, 0xFF, 0xFF});
+    bool putPixel(PointI point, Color color = {0xFF, 0xFF, 0xFF});
+    void drawCircle(PointI center, double radious, Color color = {0xFF, 0xFF, 0xFF});
+    void drawCircleFill(PointI center, double radious, Color color = {0xFF, 0xFF, 0xFF});
+    void drawSquare(PointI topLeftCorner, PointI size, Color color = {0xFF, 0xFF, 0xFF});
     void clear(void);
     void clearZBuffer(void);
     void clearColor(Color color);
     void clearTransparent(void);
-    void drawCharacter(PointI topLeftCorner, unsigned int letter, const Color color = (Color){0xFF, 0xFF, 0xFF});
+    void drawCharacter(PointI topLeftCorner, unsigned int letter, const Color color = {0xFF, 0xFF, 0xFF});
     void printFontTest(void);
-    void printString(PointI topLeftCorner, const std::string &string, const Color color = (Color){0xFF, 0xFF, 0xFF});
-    void drawLine(PointI pointA, PointI pointB, Color color = (Color){0xFF, 0xFF, 0xFF});
+    void printString(PointI topLeftCorner, const std::string &string, const Color color = {0xFF, 0xFF, 0xFF});
+    void drawLine(PointI pointA, PointI pointB, Color color = {0xFF, 0xFF, 0xFF});
     void drawLineZ(PointI pointA, PointI pointB, std::array<PointI, 3> triangle, Color color);
-    void drawSquareFill(PointI topLeftCorner, PointI size, Color color = (Color){0xFF, 0xFF, 0xFF});
+    void drawSquareFill(PointI topLeftCorner, PointI size, Color color = {0xFF, 0xFF, 0xFF});
 
     Color getPixel(PointU position);
     bool putPixelZbuffer(PointI point, int32_t color);

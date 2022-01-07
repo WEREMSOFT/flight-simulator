@@ -167,7 +167,7 @@ void Program::printFPS()
     {
         char text[1000] = {0};
         snprintf(text, 1000, "fps: %d", (int)floor(avg));
-        this->graphics->imageData.printString((PointI){100, 10}, text, (Color){0, 0xff, 0xff});
+        this->graphics->imageData.printString({100, 10}, text, {0, 0xff, 0xff});
     }
 }
 
