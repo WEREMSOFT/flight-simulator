@@ -1,5 +1,5 @@
 SRC := $(shell find src -name *.cpp)
-SRC_C := $(shell find libs -name *.c)
+SRC_C := $(shell find libs -name *.c) $(shell find src -name *.c) 
 OBJ := $(patsubst %.cpp,%.opp,$(SRC))
 OBJ_C := $(patsubst %.c,%.o,$(SRC_C))
 CC := clang
