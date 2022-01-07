@@ -8,7 +8,8 @@
 Sprite::Sprite(std::string fileName)
 {
     int nrChannels;
-    imageData = std::make_unique<ImageData>((PointI){0});
+    PointI p = { 0, 0, 0, 0 };
+    imageData = std::make_unique<ImageData>(p);
 
     auto im = imageData.get();
     auto vectorPointer = (Color *)stbi_load(fileName.c_str(), &im->size.x, &im->size.y, &nrChannels, 0);
@@ -29,11 +30,12 @@ Sprite::Sprite(std::string fileName)
 
 Sprite::Sprite(PointI size)
 {
-    imageData = std::make_unique<ImageData>((PointI){0});
+    PointI p = { 0 };
+    imageData = std::make_unique<ImageData>(p);
     auto im = imageData.get();
 
     im->size = size;
-    im->data = std::vector<Color>(im->size.x * im->size.y, (Color){0xFF, 0, 0xFF});
+    im->data = std::vector<Color>(im->size.x * im->size.y, {0xFF, 0, 0xFF});
 }
 
 std::unique_ptr<Sprite> Sprite::createChecker(PointI size, int checkerWidth, Color color1, Color color2)
@@ -89,7 +91,7 @@ void Sprite::draw(ImageData &pImageData)
         for (int32_t j = 0; j < im.size.y; j++)
         {
             Color color = im.data[j * im.size.x + i];
-            pImageData.putPixel((PointI){static_cast<int32_t>(position.x) + i, static_cast<int32_t>(position.y) + j}, color);
+            pImageData.putPixel({static_cast<int32_t>(position.x) + i, static_cast<int32_t>(position.y) + j}, color);
         }
     }
 }

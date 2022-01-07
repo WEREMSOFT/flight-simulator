@@ -379,16 +379,16 @@ void Shape::appendCube(Shape &shape, float cubeSize, PointF3 position)
 Shape Shape::createCube(float cubeSize = 50, float zPosition = 140)
 {
     Shape shape(8);
+    
+    shape.vertices.push_back({-cubeSize, -cubeSize, cubeSize, 1.f});
+    shape.vertices.push_back({cubeSize, -cubeSize, cubeSize, 1.f});
+    shape.vertices.push_back({cubeSize, cubeSize, cubeSize, 1.f});
+    shape.vertices.push_back({-cubeSize, cubeSize, cubeSize, 1.f});
 
-    shape.vertices.emplace_back((PointF3){-cubeSize, -cubeSize, cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){cubeSize, -cubeSize, cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, cubeSize, 1.f});
-
-    shape.vertices.emplace_back((PointF3){-cubeSize, -cubeSize, -cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){cubeSize, -cubeSize, -cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){cubeSize, cubeSize, -cubeSize, 1.f});
-    shape.vertices.emplace_back((PointF3){-cubeSize, cubeSize, -cubeSize, 1.f});
+    shape.vertices.push_back({-cubeSize, -cubeSize, -cubeSize, 1.f});
+    shape.vertices.push_back({cubeSize, -cubeSize, -cubeSize, 1.f});
+    shape.vertices.push_back({cubeSize, cubeSize, -cubeSize, 1.f});
+    shape.vertices.push_back({-cubeSize, cubeSize, -cubeSize, 1.f});
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({0, 2, 1}));
     shape.normalIndex.emplace_back(2);
@@ -420,13 +420,13 @@ Shape Shape::createCube(float cubeSize = 50, float zPosition = 140)
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({3, 7, 6}));
     shape.normalIndex.emplace_back(1);
 
-    shape.normals.emplace_back((PointF3){1, 0, 0, 0});
-    shape.normals.emplace_back((PointF3){0, 1, 0, 0});
-    shape.normals.emplace_back((PointF3){0, 0, 1, 0});
+    shape.normals.push_back({1, 0, 0, 0});
+    shape.normals.push_back({0, 1, 0, 0});
+    shape.normals.push_back({0, 0, 1, 0});
 
-    shape.normals.emplace_back((PointF3){-1, 0, 0, 0});
-    shape.normals.emplace_back((PointF3){0, -1, 0, 0});
-    shape.normals.emplace_back((PointF3){0, 0, -1, 0});
+    shape.normals.push_back({-1, 0, 0, 0});
+    shape.normals.push_back({0, -1, 0, 0});
+    shape.normals.push_back({0, 0, -1, 0});
 
     shape.transformedNormals.resize(shape.normals.size());
 

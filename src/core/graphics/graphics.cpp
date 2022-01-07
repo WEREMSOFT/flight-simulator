@@ -23,7 +23,7 @@ void Graphics::initImGUI()
     ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
-Graphics::Graphics(int32_t width, int32_t height) : imageData((PointI){width, height})
+Graphics::Graphics(int32_t width, int32_t height) : imageData({width, height})
 {
 
     glfwInit();
