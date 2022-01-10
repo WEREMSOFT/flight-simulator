@@ -178,7 +178,7 @@ void Shape::draw(ImageData &pImageData)
 
         if (drawNormals)
         {
-            pImageData.drawLine({p2.x, p2.y}, {p2.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p2.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
+            pImageData.drawLine({p1.x, p1.y}, {p1.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p1.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
             pImageData.drawLine({p2.x, p2.y}, {p2.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p2.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
             pImageData.drawLine({p3.x, p3.y}, {p3.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p3.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
         }
@@ -409,69 +409,69 @@ void Shape::appendCube(Shape &shape, float cubeSize, PointF3 position)
                 MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 6]))));
     shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 4, vertexOffset + 3}));
-    // shape.normals.emplace_back(
-    //     MathUtils::normalize(
-    //         MathUtils::dotProduct(
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 0], shape.vertices[vertexOffset + 4]),
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 0], shape.vertices[vertexOffset + 3]))));
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 4, vertexOffset + 3}));
+    shape.normals.emplace_back(
+        MathUtils::normalize(
+            MathUtils::dotProduct(
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 0], shape.vertices[vertexOffset + 3]),
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 0], shape.vertices[vertexOffset + 4]))));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 7, vertexOffset + 3}));
-    // shape.normals.emplace_back(
-    //     MathUtils::normalize(
-    //         MathUtils::dotProduct(
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 7]),
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 3]))));
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 7, vertexOffset + 3}));
+    shape.normals.emplace_back(
+        MathUtils::normalize(
+            MathUtils::dotProduct(
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 3]),
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 7]))));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 0, vertexOffset + 1}));
-    // shape.normals.emplace_back(
-    //     MathUtils::normalize(
-    //         MathUtils::dotProduct(
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 0]),
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 1]))));
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 0, vertexOffset + 1}));
+    shape.normals.emplace_back(
+        MathUtils::normalize(
+            MathUtils::dotProduct(
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 0]),
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 1]))));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 1, vertexOffset + 5}));
-    // shape.normals.emplace_back(
-    //     MathUtils::normalize(
-    //         MathUtils::dotProduct(
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 1]),
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 5]))));
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 1, vertexOffset + 5}));
+    shape.normals.emplace_back(
+        MathUtils::normalize(
+            MathUtils::dotProduct(
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 1]),
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 4], shape.vertices[vertexOffset + 5]))));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 2, vertexOffset + 6, vertexOffset + 5}));
-    // shape.normals.emplace_back(
-    //     MathUtils::normalize(
-    //         MathUtils::dotProduct(
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 2], shape.vertices[vertexOffset + 6]),
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 2], shape.vertices[vertexOffset + 5]))));
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 2, vertexOffset + 6, vertexOffset + 5}));
+    shape.normals.emplace_back(
+        MathUtils::normalize(
+            MathUtils::dotProduct(
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 2], shape.vertices[vertexOffset + 5]),
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 2], shape.vertices[vertexOffset + 6]))));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 2, vertexOffset + 5, vertexOffset + 1}));
-    // shape.normals.emplace_back(
-    //     MathUtils::normalize(
-    //         MathUtils::dotProduct(
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 2], shape.vertices[vertexOffset + 5]),
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 2], shape.vertices[vertexOffset + 1]))));
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 2, vertexOffset + 5, vertexOffset + 1}));
+    shape.normals.emplace_back(
+        MathUtils::normalize(
+            MathUtils::dotProduct(
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 2], shape.vertices[vertexOffset + 1]),
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 2], shape.vertices[vertexOffset + 5]))));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 3, vertexOffset + 6, vertexOffset + 2}));
-    // shape.normals.emplace_back(
-    //     MathUtils::normalize(
-    //         MathUtils::dotProduct(
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 3], shape.vertices[vertexOffset + 6]),
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 3], shape.vertices[vertexOffset + 2]))));
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 3, vertexOffset + 6, vertexOffset + 2}));
+    shape.normals.emplace_back(
+        MathUtils::normalize(
+            MathUtils::dotProduct(
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 3], shape.vertices[vertexOffset + 6]),
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 3], shape.vertices[vertexOffset + 2]))));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 3, vertexOffset + 7, vertexOffset + 6}));
-    // shape.normals.emplace_back(
-    //     MathUtils::normalize(
-    //         MathUtils::dotProduct(
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 3], shape.vertices[vertexOffset + 7]),
-    //             MathUtils::substractVertex(shape.vertices[vertexOffset + 3], shape.vertices[vertexOffset + 6]))));
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 3, vertexOffset + 7, vertexOffset + 6}));
+    shape.normals.emplace_back(
+        MathUtils::normalize(
+            MathUtils::dotProduct(
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 3], shape.vertices[vertexOffset + 7]),
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 3], shape.vertices[vertexOffset + 6]))));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
     shape.transformedNormals.resize(shape.normals.size());
 
