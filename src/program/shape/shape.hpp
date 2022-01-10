@@ -14,10 +14,10 @@ class Shape
     bool isTransformDirty = true;
 
 public:
-    bool wireFrame = true;
-    bool backFaceCulingDisabled = true;
+    bool wireFrame = false;
+    bool backFaceCulingDisabled = false;
     bool showVertexNumber = false;
-    bool drawNormals = true;
+    bool drawNormals = false;
     std::vector<PointF3> vertices;
     std::vector<PointF3> normals;
     std::vector<std::array<uint32_t, 3>> vertexIndex;
