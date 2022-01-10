@@ -14,7 +14,7 @@
 
 void showGUI(Shape &shape, bool &demoMode)
 {
-    static bool showDebugWindow = false;
+    static bool showDebugWindow = true;
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("Debug"))
@@ -66,7 +66,7 @@ void Program::update(void)
 
     float zPosition = 200.f;
     Shape shape(1);
-    Shape::appendPiramid(shape, 60, 100, {0, -40, 0});
+    // Shape::appendPiramid(shape, 60, 100, {0, -40, 0});
     Shape::appendCube(shape, 45, {0, 0, 0});
 
 #if CREATE_CHECKER

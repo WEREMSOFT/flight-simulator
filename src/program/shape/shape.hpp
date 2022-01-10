@@ -14,10 +14,10 @@ class Shape
     bool isTransformDirty = true;
 
 public:
-    bool wireFrame = false;
-    bool backFaceCulingDisabled = false;
+    bool wireFrame = true;
+    bool backFaceCulingDisabled = true;
     bool showVertexNumber = false;
-    bool drawNormals = false;
+    bool drawNormals = true;
     std::vector<PointF3> vertices;
     std::vector<PointF3> normals;
     std::vector<std::array<uint32_t, 3>> vertexIndex;
@@ -39,4 +39,5 @@ public:
     static Shape createPyramid(float baseSize = 50, float height = 50, float zPosition = 140);
     static void appendPiramid(Shape &shape, float baseSize, float height, PointF3 zPosition);
     static void appendCube(Shape &shape, float cubeSize, PointF3 zPosition);
+    static void appendQuad(Shape &shape, float cubeSize, PointF3 zPosition);
 };
