@@ -72,7 +72,13 @@ void Program::update(void)
 
     Shape::appendPiramid(shape, 60, 60, {0, -40, 0});
     Shape::appendCube(shape, 45, {0, 0, 0});
-    Shape::appendWall(wall, 80, {0, 0, 0});
+    Shape::appendCube(wall, 10, {0, 0, 0});
+    Shape::appendCube(wall, 10, {23, 0, 0});
+    Shape::appendCube(wall, 10, {-23, 0, 0});
+    Shape::appendCube(wall, 10, {0, 23, 0});
+    Shape::appendCube(wall, 10, {0, -23, 0});
+
+    wall.translate({0, 0.f, 200});
 
 #if CREATE_CHECKER
     auto tempChecker = Sprite::createChecker({320, 240}, 20, {0x77, 0x55, 0x33}, {0x77, 0, 0});
@@ -141,16 +147,13 @@ void Program::update(void)
         }
 
         shape.translate({translationX, 0.f, zPosition});
-        wall.translate({0, 0.f, zNear});
 
         checker->draw(graphics->imageData);
 
         shape.rotate(rotationX, rotationY, rotationZ);
+        wall.rotate(rotationX, rotationY, rotationZ);
         shape.draw(graphics->imageData, zNear);
-        // wall.draw(graphics->imageData, -1000);
-        // distance * triangle[i].x / triangle[i].z + 160
-        // int zLine = 500;
-        // graphics->imageData.drawLine({static_cast<int>(100 * -200 / (zNear + zLine) + 100), static_cast<int>(100 * 0 / (zNear + zLine) + 160)}, {static_cast<int>(100 * 800 / (zNear + zLine) + 100), static_cast<int>(0 / (zNear + zLine) + 160)});
+        wall.draw(graphics->imageData, zNear);
         printFPS();
         char zNearPosition[100] = {0};
         snprintf(zNearPosition, 100, "zNear: %f", zNear);

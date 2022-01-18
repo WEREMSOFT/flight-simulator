@@ -55,27 +55,6 @@ namespace MathUtils
         return addVertex(addVertex(diff, planePoint), scaleVector(lineVector, -dotProduct(diff, planeNormal) / dotProduct(lineVector, planeNormal)));
     }
 
-    PointF3 linePlaneIntersection(PointF3 ray, PointF3 rayOrigin, PointF3 normal, PointF3 coord)
-    {
-
-        // calculate plane
-        float d = dotProduct(normal, coord);
-
-        if (dotProduct(normal, ray))
-        {
-            return {0}; // avoid divide by zero
-        }
-
-        // Compute the t value for the directed line ray intersecting the plane
-        float t = (d - dotProduct(normal, rayOrigin)) / dotProduct(normal, ray);
-
-        // scale the ray by t
-        PointF3 newRay = scaleVector(ray, t);
-
-        // calc contact point
-        return addVertex(rayOrigin, newRay);
-    }
-
     void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[4])
     {
         vertDestination.x = vertSource.x * mat[0].x +
@@ -240,15 +219,22 @@ void Shape::draw(ImageData &pImageData, float zNear)
         isTransformDirty = false;
     }
 
-    int i = 0;
+    int i = -1;
     for (auto &triangle : projectedVerticesLocal)
     {
+        i++;
         if (!backFaceCulingDisabled)
             if (isBackFace(transformedNormals[localNormalIndex[i]]))
             {
-                i++;
                 continue;
             }
+
+        if (drawNormals)
+        {
+            pImageData.drawLine({triangle[0].x, triangle[0].y}, {triangle[0].x + static_cast<int>(transformedNormals[localNormalIndex[i]].x * 10), triangle[0].y + static_cast<int>(transformedNormals[localNormalIndex[i]].y * 10)});
+            pImageData.drawLine({triangle[1].x, triangle[1].y}, {triangle[1].x + static_cast<int>(transformedNormals[localNormalIndex[i]].x * 10), triangle[1].y + static_cast<int>(transformedNormals[localNormalIndex[i]].y * 10)});
+            pImageData.drawLine({triangle[2].x, triangle[2].y}, {triangle[2].x + static_cast<int>(transformedNormals[localNormalIndex[i]].x * 10), triangle[2].y + static_cast<int>(transformedNormals[localNormalIndex[i]].y * 10)});
+        }
 
         if (wireFrame)
         {
@@ -260,70 +246,20 @@ void Shape::draw(ImageData &pImageData, float zNear)
         Color color = {0, 0, 255};
         auto component = angleBetweenVectors(transformedNormals[localNormalIndex[i]], {1, 1, 1}) / ANGLE_RATIO;
         color = {static_cast<unsigned char>(component),
-                 static_cast<unsigned char>(component),
-                 static_cast<unsigned char>(component)};
+                 static_cast<unsigned char>(0),
+                 static_cast<unsigned char>(255 - component)};
         rasterizeTriangle(triangle, pImageData, color);
         if (showVertexNumber)
         {
             char numberString[50] = {0};
-            snprintf(numberString, 50, "%d", vertexIndex[i]);
+            snprintf(numberString, 50, "%d", i);
             pImageData.printString(triangle[0], numberString);
-            snprintf(numberString, 50, "%d", vertexIndex[i]);
+            snprintf(numberString, 50, "%d", i);
             pImageData.printString(triangle[1], numberString);
-            snprintf(numberString, 50, "%d", vertexIndex[i]);
+            snprintf(numberString, 50, "%d", i);
             pImageData.printString(triangle[2], numberString);
         }
-        i++;
     }
-
-    /*
-    auto size = vertexIndex.size();
-    Color color = {0, 0, 255};
-    for (int i = 0; i < size; i++)
-    {
-        auto index = vertexIndex[i];
-        PointI p1 = {static_cast<int32_t>(projectedVertices[index[0]].x), static_cast<int32_t>(projectedVertices[index[0]].y), static_cast<int32_t>(projectedVertices[index[0]].z)};
-        PointI p2 = {static_cast<int32_t>(projectedVertices[index[1]].x), static_cast<int32_t>(projectedVertices[index[1]].y), static_cast<int32_t>(projectedVertices[index[1]].z)};
-        PointI p3 = {static_cast<int32_t>(projectedVertices[index[2]].x), static_cast<int32_t>(projectedVertices[index[2]].y), static_cast<int32_t>(projectedVertices[index[2]].z)};
-
-        if (!backFaceCulingDisabled)
-            if (isBackFace({projectedVertices[index[0]], projectedVertices[index[1]], projectedVertices[index[2]]}))
-                continue;
-
-        auto component = angleBetweenVectors(transformedNormals[normalIndex[i]], {1, 1, 1}) / ANGLE_RATIO;
-        color = {static_cast<unsigned char>(component),
-                 static_cast<unsigned char>(component),
-                 static_cast<unsigned char>(component)};
-
-        if (wireFrame)
-        {
-            pImageData.drawLine(p1, p2, {255, 0, 0});
-            pImageData.drawLine(p2, p3, {0, 255, 0});
-            pImageData.drawLine(p3, p1, {0, 0, 255});
-        }
-        else
-        {
-            rasterizeTriangle({p1, p2, p3}, pImageData, color);
-        }
-
-        if (drawNormals)
-        {
-            pImageData.drawLine({p1.x, p1.y}, {p1.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p1.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
-            pImageData.drawLine({p2.x, p2.y}, {p2.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p2.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
-            pImageData.drawLine({p3.x, p3.y}, {p3.x + static_cast<int>(transformedNormals[normalIndex[i]].x * 10), p3.y + static_cast<int>(transformedNormals[normalIndex[i]].y * 10)});
-        }
-
-        if (showVertexNumber)
-        {
-            char numberString[50] = {0};
-            snprintf(numberString, 50, "%d", index[0]);
-            pImageData.printString(p1, numberString);
-            snprintf(numberString, 50, "%d", index[1]);
-            pImageData.printString(p2, numberString);
-            snprintf(numberString, 50, "%d", index[2]);
-            pImageData.printString(p3, numberString);
-        }
-    }*/
 }
 
 void Shape::transform()

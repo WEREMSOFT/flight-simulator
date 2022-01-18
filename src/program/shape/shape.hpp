@@ -20,7 +20,7 @@ class Shape
 
 public:
     bool wireFrame = false;
-    bool backFaceCulingDisabled = true;
+    bool backFaceCulingDisabled = false;
     bool showVertexNumber = false;
     bool drawNormals = false;
     std::vector<PointF3> vertices;
