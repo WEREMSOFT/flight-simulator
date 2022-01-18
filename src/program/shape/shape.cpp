@@ -7,11 +7,6 @@
 #include <string>
 #include <list>
 
-#define WIREFRAME 0
-#define BACKFACE_CULlING 1
-#define SHOW_VERTEX_NUMBER 0
-#define DRAW_NORMALS 0
-#define USE_HACKY_SHADING 0
 #define ANGLE_RATIO 3.1416 * 255
 
 namespace MathUtils
@@ -37,6 +32,11 @@ namespace MathUtils
                 u.x * v.y - u.y * v.x, 0};
     }
 
+    double dotProduct(PointF3 a, PointF3 b)
+    {
+        return a.x * b.x + a.y * b.y + a.z * b.z;
+    }
+
     float length(PointF3 v)
     {
         return sqrt(pow(v.x, 2) + pow(v.y, 2) + pow(v.z, 2));
@@ -48,7 +48,35 @@ namespace MathUtils
         return {v.x / length, v.y / length, v.z / length};
     }
 
-    void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[3])
+    PointF3 intersectionPoint(PointF3 lineVector, PointF3 linePoint, PointF3 planeNormal, PointF3 planePoint)
+    {
+        PointF3 diff = substractVertex(linePoint, planePoint);
+
+        return addVertex(addVertex(diff, planePoint), scaleVector(lineVector, -dotProduct(diff, planeNormal) / dotProduct(lineVector, planeNormal)));
+    }
+
+    PointF3 linePlaneIntersection(PointF3 ray, PointF3 rayOrigin, PointF3 normal, PointF3 coord)
+    {
+
+        // calculate plane
+        float d = dotProduct(normal, coord);
+
+        if (dotProduct(normal, ray))
+        {
+            return {0}; // avoid divide by zero
+        }
+
+        // Compute the t value for the directed line ray intersecting the plane
+        float t = (d - dotProduct(normal, rayOrigin)) / dotProduct(normal, ray);
+
+        // scale the ray by t
+        PointF3 newRay = scaleVector(ray, t);
+
+        // calc contact point
+        return addVertex(rayOrigin, newRay);
+    }
+
+    void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[4])
     {
         vertDestination.x = vertSource.x * mat[0].x +
                             vertSource.y * mat[1].x +
@@ -129,28 +157,132 @@ float angleBetweenVectors(PointF3 a, PointF3 b)
     return acos(dot / sqrt(lenSq1 * lenSq2));
 }
 
-bool isBackFace(std::array<PointF3, 3> triangle)
+bool isBackFace(TriangleI triangle)
 {
     auto z = (triangle[1].x - triangle[0].x) * (triangle[2].y - triangle[0].y) - (triangle[1].y - triangle[0].y) * (triangle[2].x - triangle[0].x);
     return z < 0;
 }
 
-bool isInTheShadow(std::array<PointF3, 3> triangle)
+bool isInTheShadow(TriangleF triangle)
 {
     auto z = (triangle[1].y - triangle[0].y) * (triangle[2].z - triangle[0].z) - (triangle[1].z - triangle[0].z) * (triangle[2].y - triangle[0].y);
     return z > 0;
 }
 
-void Shape::draw(ImageData &pImageData)
+bool sortTriangleZ(PointF3 a, PointF3 b)
 {
+    return a.z > b.z;
+}
+
+void Shape::clipTriangle(TrianglesF &triangles, TriangleF triangle, float z, std::vector<uint32_t> &localNormalIndex, int32_t normalIndex)
+{
+    int vertexInside = 0;
+    for (auto &vertex : triangle)
+    {
+        if (vertex.z >= z)
+            vertexInside++;
+    }
+
+    if (vertexInside == 0)
+        return;
+
+    if (vertexInside == 3)
+    {
+        triangles.emplace_back(triangle);
+        localNormalIndex.emplace_back(normalIndex);
+        return;
+    }
+
+    if (vertexInside == 1)
+    {
+        std::sort(triangle.begin(), triangle.end(), sortTriangleZ);
+        triangle[1] = MathUtils::intersectionPoint(MathUtils::substractVertex(triangle[0], triangle[1]), triangle[1], {0, 0, 1}, {0, 0, z});
+        triangle[2] = MathUtils::intersectionPoint(MathUtils::substractVertex(triangle[0], triangle[2]), triangle[2], {0, 0, 1}, {0, 0, z});
+        triangles.emplace_back(triangle);
+        localNormalIndex.emplace_back(normalIndex);
+        return;
+    }
+
+    if (vertexInside == 2)
+    {
+        std::sort(triangle.begin(), triangle.end(), sortTriangleZ);
+        TriangleF newTriangle = {0};
+        newTriangle[0] = triangle[1];
+        newTriangle[1] = MathUtils::intersectionPoint(MathUtils::substractVertex(triangle[0], triangle[2]), triangle[2], {0, 0, -1}, {0, 0, z});
+        newTriangle[2] = MathUtils::intersectionPoint(MathUtils::substractVertex(triangle[1], triangle[2]), triangle[1], {0, 0, 1}, {0, 0, z});
+
+        triangle[2] = MathUtils::intersectionPoint(MathUtils::substractVertex(triangle[0], triangle[2]), triangle[2], {0, 0, -1}, {0, 0, z});
+        triangles.emplace_back(triangle);
+        localNormalIndex.emplace_back(normalIndex);
+
+        triangles.emplace_back(newTriangle);
+        localNormalIndex.emplace_back(normalIndex);
+
+        return;
+    }
+}
+
+void Shape::draw(ImageData &pImageData, float zNear)
+{
+    TrianglesF clippedTriangles;
+    TrianglesI projectedVerticesLocal;
+    std::vector<uint32_t> localNormalIndex;
+
     if (isTransformDirty)
     {
         recalculateTransformMatrix();
         transform();
-        project(100);
+
+        int i = 0;
+        for (auto &index : vertexIndex)
+        {
+            PointF3 p1 = {transformedVertices[index[0]].x, transformedVertices[index[0]].y, transformedVertices[index[0]].z};
+            PointF3 p2 = {transformedVertices[index[1]].x, transformedVertices[index[1]].y, transformedVertices[index[1]].z};
+            PointF3 p3 = {transformedVertices[index[2]].x, transformedVertices[index[2]].y, transformedVertices[index[2]].z};
+            clipTriangle(clippedTriangles, {p1, p2, p3}, zNear, localNormalIndex, normalIndex[i++]);
+        }
+
+        project(projectedVerticesLocal, clippedTriangles, 100);
         isTransformDirty = false;
     }
 
+    int i = 0;
+    for (auto &triangle : projectedVerticesLocal)
+    {
+        if (!backFaceCulingDisabled)
+            if (isBackFace(triangle))
+            {
+                i++;
+                continue;
+            }
+
+        if (wireFrame)
+        {
+            pImageData.drawLine(triangle[0], triangle[1], {255, 0, 0});
+            pImageData.drawLine(triangle[1], triangle[2], {0, 255, 0});
+            pImageData.drawLine(triangle[2], triangle[0], {0, 0, 255});
+            continue;
+        }
+        Color color = {0, 0, 255};
+        auto component = angleBetweenVectors(transformedNormals[localNormalIndex[i]], {1, 1, 1}) / ANGLE_RATIO;
+        color = {static_cast<unsigned char>(component),
+                 static_cast<unsigned char>(component),
+                 static_cast<unsigned char>(component)};
+        rasterizeTriangle(triangle, pImageData, color);
+        if (showVertexNumber)
+        {
+            char numberString[50] = {0};
+            snprintf(numberString, 50, "%d", vertexIndex[i]);
+            pImageData.printString(triangle[0], numberString);
+            snprintf(numberString, 50, "%d", vertexIndex[i]);
+            pImageData.printString(triangle[1], numberString);
+            snprintf(numberString, 50, "%d", vertexIndex[i]);
+            pImageData.printString(triangle[2], numberString);
+        }
+        i++;
+    }
+
+    /*
     auto size = vertexIndex.size();
     Color color = {0, 0, 255};
     for (int i = 0; i < size; i++)
@@ -197,7 +329,7 @@ void Shape::draw(ImageData &pImageData)
             snprintf(numberString, 50, "%d", index[2]);
             pImageData.printString(p3, numberString);
         }
-    }
+    }*/
 }
 
 void Shape::transform()
@@ -281,6 +413,21 @@ void Shape::project(float distance)
         projectedVertices[i].x = distance * transformedVertices[i].x / transformedVertices[i].z + 160;
         projectedVertices[i].y = distance * transformedVertices[i].y / transformedVertices[i].z + 120;
         projectedVertices[i].z = transformedVertices[i].z;
+    }
+}
+
+void Shape::project(TrianglesI &pProjectedVertices, TrianglesF &triangles, float distance)
+{
+    for (auto &triangle : triangles)
+    {
+        TriangleI triangleD = {0};
+        for (int i = 0; i < triangleD.size(); ++i)
+        {
+            triangleD[i].x = static_cast<int32_t>(distance * triangle[i].x / triangle[i].z + 160);
+            triangleD[i].y = static_cast<int32_t>(distance * triangle[i].y / triangle[i].z + 120);
+            triangleD[i].z = static_cast<int32_t>(triangle[i].z);
+        }
+        pProjectedVertices.emplace_back(triangleD);
     }
 }
 
@@ -392,7 +539,33 @@ void Shape::appendQuad(Shape &shape, float cubeSize, PointF3 position)
 
     shape.translate({0.f, 0.f, position.z});
 }
+void Shape::appendWall(Shape &shape, float size, PointF3 position)
+{
+    uint32_t vertexOffset = shape.vertices.size();
 
+    shape.vertices.emplace_back(MathUtils::addVertex({-size, -size, 0, 1.f}, position));
+    shape.vertices.emplace_back(MathUtils::addVertex({size, -size, 0, 1.f}, position));
+    shape.vertices.emplace_back(MathUtils::addVertex({size, size, 0, 1.f}, position));
+    shape.vertices.emplace_back(MathUtils::addVertex({-size, size, 0, 1.f}, position));
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 2, vertexOffset + 1}));
+    shape.normals.emplace_back(
+        MathUtils::normalize(
+            MathUtils::crossProduct(
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 0], shape.vertices[vertexOffset + 1]),
+                MathUtils::substractVertex(shape.vertices[vertexOffset + 0], shape.vertices[vertexOffset + 2]))));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 3, vertexOffset + 2}));
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+
+    shape.transformedNormals.resize(shape.normals.size());
+
+    shape.transformedVertices.resize(shape.vertices.size());
+    shape.projectedVertices.resize(shape.vertices.size());
+
+    shape.translate({0.f, 0.f, position.z});
+}
 void Shape::appendCube(Shape &shape, float cubeSize, PointF3 position)
 {
     uint32_t vertexOffset = shape.vertices.size();
