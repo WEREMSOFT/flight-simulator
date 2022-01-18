@@ -157,16 +157,10 @@ float angleBetweenVectors(PointF3 a, PointF3 b)
     return acos(dot / sqrt(lenSq1 * lenSq2));
 }
 
-bool isBackFace(TriangleI triangle)
+bool isBackFace(PointF3 normal)
 {
-    auto z = (triangle[1].x - triangle[0].x) * (triangle[2].y - triangle[0].y) - (triangle[1].y - triangle[0].y) * (triangle[2].x - triangle[0].x);
-    return z < 0;
-}
-
-bool isInTheShadow(TriangleF triangle)
-{
-    auto z = (triangle[1].y - triangle[0].y) * (triangle[2].z - triangle[0].z) - (triangle[1].z - triangle[0].z) * (triangle[2].y - triangle[0].y);
-    return z > 0;
+    auto angle = MathUtils::dotProduct(normal, {0, 0, 1});
+    return angle > 0;
 }
 
 bool sortTriangleZ(PointF3 a, PointF3 b)
@@ -250,7 +244,7 @@ void Shape::draw(ImageData &pImageData, float zNear)
     for (auto &triangle : projectedVerticesLocal)
     {
         if (!backFaceCulingDisabled)
-            if (isBackFace(triangle))
+            if (isBackFace(transformedNormals[localNormalIndex[i]]))
             {
                 i++;
                 continue;

@@ -19,7 +19,7 @@ class Shape
     bool isTransformDirty = true;
 
 public:
-    bool wireFrame = true;
+    bool wireFrame = false;
     bool backFaceCulingDisabled = true;
     bool showVertexNumber = false;
     bool drawNormals = false;

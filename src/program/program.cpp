@@ -70,7 +70,7 @@ void Program::update(void)
     Shape shape(1);
     Shape wall(1);
 
-    // Shape::appendPiramid(shape, 60, 60, {0, -40, 0});
+    Shape::appendPiramid(shape, 60, 60, {0, -40, 0});
     Shape::appendCube(shape, 45, {0, 0, 0});
     Shape::appendWall(wall, 80, {0, 0, 0});
 
