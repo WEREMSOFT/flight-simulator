@@ -62,23 +62,29 @@ void Program::update(void)
     float zNear = 50;
 
     Shape shape(1);
-    Shape wall(1);
+    Shape cross(1);
 
     Shape::appendPiramid(shape, 60, 60, {0, -40, 0});
     Shape::appendCube(shape, 45, {0, 0, 0});
-    Shape::appendCube(wall, 10, {0, 0, 0});
-    Shape::appendCube(wall, 10, {23, 0, 0});
-    Shape::appendCube(wall, 10, {-23, 0, 0});
-    Shape::appendCube(wall, 10, {0, 23, 0});
-    Shape::appendCube(wall, 10, {0, -23, 0});
+    Shape::appendCube(cross, 10, {0, 0, 0});
+    Shape::appendCube(cross, 10, {23, 0, 0});
+    Shape::appendCube(cross, 10, {-23, 0, 0});
+    Shape::appendCube(cross, 10, {0, 23, 0});
+    Shape::appendCube(cross, 10, {0, -23, 0});
 
-    wall.translate({0, 0.f, 200});
+    shape.translate({-50, 0, 200.f});
+    cross.translate({50, 0, 200.f});
+
+    Camera camera;
+
     auto tempChecker = Sprite::createSplit({320, 240}, 115, {0x77, 0x77, 0xAA}, {0, 0x77, 0});
     auto checker = tempChecker.get();
-    float rotationZ = 0.0;
-    float rotationX = 0.0;
-    float rotationY = 0.0;
+    float rotationZ = 0;
+    float rotationX = 0;
+    float rotationY = 0;
     float translationX = 0;
+    float cameraRotationY = 0;
+
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         graphics->newFrame();
@@ -87,24 +93,34 @@ void Program::update(void)
 
         if (glfwGetKey(graphics->window, GLFW_KEY_UP))
         {
-            // zPosition += 70.f * deltaTime;
-            zNear += 70.f * deltaTime;
+            zPosition -= 200.f * deltaTime;
+            // zNear += 70.f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_DOWN))
         {
-            // zPosition -= 70.f * deltaTime;
-            zNear -= 70.f * deltaTime;
+            zPosition += 200.f * deltaTime;
+            // zNear -= 70.f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_LEFT))
         {
-            translationX -= 70.f * deltaTime;
+            translationX += 70.f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_RIGHT))
         {
-            translationX += 70.f * deltaTime;
+            translationX -= 70.f * deltaTime;
+        }
+
+        if (glfwGetKey(graphics->window, GLFW_KEY_Q))
+        {
+            cameraRotationY -= 1.5f * deltaTime;
+        }
+
+        if (glfwGetKey(graphics->window, GLFW_KEY_E))
+        {
+            cameraRotationY += 1.5f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_A))
@@ -129,24 +145,25 @@ void Program::update(void)
 
         if (demoMode)
         {
-
             rotationX += 1.0f * deltaTime;
             rotationY += 1.0f * deltaTime;
             rotationZ += 1.0f * deltaTime;
         }
 
-        shape.translate({translationX, 0.f, zPosition});
+        camera.translate({translationX, 0.f, zPosition});
+        camera.rotate(0, cameraRotationY, 0);
+        camera.update();
 
         checker->draw(graphics->imageData);
 
         shape.rotate(rotationX, rotationY, rotationZ);
-        wall.rotate(rotationX, rotationY, rotationZ);
+        cross.rotate(rotationX, rotationY, rotationZ);
 
         shape.update();
-        wall.update();
+        cross.update();
 
-        shape.draw(graphics->imageData, zNear);
-        wall.draw(graphics->imageData, zNear);
+        shape.draw(graphics->imageData, camera);
+        cross.draw(graphics->imageData, camera);
         printFPS();
         char zNearPosition[100] = {0};
         snprintf(zNearPosition, 100, "zNear: %f", zNear);

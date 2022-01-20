@@ -62,3 +62,8 @@ void Object3D::rotate(float x, float y, float z)
     MathUtils::multiplyMatrix(rotationMatrix, rotationMatrixX);
     MathUtils::multiplyMatrix(rotationMatrix, rotationMatrixY);
 }
+
+void Object3D::update(void)
+{
+    recalculateTransformMatrix();
+}

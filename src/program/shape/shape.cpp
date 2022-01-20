@@ -87,7 +87,7 @@ void Shape::clipTriangle(TrianglesF &triangles, TriangleF triangle, float z, std
 
 void Shape::update(void)
 {
-    recalculateTransformMatrix();
+    Object3D::recalculateTransformMatrix();
     transform();
 }
 
@@ -96,13 +96,21 @@ void Shape::draw(ImageData &pImageData, Camera camera)
     TrianglesF clippedTriangles;
     TrianglesI projectedVerticesLocal;
     std::vector<uint32_t> localNormalIndex;
+    std::vector<PointF3> transformedVerticesLocal;
+
+    transformedVerticesLocal.reserve(transformedVertices.size());
+
+    for (auto i = 0; i < transformedVertices.size(); i++)
+    {
+        MathUtils::multiplyVertexByMatrix(transformedVerticesLocal[i], transformedVertices[i], camera.transformMatrix);
+    }
 
     for (int i = 0; i < vertexIndex.size(); i++)
     {
         auto index = vertexIndex[i];
-        PointF3 p1 = {transformedVertices[index[0]].x, transformedVertices[index[0]].y, transformedVertices[index[0]].z};
-        PointF3 p2 = {transformedVertices[index[1]].x, transformedVertices[index[1]].y, transformedVertices[index[1]].z};
-        PointF3 p3 = {transformedVertices[index[2]].x, transformedVertices[index[2]].y, transformedVertices[index[2]].z};
+        PointF3 p1 = {transformedVerticesLocal[index[0]].x, transformedVerticesLocal[index[0]].y, transformedVerticesLocal[index[0]].z};
+        PointF3 p2 = {transformedVerticesLocal[index[1]].x, transformedVerticesLocal[index[1]].y, transformedVerticesLocal[index[1]].z};
+        PointF3 p3 = {transformedVerticesLocal[index[2]].x, transformedVerticesLocal[index[2]].y, transformedVerticesLocal[index[2]].z};
         clipTriangle(clippedTriangles, {p1, p2, p3}, camera.zNear, localNormalIndex, normalIndex[i]);
     }
 

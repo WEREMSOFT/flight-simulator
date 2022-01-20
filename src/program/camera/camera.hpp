@@ -3,7 +3,10 @@
 #include "../math/mathUtils.hpp"
 class Camera : public Object3D
 {
+protected:
+    void recalculateTransformMatrix();
+
 public:
     float zNear;
-    Camera(float zNear = 200);
+    Camera(float zNear = 50);
 };

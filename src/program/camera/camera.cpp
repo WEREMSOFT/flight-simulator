@@ -9,3 +9,11 @@ Camera::Camera(float pZNear)
     MathUtils::setMatrixAsIdentity(rotationMatrix);
     MathUtils::setMatrixAsIdentity(translationMatrix);
 }
+
+void Camera::recalculateTransformMatrix()
+{
+    MathUtils::setMatrixAsIdentity(transformMatrix);
+    MathUtils::multiplyMatrix(transformMatrix, translationMatrix);
+    MathUtils::multiplyMatrix(transformMatrix, rotationMatrix);
+    MathUtils::multiplyMatrix(transformMatrix, scaleMatrix);
+}
