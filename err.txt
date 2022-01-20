@@ -1,0 +1,30 @@
+src/imgui/imgui.h:264:79: warning: The address of local variable 'x' might be accessed at non-zero index. [objectIndex]
+    float  operator[] (size_t idx) const    { IM_ASSERT(idx <= 1); return (&x)[idx]; }    // We very rarely use this [] operator, the assert overhead is fine.
+                                                                              ^
+src/imgui/imgui.h:264:76: note: Address of variable taken here.
+    float  operator[] (size_t idx) const    { IM_ASSERT(idx <= 1); return (&x)[idx]; }    // We very rarely use this [] operator, the assert overhead is fine.
+                                                                           ^
+src/imgui/imgui.h:264:79: note: The address of local variable 'x' might be accessed at non-zero index.
+    float  operator[] (size_t idx) const    { IM_ASSERT(idx <= 1); return (&x)[idx]; }    // We very rarely use this [] operator, the assert overhead is fine.
+                                                                              ^
+src/imgui/imgui.h:265:79: warning: The address of local variable 'x' might be accessed at non-zero index. [objectIndex]
+    float& operator[] (size_t idx)          { IM_ASSERT(idx <= 1); return (&x)[idx]; }    // We very rarely use this [] operator, the assert overhead is fine.
+                                                                              ^
+src/imgui/imgui.h:265:76: note: Address of variable taken here.
+    float& operator[] (size_t idx)          { IM_ASSERT(idx <= 1); return (&x)[idx]; }    // We very rarely use this [] operator, the assert overhead is fine.
+                                                                           ^
+src/imgui/imgui.h:265:79: note: The address of local variable 'x' might be accessed at non-zero index.
+    float& operator[] (size_t idx)          { IM_ASSERT(idx <= 1); return (&x)[idx]; }    // We very rarely use this [] operator, the assert overhead is fine.
+                                                                              ^
+src/imgui/imgui.h:46:0: error: No header in #include [preprocessorErrorDirective]
+#include IMGUI_USER_CONFIG
+^
+src/imgui/imgui.cpp:2216:5: error: va_list 'args_copy' used before va_start() was called. [va_list_usedBeforeStarted]
+    va_copy(args_copy, args);
+    ^
+src/imgui/imgui.cpp:2221:9: error: va_list 'args_copy' used before va_start() was called. [va_list_usedBeforeStarted]
+        va_end(args_copy);
+        ^
+src/imgui/imgui_draw.cpp:162:0: error: No header in #include [preprocessorErrorDirective]
+#include IMGUI_STB_TRUETYPE_FILENAME
+^

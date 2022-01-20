@@ -1,12 +1,8 @@
 #pragma once
 #include <vector>
 #include <array>
+#include "../math/mathUtils.hpp"
 #include "../../core/graphics/imageData/imagedata.hpp"
-
-using TriangleI = std::array<PointI, 3>;
-using TriangleF = std::array<PointF3, 3>;
-using TrianglesI = std::vector<TriangleI>;
-using TrianglesF = std::vector<TriangleF>;
 
 class Shape
 {
@@ -17,6 +13,8 @@ class Shape
     void transform();
     void recalculateTransformMatrix();
     bool isTransformDirty = true;
+    static bool isBackFace(PointF3 normal);
+    static bool sortTriangleZ(PointF3 a, PointF3 b);
 
 public:
     bool wireFrame = false;

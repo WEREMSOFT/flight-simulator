@@ -1,7 +1,6 @@
 #include "program.hpp"
 #include "../core/graphics/sprite/sprite.hpp"
 #include "shape/shape.hpp"
-#include "bouncingPoint/bouncingPoint.hpp"
 #include <algorithm>
 #include <cmath>
 #include <vector>
@@ -89,7 +88,7 @@ void Program::update(void)
     float rotationZ = 0.0;
     float rotationX = 0.0;
     float rotationY = 0.0;
-    float translationX = 0, translationY = 0;
+    float translationX = 0;
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         graphics->newFrame();

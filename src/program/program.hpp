@@ -2,8 +2,8 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include "bouncingPoint/bouncingPoint.hpp"
 #include "shape/shape.hpp"
+#include "math/mathUtils.hpp"
 
 class Program
 {
@@ -18,6 +18,4 @@ public:
 private:
     void printFPS();
     double getDeltaTime();
-    void updatePoints(std::vector<BouncingPointF> &);
-    void drawLines(std::vector<BouncingPointF>);
 };
