@@ -10,6 +10,14 @@ using TriangleF = std::array<PointF3, 3>;
 using TrianglesI = std::vector<TriangleI>;
 using TrianglesF = std::vector<TriangleF>;
 
+template <typename T>
+class Triangle
+{
+public:
+    std::array<Point3<T>, 3> vertices;
+    Color color;
+};
+
 namespace MathUtils
 {
     PointF3 scaleVector(PointF3 v, float scalar);

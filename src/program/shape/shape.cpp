@@ -85,22 +85,25 @@ void Shape::clipTriangle(TrianglesF &triangles, TriangleF triangle, float z, std
     }
 }
 
+void Shape::update(void)
+{
+    recalculateTransformMatrix();
+    transform();
+}
+
 void Shape::draw(ImageData &pImageData, Camera camera)
 {
     TrianglesF clippedTriangles;
     TrianglesI projectedVerticesLocal;
     std::vector<uint32_t> localNormalIndex;
 
-    recalculateTransformMatrix();
-    transform();
-
-    int i = 0;
-    for (auto &index : vertexIndex)
+    for (int i = 0; i < vertexIndex.size(); i++)
     {
+        auto index = vertexIndex[i];
         PointF3 p1 = {transformedVertices[index[0]].x, transformedVertices[index[0]].y, transformedVertices[index[0]].z};
         PointF3 p2 = {transformedVertices[index[1]].x, transformedVertices[index[1]].y, transformedVertices[index[1]].z};
         PointF3 p3 = {transformedVertices[index[2]].x, transformedVertices[index[2]].y, transformedVertices[index[2]].z};
-        clipTriangle(clippedTriangles, {p1, p2, p3}, camera.zNear, localNormalIndex, normalIndex[i++]);
+        clipTriangle(clippedTriangles, {p1, p2, p3}, camera.zNear, localNormalIndex, normalIndex[i]);
     }
 
     project(projectedVerticesLocal, clippedTriangles, 100);
@@ -137,7 +140,10 @@ void Shape::draw(ImageData &pImageData, Camera camera)
         color = {static_cast<unsigned char>(component),
                  static_cast<unsigned char>(0),
                  static_cast<unsigned char>(255 - component)};
-        rasterizeTriangle(triangle, pImageData, color);
+
+        Triangle<int32_t> triangleI = {triangle, color};
+
+        rasterizeTriangle(triangleI, pImageData);
         if (showVertexNumber)
         {
             char numberString[50] = {0};
@@ -163,60 +169,6 @@ void Shape::transform()
     {
         MathUtils::multiplyVertexByMatrix(transformedVertices[i], vertices[i], transformMatrix);
     }
-}
-
-void Shape::translate(PointF3 translation)
-{
-    translationMatrix[0] = {1, 0, 0, 0};
-    translationMatrix[1] = {0, 1, 0, 0};
-    translationMatrix[2] = {0, 0, 1, 0};
-    translationMatrix[3] = {translation.x, translation.y, translation.z, 1};
-}
-
-void Shape::scale(PointF3 scale)
-{
-    MathUtils::setMatrixAsIdentity(scaleMatrix);
-    scaleMatrix[0].x = scale.x;
-    scaleMatrix[1].y = scale.y;
-    scaleMatrix[2].z = scale.z;
-    scaleMatrix[3].w = 1.f;
-}
-
-void Shape::recalculateTransformMatrix()
-{
-    MathUtils::setMatrixAsIdentity(transformMatrix);
-    MathUtils::multiplyMatrix(transformMatrix, rotationMatrix);
-    MathUtils::multiplyMatrix(transformMatrix, scaleMatrix);
-    MathUtils::multiplyMatrix(transformMatrix, translationMatrix);
-}
-
-void Shape::rotate(float x, float y, float z)
-{
-    PointF3 rotationMatrixX[4] = {0};
-
-    rotationMatrixX[0] = {1, 0, 0, 0};
-    rotationMatrixX[1] = {0, cosf(x), sinf(x), 0};
-    rotationMatrixX[2] = {0, -sinf(x), cosf(x), 0};
-    rotationMatrixX[3] = {0, 0, 0, 1};
-
-    PointF3 rotationMatrixY[4] = {0};
-
-    rotationMatrixY[0] = {cosf(y), 0, -sinf(y), 0};
-    rotationMatrixY[1] = {0, 1, 0, 0};
-    rotationMatrixY[2] = {sinf(y), 0, cosf(y), 0};
-    rotationMatrixY[3] = {0, 0, 0, 1};
-
-    PointF3 rotationMatrixZ[4] = {0};
-
-    rotationMatrixZ[0] = {cosf(z), sinf(z), 0, 0};
-    rotationMatrixZ[1] = {-sinf(z), cosf(z), 0, 0};
-    rotationMatrixZ[2] = {0, 0, 1, 0};
-    rotationMatrixZ[3] = {0, 0, 0, 1};
-
-    MathUtils::setMatrixAsIdentity(rotationMatrix);
-    MathUtils::multiplyMatrix(rotationMatrix, rotationMatrixZ);
-    MathUtils::multiplyMatrix(rotationMatrix, rotationMatrixX);
-    MathUtils::multiplyMatrix(rotationMatrix, rotationMatrixY);
 }
 
 void Shape::project(float distance)
@@ -572,25 +524,25 @@ bool sortTriangleX(PointI a, PointI b)
     return a.x < b.x;
 }
 
-void Shape::rasterizeTriangle(std::array<PointI, 3> triangle, ImageData &pImageData, Color color)
+void Shape::rasterizeTriangle(Triangle<int32_t> triangle, ImageData &pImageData)
 {
-    std::sort(triangle.begin(), triangle.end(), sortTriangleY);
+    std::sort(triangle.vertices.begin(), triangle.vertices.end(), sortTriangleY);
 
-    float dy = (float)(triangle[1].y - triangle[0].y);
-    float dx = (float)(triangle[2].y - triangle[0].y);
+    float dy = (float)(triangle.vertices[1].y - triangle.vertices[0].y);
+    float dx = (float)(triangle.vertices[2].y - triangle.vertices[0].y);
 
-    float incrementY = dy ? (float)(triangle[1].x - triangle[0].x) / dy : 0;
-    float incrementXLimit = dx ? (float)(triangle[2].x - triangle[0].x) / dx : 0;
+    float incrementY = dy ? (float)(triangle.vertices[1].x - triangle.vertices[0].x) / dy : 0;
+    float incrementXLimit = dx ? (float)(triangle.vertices[2].x - triangle.vertices[0].x) / dx : 0;
     float start = 0;
     float end = 0;
 
-    int height = triangle[1].y - triangle[0].y;
+    int height = triangle.vertices[1].y - triangle.vertices[0].y;
     for (int i = 0; i < height; i++)
     {
         int localStart = floor(start);
         int localEnd = floor(end);
 
-        pImageData.drawLineZ({triangle[0].x + localStart, triangle[0].y + i}, {triangle[0].x + localEnd, triangle[0].y + i}, triangle, color);
+        pImageData.drawLineZ({triangle.vertices[0].x + localStart, triangle.vertices[0].y + i}, {triangle.vertices[0].x + localEnd, triangle.vertices[0].y + i}, triangle.vertices, triangle.color);
 
         start += incrementXLimit;
         end += incrementY;
@@ -598,23 +550,23 @@ void Shape::rasterizeTriangle(std::array<PointI, 3> triangle, ImageData &pImageD
 
     if (height != 0)
     {
-        dy = (float)(triangle[2].y - triangle[1].y);
-        incrementY = dy ? (float)(triangle[2].x - triangle[1].x) / dy : 0;
+        dy = (float)(triangle.vertices[2].y - triangle.vertices[1].y);
+        incrementY = dy ? (float)(triangle.vertices[2].x - triangle.vertices[1].x) / dy : 0;
     }
     else
     {
         incrementY = incrementXLimit;
-        dy = (float)(triangle[2].y - triangle[1].y);
-        incrementXLimit = dy ? (float)(triangle[2].x - triangle[1].x) / dy : 0;
-        start = triangle[1].x - triangle[0].x;
+        dy = (float)(triangle.vertices[2].y - triangle.vertices[1].y);
+        incrementXLimit = dy ? (float)(triangle.vertices[2].x - triangle.vertices[1].x) / dy : 0;
+        start = triangle.vertices[1].x - triangle.vertices[0].x;
     }
-    height = triangle[2].y - triangle[1].y;
+    height = triangle.vertices[2].y - triangle.vertices[1].y;
 
     for (int i = 0; i < height; i++)
     {
         int localStart = floor(start);
         int localEnd = floor(end);
-        pImageData.drawLineZ({triangle[0].x + localStart, triangle[1].y + i}, {triangle[0].x + localEnd, triangle[1].y + i}, triangle, color);
+        pImageData.drawLineZ({triangle.vertices[0].x + localStart, triangle.vertices[1].y + i}, {triangle.vertices[0].x + localEnd, triangle.vertices[1].y + i}, triangle.vertices, triangle.color);
         start += incrementXLimit;
         end += incrementY;
     }

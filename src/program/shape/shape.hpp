@@ -4,17 +4,13 @@
 #include "../math/mathUtils.hpp"
 #include "../../core/graphics/imageData/imagedata.hpp"
 #include "../camera/camera.hpp"
+#include "../object3D/object3d.hpp"
 
-class Shape
+class Shape : public Object3D
 {
-    PointF3 transformMatrix[4] = {0};
-    PointF3 translationMatrix[4] = {0};
-    PointF3 rotationMatrix[4] = {0};
-    PointF3 scaleMatrix[4] = {0};
-    void transform();
-    void recalculateTransformMatrix();
     static bool isBackFace(PointF3 normal);
     static bool sortTriangleZ(PointF3 a, PointF3 b);
+    void transform();
 
 public:
     bool wireFrame = false;
@@ -33,15 +29,12 @@ public:
     ~Shape();
 
     void draw(ImageData &pImageData, Camera camera);
-    void translate(PointF3);
-    void scale(PointF3);
-    void rotateZ(float angle);
-    void rotate(float x, float y, float z);
+    void update(void);
 
     void project(float distance);
     void project(TrianglesI &pProjectedVertices, TrianglesF &triangles, float distance);
 
-    void rasterizeTriangle(std::array<PointI, 3> triangle, ImageData &pImageData, Color color);
+    void rasterizeTriangle(Triangle<int32_t> triangle, ImageData &pImageData);
     void clipTriangle(TrianglesF &triangles, TriangleF triangle, float z, std::vector<uint32_t> &localNormalIndex, int32_t normalIndex);
 
     static Shape createCube(float cubeSize, float zPosition);

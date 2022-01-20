@@ -1,11 +1,9 @@
 #pragma once
+#include "../object3D/object3d.hpp"
 #include "../math/mathUtils.hpp"
-class Camera
+class Camera : public Object3D
 {
 public:
-    PointF3 transformMatrix[4] = {0};
-    PointF3 translationMatrix[4] = {0};
-    PointF3 rotationMatrix[4] = {0};
     float zNear;
     Camera(float zNear = 200);
 };

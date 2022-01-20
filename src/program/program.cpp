@@ -141,6 +141,10 @@ void Program::update(void)
 
         shape.rotate(rotationX, rotationY, rotationZ);
         wall.rotate(rotationX, rotationY, rotationZ);
+
+        shape.update();
+        wall.update();
+
         shape.draw(graphics->imageData, zNear);
         wall.draw(graphics->imageData, zNear);
         printFPS();
