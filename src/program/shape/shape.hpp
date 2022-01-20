@@ -3,6 +3,7 @@
 #include <array>
 #include "../math/mathUtils.hpp"
 #include "../../core/graphics/imageData/imagedata.hpp"
+#include "../camera/camera.hpp"
 
 class Shape
 {
@@ -12,7 +13,6 @@ class Shape
     PointF3 scaleMatrix[4] = {0};
     void transform();
     void recalculateTransformMatrix();
-    bool isTransformDirty = true;
     static bool isBackFace(PointF3 normal);
     static bool sortTriangleZ(PointF3 a, PointF3 b);
 
@@ -32,7 +32,7 @@ public:
     Shape(int vertexNum);
     ~Shape();
 
-    void draw(ImageData &pImageData, float zNear);
+    void draw(ImageData &pImageData, Camera camera);
     void translate(PointF3);
     void scale(PointF3);
     void rotateZ(float angle);

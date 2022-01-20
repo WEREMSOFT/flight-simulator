@@ -85,45 +85,44 @@ void Shape::clipTriangle(TrianglesF &triangles, TriangleF triangle, float z, std
     }
 }
 
-void Shape::draw(ImageData &pImageData, float zNear)
+void Shape::draw(ImageData &pImageData, Camera camera)
 {
     TrianglesF clippedTriangles;
     TrianglesI projectedVerticesLocal;
     std::vector<uint32_t> localNormalIndex;
 
-    if (isTransformDirty)
+    recalculateTransformMatrix();
+    transform();
+
+    int i = 0;
+    for (auto &index : vertexIndex)
     {
-        recalculateTransformMatrix();
-        transform();
-
-        int i = 0;
-        for (auto &index : vertexIndex)
-        {
-            PointF3 p1 = {transformedVertices[index[0]].x, transformedVertices[index[0]].y, transformedVertices[index[0]].z};
-            PointF3 p2 = {transformedVertices[index[1]].x, transformedVertices[index[1]].y, transformedVertices[index[1]].z};
-            PointF3 p3 = {transformedVertices[index[2]].x, transformedVertices[index[2]].y, transformedVertices[index[2]].z};
-            clipTriangle(clippedTriangles, {p1, p2, p3}, zNear, localNormalIndex, normalIndex[i++]);
-        }
-
-        project(projectedVerticesLocal, clippedTriangles, 100);
-        isTransformDirty = false;
+        PointF3 p1 = {transformedVertices[index[0]].x, transformedVertices[index[0]].y, transformedVertices[index[0]].z};
+        PointF3 p2 = {transformedVertices[index[1]].x, transformedVertices[index[1]].y, transformedVertices[index[1]].z};
+        PointF3 p3 = {transformedVertices[index[2]].x, transformedVertices[index[2]].y, transformedVertices[index[2]].z};
+        clipTriangle(clippedTriangles, {p1, p2, p3}, camera.zNear, localNormalIndex, normalIndex[i++]);
     }
 
-    int i = -1;
-    for (auto &triangle : projectedVerticesLocal)
+    project(projectedVerticesLocal, clippedTriangles, 100);
+
+    for (int i = 0; i < projectedVerticesLocal.size(); i++)
     {
-        i++;
+        auto triangle = projectedVerticesLocal[i];
+        auto transformedNormal = transformedNormals[localNormalIndex[i]];
         if (!backFaceCulingDisabled)
-            if (isBackFace(transformedNormals[localNormalIndex[i]]))
+            if (isBackFace(transformedNormal))
             {
                 continue;
             }
 
         if (drawNormals)
         {
-            pImageData.drawLine({triangle[0].x, triangle[0].y}, {triangle[0].x + static_cast<int>(transformedNormals[localNormalIndex[i]].x * 10), triangle[0].y + static_cast<int>(transformedNormals[localNormalIndex[i]].y * 10)});
-            pImageData.drawLine({triangle[1].x, triangle[1].y}, {triangle[1].x + static_cast<int>(transformedNormals[localNormalIndex[i]].x * 10), triangle[1].y + static_cast<int>(transformedNormals[localNormalIndex[i]].y * 10)});
-            pImageData.drawLine({triangle[2].x, triangle[2].y}, {triangle[2].x + static_cast<int>(transformedNormals[localNormalIndex[i]].x * 10), triangle[2].y + static_cast<int>(transformedNormals[localNormalIndex[i]].y * 10)});
+            auto transformedNormalX = static_cast<int>(transformedNormal.x * 10);
+            auto transformedNormalY = static_cast<int>(transformedNormal.y * 10);
+
+            pImageData.drawLine({triangle[0].x, triangle[0].y}, {triangle[0].x + transformedNormalX, triangle[0].y + transformedNormalY});
+            pImageData.drawLine({triangle[1].x, triangle[1].y}, {triangle[1].x + transformedNormalX, triangle[1].y + transformedNormalY});
+            pImageData.drawLine({triangle[2].x, triangle[2].y}, {triangle[2].x + transformedNormalX, triangle[2].y + transformedNormalY});
         }
 
         if (wireFrame)
@@ -134,7 +133,7 @@ void Shape::draw(ImageData &pImageData, float zNear)
             continue;
         }
         Color color = {0, 0, 255};
-        auto component = MathUtils::angleBetweenVectors(transformedNormals[localNormalIndex[i]], {1, 1, 1}) / ANGLE_RATIO;
+        auto component = MathUtils::angleBetweenVectors(transformedNormal, {1, 1, 1}) / ANGLE_RATIO;
         color = {static_cast<unsigned char>(component),
                  static_cast<unsigned char>(0),
                  static_cast<unsigned char>(255 - component)};
@@ -172,8 +171,6 @@ void Shape::translate(PointF3 translation)
     translationMatrix[1] = {0, 1, 0, 0};
     translationMatrix[2] = {0, 0, 1, 0};
     translationMatrix[3] = {translation.x, translation.y, translation.z, 1};
-
-    isTransformDirty = true;
 }
 
 void Shape::scale(PointF3 scale)
@@ -183,7 +180,6 @@ void Shape::scale(PointF3 scale)
     scaleMatrix[1].y = scale.y;
     scaleMatrix[2].z = scale.z;
     scaleMatrix[3].w = 1.f;
-    isTransformDirty = true;
 }
 
 void Shape::recalculateTransformMatrix()
@@ -221,8 +217,6 @@ void Shape::rotate(float x, float y, float z)
     MathUtils::multiplyMatrix(rotationMatrix, rotationMatrixZ);
     MathUtils::multiplyMatrix(rotationMatrix, rotationMatrixX);
     MathUtils::multiplyMatrix(rotationMatrix, rotationMatrixY);
-
-    isTransformDirty = true;
 }
 
 void Shape::project(float distance)

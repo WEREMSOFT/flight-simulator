@@ -9,8 +9,6 @@
 #include "../imgui/imgui_impl_opengl3.h"
 #include "../core/gameObject/gameObject.hpp"
 
-#define CREATE_CHECKER 0
-
 void showGUI(Shape &shape, bool &demoMode)
 {
     static bool showDebugWindow = true;
@@ -56,9 +54,6 @@ void Program::update(void)
 {
     GameObject parent;
     GameObject child;
-    parent.children.emplace_back(child);
-
-    parent.update(10.0);
 
     Graphics *graphics = this->graphics.get();
     bool demoMode = false;
@@ -78,12 +73,7 @@ void Program::update(void)
     Shape::appendCube(wall, 10, {0, -23, 0});
 
     wall.translate({0, 0.f, 200});
-
-#if CREATE_CHECKER
-    auto tempChecker = Sprite::createChecker({320, 240}, 20, {0x77, 0x55, 0x33}, {0x77, 0, 0});
-#else
     auto tempChecker = Sprite::createSplit({320, 240}, 115, {0x77, 0x77, 0xAA}, {0, 0x77, 0});
-#endif
     auto checker = tempChecker.get();
     float rotationZ = 0.0;
     float rotationX = 0.0;
