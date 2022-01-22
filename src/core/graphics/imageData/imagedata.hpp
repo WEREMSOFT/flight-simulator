@@ -6,6 +6,8 @@
 #include <GLFW/glfw3.h>
 #include <array>
 
+#include "../../math/vector/vector3.hpp"
+
 typedef struct
 {
     unsigned char r, g, b;
@@ -15,12 +17,6 @@ template <typename T>
 struct Point2
 {
     T x, y;
-};
-
-template <typename T>
-struct Point3
-{
-    T x, y, z, w;
 };
 
 typedef Point3<float> PointF3;
@@ -37,8 +33,8 @@ public:
     void init(void);
     void updateTexture(void);
     bool putPixel(PointI point, Color color = {0xFF, 0xFF, 0xFF});
-    void drawCircle(PointI center, double radious, Color color = {0xFF, 0xFF, 0xFF});
-    void drawCircleFill(PointI center, double radious, Color color = {0xFF, 0xFF, 0xFF});
+    void drawCircle(PointI center, double radius, Color color = {0xFF, 0xFF, 0xFF});
+    void drawCircleFill(PointI center, double radius, Color color = {0xFF, 0xFF, 0xFF});
     void drawSquare(PointI topLeftCorner, PointI size, Color color = {0xFF, 0xFF, 0xFF});
     void clear(void);
     void clearZBuffer(void);

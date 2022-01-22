@@ -1,5 +1,5 @@
 #pragma once
-#include "../math/mathUtils.hpp"
+#include "../../core/math/mathUtils.hpp"
 class Object3D
 {
 protected:
@@ -9,6 +9,7 @@ protected:
     virtual void recalculateTransformMatrix();
 
 public:
+    PointF3 position;
     PointF3 transformMatrix[4] = {0};
     Object3D();
     void translate(PointF3);

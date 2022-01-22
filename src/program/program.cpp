@@ -84,6 +84,7 @@ void Program::update(void)
     float rotationY = 0;
     float translationX = 0;
     float cameraRotationY = 0;
+    float cameraSpeed = 200.f;
 
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
@@ -93,24 +94,22 @@ void Program::update(void)
 
         if (glfwGetKey(graphics->window, GLFW_KEY_UP))
         {
-            zPosition -= 200.f * deltaTime;
-            // zNear += 70.f * deltaTime;
+            zPosition -= cameraSpeed * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_DOWN))
         {
-            zPosition += 200.f * deltaTime;
-            // zNear -= 70.f * deltaTime;
+            zPosition += cameraSpeed * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_LEFT))
         {
-            translationX += 70.f * deltaTime;
+            translationX += cameraSpeed * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_RIGHT))
         {
-            translationX -= 70.f * deltaTime;
+            translationX -= cameraSpeed * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_Q))

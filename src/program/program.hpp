@@ -3,7 +3,6 @@
 #include <vector>
 #include <memory>
 #include "shape/shape.hpp"
-#include "math/mathUtils.hpp"
 
 class Program
 {

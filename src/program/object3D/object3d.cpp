@@ -1,5 +1,4 @@
 #include "object3d.hpp"
-#include "../math/mathUtils.hpp"
 
 Object3D::Object3D()
 {
@@ -11,6 +10,7 @@ Object3D::Object3D()
 
 void Object3D::translate(PointF3 translation)
 {
+    this->position = translation;
     translationMatrix[0] = {1, 0, 0, 0};
     translationMatrix[1] = {0, 1, 0, 0};
     translationMatrix[2] = {0, 0, 1, 0};

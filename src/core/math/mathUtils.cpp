@@ -7,48 +7,12 @@ using TrianglesF = std::vector<TriangleF>;
 
 namespace MathUtils
 {
-    PointF3 scaleVector(PointF3 v, float scalar)
-    {
-        return {v.x * scalar, v.y * scalar, v.z * scalar, v.w * scalar};
-    }
-    PointF3 addVertex(PointF3 u, PointF3 v)
-    {
-        return {u.x + v.x, u.y + v.y, u.z + v.z, u.w + v.w};
-    }
-
-    PointF3 substractVertex(PointF3 u, PointF3 v)
-    {
-        return {u.x - v.x, u.y - v.y, u.z - v.z, u.w - v.w};
-    }
-
-    PointF3 crossProduct(PointF3 u, PointF3 v)
-    {
-        return {u.y * v.z - u.z * v.y,
-                u.z * v.x - u.x * v.z,
-                u.x * v.y - u.y * v.x, 0};
-    }
-
-    double dotProduct(PointF3 a, PointF3 b)
-    {
-        return a.x * b.x + a.y * b.y + a.z * b.z;
-    }
-
-    float length(PointF3 v)
-    {
-        return sqrt(pow(v.x, 2) + pow(v.y, 2) + pow(v.z, 2));
-    }
-
-    PointF3 normalize(PointF3 v)
-    {
-        auto length = MathUtils::length(v);
-        return {v.x / length, v.y / length, v.z / length};
-    }
 
     PointF3 intersectionPoint(PointF3 lineVector, PointF3 linePoint, PointF3 planeNormal, PointF3 planePoint)
     {
-        PointF3 diff = substractVertex(linePoint, planePoint);
+        PointF3 diff = linePoint - planePoint;
 
-        return addVertex(addVertex(diff, planePoint), scaleVector(lineVector, -dotProduct(diff, planeNormal) / dotProduct(lineVector, planeNormal)));
+        return (diff + planePoint) + lineVector.scale(-diff.dot(planeNormal) / lineVector.dot(planeNormal));
     }
 
     void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[4])
@@ -106,23 +70,4 @@ namespace MathUtils
 
         copyMatrix(mat1, returnValue);
     }
-
-    float angleBetweenVectors(PointF3 a, PointF3 b)
-    {
-        auto dot = a.x * b.x + a.y * b.y + a.z * b.z;
-        auto lenSq1 = a.x * a.x + a.y * a.y + a.z * a.z;
-        auto lenSq2 = b.x * b.x + b.y * b.y + b.z * b.z;
-        return acos(dot / sqrt(lenSq1 * lenSq2));
-    }
-}
-
-bool isBackFace(PointF3 normal)
-{
-    auto angle = MathUtils::dotProduct(normal, {0, 0, 1});
-    return angle > 0;
-}
-
-bool sortTriangleZ(PointF3 a, PointF3 b)
-{
-    return a.z > b.z;
 }

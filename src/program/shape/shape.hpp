@@ -1,14 +1,14 @@
 #pragma once
 #include <vector>
 #include <array>
-#include "../math/mathUtils.hpp"
+#include "../../core/math/mathUtils.hpp"
 #include "../../core/graphics/imageData/imagedata.hpp"
 #include "../camera/camera.hpp"
 #include "../object3D/object3d.hpp"
 
 class Shape : public Object3D
 {
-    static bool isBackFace(PointF3 normal);
+    bool isBackFace(PointF3 normal, PointF3 cameraPosition);
     static bool sortTriangleZ(PointF3 a, PointF3 b);
     void transform();
 
@@ -43,4 +43,5 @@ public:
     static void appendCube(Shape &shape, float cubeSize, PointF3 zPosition);
     static void appendQuad(Shape &shape, float cubeSize, PointF3 zPosition);
     static void appendWall(Shape &shape, float size, PointF3 position);
+    static void appendCircle(Shape &shape, float radius, int sides, PointF3 position);
 };

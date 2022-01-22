@@ -1,6 +1,6 @@
 #pragma once
 #include "../object3D/object3d.hpp"
-#include "../math/mathUtils.hpp"
+#include "../../core/math/vector/vector3.hpp"
 class Camera : public Object3D
 {
 protected:

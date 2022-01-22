@@ -14,8 +14,16 @@ TARGET := bin/main.bin
 
 
 all: $(OBJ) $(OBJ_C) copy_assets $(SRC_H)
-	@echo $(OBJ) $(OBJ_C) $(SRC_C)
-	$(CC) $(FLAGS) $(OBJ) $(OBJ_C) -o $(TARGET) $(LIBS)
+#@echo $(OBJ) $(OBJ_C) $(SRC_C) $(SRC_H)
+	@$(CC) $(FLAGS) $(OBJ) $(OBJ_C) -o $(TARGET) $(LIBS)
+
+%.cpp: %.hpp
+	@echo "$@ updated"
+	@touch $@
+
+%.c: %.h
+	@echo "$@ updated"
+	@touch $@
 
 %.opp: %.cpp
 	$(CC) -c $(FLAGS) $^ -o $@
@@ -33,4 +41,4 @@ clean:
 	rm -rf $(OBJ_C)
 
 copy_assets:
-	cp -r assets bin
+	@cp -r assets bin

@@ -1,5 +1,5 @@
 #include "camera.hpp"
-#include "../math/mathUtils.hpp"
+#include "../../core/math/mathUtils.hpp"
 
 Camera::Camera(float pZNear)
 {
