@@ -9,7 +9,7 @@
 #include "../imgui/imgui_impl_opengl3.h"
 #include "../core/gameObject/gameObject.hpp"
 
-void showGUI(Shape &shape, bool &demoMode)
+void showGUI(Camera &camera, bool &demoMode)
 {
     static bool showDebugWindow = true;
     if (ImGui::BeginMainMenuBar())
@@ -23,10 +23,9 @@ void showGUI(Shape &shape, bool &demoMode)
         if (showDebugWindow)
         {
             ImGui::Begin("Debug");
-            ImGui::Checkbox("Show Wireframe", &shape.wireFrame);
-            ImGui::Checkbox("Disable BackFaceCuling", &shape.backFaceCulingDisabled);
-            ImGui::Checkbox("Show Vertex Number", &shape.showVertexNumber);
-            ImGui::Checkbox("Draw Normals", &shape.drawNormals);
+            ImGui::Checkbox("Show Wireframe", &camera.wireframe);
+            ImGui::Checkbox("Disable BackFaceCuling", &camera.backFaceCulling);
+            ImGui::Checkbox("Draw Normals", &camera.drawNormals);
             ImGui::Checkbox("Demo Mode", &demoMode);
             ImGui::End();
         }
@@ -58,7 +57,6 @@ void Program::update(void)
     Graphics *graphics = this->graphics.get();
     bool demoMode = false;
 
-    float zPosition = 200.f;
     float zNear = 50;
 
     Shape shape(1);
@@ -87,9 +85,7 @@ void Program::update(void)
     float rotationZ = 0;
     float rotationX = 0;
     float rotationY = 0;
-    float translationX = 0;
     float cameraRotationY = 0;
-    float cameraSpeed = 200.f;
 
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
@@ -99,25 +95,21 @@ void Program::update(void)
 
         if (glfwGetKey(graphics->window, GLFW_KEY_UP))
         {
-            // zPosition -= cameraSpeed * deltaTime;
-            camera.moveForward(cameraSpeed * deltaTime);
+            camera.moveForward(deltaTime);
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_DOWN))
         {
-            // zPosition += cameraSpeed * deltaTime;
-            camera.moveForward(-(cameraSpeed * deltaTime));
+            camera.moveForward(-deltaTime);
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_LEFT))
         {
-            // translationX += cameraSpeed * deltaTime;
             cameraRotationY += 1.5f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_RIGHT))
         {
-            // translationX -= cameraSpeed * deltaTime;
             cameraRotationY -= 1.5f * deltaTime;
         }
 
@@ -133,16 +125,12 @@ void Program::update(void)
 
         if (glfwGetKey(graphics->window, GLFW_KEY_A))
         {
-            // rotationY -= 1.5f * deltaTime;
-            translationX = cameraSpeed * deltaTime;
-            camera.translate(camera.position + (PointF3){translationX, 0, 0});
+            camera.strafe(-deltaTime);
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_D))
         {
-            // rotationY += 1.5f * deltaTime;
-            translationX = cameraSpeed * deltaTime;
-            camera.translate(camera.position - (PointF3){translationX, 0, 0});
+            camera.strafe(deltaTime);
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_W))
@@ -162,7 +150,6 @@ void Program::update(void)
             rotationZ += 1.0f * deltaTime;
         }
 
-        // camera.translate({translationX, 0.f, zPosition});
         camera.rotate({0, cameraRotationY, 0});
         camera.update();
 
@@ -182,7 +169,7 @@ void Program::update(void)
         char zNearPosition[100] = {0};
         snprintf(zNearPosition, 100, "zNear: %f", zNear);
         graphics->imageData.printString({10, 100}, zNearPosition, {0xFF, 0, 0});
-        showGUI(shape, demoMode);
+        showGUI(camera, demoMode);
 
         graphics->endFrame();
         glfwPollEvents();

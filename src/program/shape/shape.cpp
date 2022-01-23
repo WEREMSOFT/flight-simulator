@@ -120,13 +120,13 @@ void Shape::draw(ImageData &pImageData, Camera camera)
     {
         auto triangle = projectedVerticesLocal[i];
         auto transformedNormal = transformedNormals[localNormalIndex[i]];
-        if (!backFaceCulingDisabled)
+        if (camera.backFaceCulling)
             if (isBackFace(transformedNormal, camera.position))
             {
                 continue;
             }
 
-        if (drawNormals)
+        if (camera.drawNormals)
         {
             auto transformedNormalX = static_cast<int>(transformedNormal.x * 10);
             auto transformedNormalY = static_cast<int>(transformedNormal.y * 10);
@@ -136,7 +136,7 @@ void Shape::draw(ImageData &pImageData, Camera camera)
             pImageData.drawLine({triangle[2].x, triangle[2].y}, {triangle[2].x + transformedNormalX, triangle[2].y + transformedNormalY});
         }
 
-        if (wireFrame)
+        if (camera.wireframe)
         {
             pImageData.drawLine(triangle[0], triangle[1], {255, 0, 0});
             pImageData.drawLine(triangle[1], triangle[2], {0, 255, 0});
@@ -152,16 +152,6 @@ void Shape::draw(ImageData &pImageData, Camera camera)
         Triangle<int32_t> triangleI = {triangle, color};
 
         rasterizeTriangle(triangleI, pImageData);
-        if (showVertexNumber)
-        {
-            char numberString[50] = {0};
-            snprintf(numberString, 50, "%d", i);
-            pImageData.printString(triangle[0], numberString);
-            snprintf(numberString, 50, "%d", i);
-            pImageData.printString(triangle[1], numberString);
-            snprintf(numberString, 50, "%d", i);
-            pImageData.printString(triangle[2], numberString);
-        }
     }
 }
 

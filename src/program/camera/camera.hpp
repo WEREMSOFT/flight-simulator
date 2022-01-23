@@ -8,6 +8,11 @@ protected:
 
 public:
     float zNear;
+    bool wireframe = false;
+    bool drawNormals = false;
+    bool backFaceCulling = true;
+    float speed = 200.f;
     Camera(float zNear = 50);
-    void moveForward(float distance);
+    void moveForward(float deltaTime);
+    void strafe(float deltaTime);
 };
