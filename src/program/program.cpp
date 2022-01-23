@@ -63,8 +63,10 @@ void Program::update(void)
 
     Shape shape(1);
     Shape cross(1);
+    Shape cube(1);
 
     Shape::appendPiramid(shape, 60, 60, {0, -40, 0});
+
     Shape::appendCube(shape, 45, {0, 0, 0});
     Shape::appendCube(cross, 10, {0, 0, 0});
     Shape::appendCube(cross, 10, {23, 0, 0});
@@ -72,8 +74,11 @@ void Program::update(void)
     Shape::appendCube(cross, 10, {0, 23, 0});
     Shape::appendCube(cross, 10, {0, -23, 0});
 
-    shape.translate({-50, 0, 200.f});
-    cross.translate({50, 0, 200.f});
+    Shape::appendPiramid(cube, 60, 60, {0});
+
+    shape.translate({0, 0, 800.f});
+    cross.translate({800.f, 0, 0});
+    cube.translate({0, 0, -800});
 
     Camera camera;
 
@@ -94,22 +99,26 @@ void Program::update(void)
 
         if (glfwGetKey(graphics->window, GLFW_KEY_UP))
         {
-            zPosition -= cameraSpeed * deltaTime;
+            // zPosition -= cameraSpeed * deltaTime;
+            camera.moveForward(cameraSpeed * deltaTime);
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_DOWN))
         {
-            zPosition += cameraSpeed * deltaTime;
+            // zPosition += cameraSpeed * deltaTime;
+            camera.moveForward(-(cameraSpeed * deltaTime));
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_LEFT))
         {
-            translationX += cameraSpeed * deltaTime;
+            // translationX += cameraSpeed * deltaTime;
+            cameraRotationY += 1.5f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_RIGHT))
         {
-            translationX -= cameraSpeed * deltaTime;
+            // translationX -= cameraSpeed * deltaTime;
+            cameraRotationY -= 1.5f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_Q))
@@ -124,12 +133,16 @@ void Program::update(void)
 
         if (glfwGetKey(graphics->window, GLFW_KEY_A))
         {
-            rotationY -= 1.5f * deltaTime;
+            // rotationY -= 1.5f * deltaTime;
+            translationX = cameraSpeed * deltaTime;
+            camera.translate(camera.position + (PointF3){translationX, 0, 0});
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_D))
         {
-            rotationY += 1.5f * deltaTime;
+            // rotationY += 1.5f * deltaTime;
+            translationX = cameraSpeed * deltaTime;
+            camera.translate(camera.position - (PointF3){translationX, 0, 0});
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_W))
@@ -149,20 +162,22 @@ void Program::update(void)
             rotationZ += 1.0f * deltaTime;
         }
 
-        camera.translate({translationX, 0.f, zPosition});
-        camera.rotate(0, cameraRotationY, 0);
+        // camera.translate({translationX, 0.f, zPosition});
+        camera.rotate({0, cameraRotationY, 0});
         camera.update();
 
         checker->draw(graphics->imageData);
 
-        shape.rotate(rotationX, rotationY, rotationZ);
-        cross.rotate(rotationX, rotationY, rotationZ);
+        shape.rotate({rotationX, rotationY, rotationZ});
+        cross.rotate({rotationX, rotationY, rotationZ});
 
         shape.update();
         cross.update();
+        cube.update();
 
         shape.draw(graphics->imageData, camera);
         cross.draw(graphics->imageData, camera);
+        cube.draw(graphics->imageData, camera);
         printFPS();
         char zNearPosition[100] = {0};
         snprintf(zNearPosition, 100, "zNear: %f", zNear);

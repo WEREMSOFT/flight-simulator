@@ -70,4 +70,23 @@ namespace MathUtils
 
         copyMatrix(mat1, returnValue);
     }
+
+    float det(PointF3 m[4])
+    {
+        float *mat = &m[0].x;
+        double c, r = 1;
+        for (int i = 0; i < 4; i++)
+        {
+
+            for (int k = i + 1; k < 4; k++)
+            {
+                c = mat[k * 4 + i] / mat[i * 4 + i];
+                for (int j = i; j < 4; j++)
+                    mat[k * 4 + j] = mat[k * 4 + j] - c * mat[i * 4 + j];
+            }
+        }
+        for (int i = 0; i < 4; i++)
+            r *= mat[i * 4 + i];
+        return r;
+    }
 }

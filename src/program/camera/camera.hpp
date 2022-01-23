@@ -9,4 +9,5 @@ protected:
 public:
     float zNear;
     Camera(float zNear = 50);
+    void moveForward(float distance);
 };

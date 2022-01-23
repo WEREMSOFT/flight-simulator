@@ -24,6 +24,12 @@ typedef Point3<int32_t> PointI;
 typedef Point2<uint32_t> PointU;
 typedef Point2<float> PointF;
 
+typedef union
+{
+    PointF3 p;
+    float a[4];
+} Mat4Elem;
+
 class ImageData
 {
 public:

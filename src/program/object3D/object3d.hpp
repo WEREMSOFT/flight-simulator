@@ -9,11 +9,12 @@ protected:
     virtual void recalculateTransformMatrix();
 
 public:
-    PointF3 position;
+    PointF3 position = {0};
+    PointF3 rotation = {0};
     PointF3 transformMatrix[4] = {0};
     Object3D();
     void translate(PointF3);
     void scale(PointF3);
-    void rotate(float x, float y, float z);
+    void rotate(PointF3 rotation);
     virtual void update(void);
 };

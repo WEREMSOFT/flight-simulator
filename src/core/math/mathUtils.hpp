@@ -25,4 +25,5 @@ namespace MathUtils
     void setMatrixAsIdentity(PointF3 matrix[4]);
     void copyMatrix(PointF3 destination[4], PointF3 source[4]);
     void multiplyMatrix(PointF3 mat1[4], PointF3 mat2[4]);
+    float det(PointF3 mat[4]);
 }
