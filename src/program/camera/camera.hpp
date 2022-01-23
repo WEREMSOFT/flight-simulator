@@ -15,4 +15,5 @@ public:
     Camera(float zNear = 50);
     void moveForward(float deltaTime);
     void strafe(float deltaTime);
+    PointF3 getForwardVector();
 };

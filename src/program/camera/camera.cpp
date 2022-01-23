@@ -33,3 +33,8 @@ void Camera::recalculateTransformMatrix()
     MathUtils::multiplyMatrix(transformMatrix, rotationMatrix);
     MathUtils::multiplyMatrix(transformMatrix, scaleMatrix);
 }
+
+PointF3 Camera::getForwardVector()
+{
+    return {-sinf(rotation.y), 0, cosf(rotation.y)};
+}

@@ -166,9 +166,6 @@ void Program::update(void)
         cross.draw(graphics->imageData, camera);
         cube.draw(graphics->imageData, camera);
         printFPS();
-        char zNearPosition[100] = {0};
-        snprintf(zNearPosition, 100, "zNear: %f", zNear);
-        graphics->imageData.printString({10, 100}, zNearPosition, {0xFF, 0, 0});
         showGUI(camera, demoMode);
 
         graphics->endFrame();

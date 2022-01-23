@@ -26,9 +26,9 @@ Shape::~Shape()
 {
 }
 
-bool Shape::isBackFace(PointF3 normal, PointF3 cameraPosition)
+bool Shape::isBackFace(PointF3 normal, Camera camera)
 {
-    auto angle = normal.dot({0, 0, 1});
+    auto angle = normal.dot(camera.getForwardVector());
     return angle > 0;
 }
 
@@ -121,7 +121,7 @@ void Shape::draw(ImageData &pImageData, Camera camera)
         auto triangle = projectedVerticesLocal[i];
         auto transformedNormal = transformedNormals[localNormalIndex[i]];
         if (camera.backFaceCulling)
-            if (isBackFace(transformedNormal, camera.position))
+            if (isBackFace(transformedNormal, camera))
             {
                 continue;
             }
