@@ -24,7 +24,7 @@ void showGUI(Camera &camera, bool &demoMode, bool &drawZBuffer)
         {
             ImGui::Begin("Debug");
             ImGui::Checkbox("Show Wireframe", &camera.wireframe);
-            ImGui::Checkbox("Disable BackFaceCuling", &camera.backFaceCulling);
+            ImGui::Checkbox("BackFaceCuling", &camera.backFaceCulling);
             ImGui::Checkbox("Draw Normals", &camera.drawNormals);
             ImGui::Checkbox("Draw ZBuffer", &drawZBuffer);
             ImGui::Checkbox("Demo Mode", &demoMode);
