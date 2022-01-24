@@ -3,6 +3,8 @@
 #include <cstring>
 #include <array>
 #include <iostream>
+#include <limits>
+
 extern char fonts[][5];
 
 ImageData::ImageData(PointI pSize)
@@ -252,6 +254,20 @@ void ImageData::drawSquareFill(PointI topLeftCorner, PointI size, Color color)
         for (int j = topLeftCorner.y; j <= topLeftCorner.y + size.y; j++)
         {
             this->putPixel({i, j}, color);
+        }
+    }
+}
+
+void ImageData::drawZBuffer(PointI position)
+{
+    auto ratio = 255.f / 1000.f;
+    for (int i = 0; i < size.x; i++)
+    {
+        for (int j = 0; j < size.y; j++)
+        {
+
+            auto pixel = static_cast<unsigned char>(getPixelZBuffer({i, j}) * ratio);
+            this->putPixel({i, j}, {pixel, pixel, pixel});
         }
     }
 }

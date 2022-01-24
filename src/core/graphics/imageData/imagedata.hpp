@@ -52,7 +52,7 @@ public:
     void drawLine(PointI pointA, PointI pointB, Color color = {0xFF, 0xFF, 0xFF});
     void drawLineZ(PointI pointA, PointI pointB, std::array<PointI, 3> triangle, Color color);
     void drawSquareFill(PointI topLeftCorner, PointI size, Color color = {0xFF, 0xFF, 0xFF});
-
+    void drawZBuffer(PointI position);
     Color getPixel(PointU position);
     bool putPixelZbuffer(PointI point, int32_t color);
     int32_t getPixelZBuffer(PointI position);

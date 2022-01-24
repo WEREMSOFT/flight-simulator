@@ -9,7 +9,7 @@
 #include "../imgui/imgui_impl_opengl3.h"
 #include "../core/gameObject/gameObject.hpp"
 
-void showGUI(Camera &camera, bool &demoMode)
+void showGUI(Camera &camera, bool &demoMode, bool &drawZBuffer)
 {
     static bool showDebugWindow = true;
     if (ImGui::BeginMainMenuBar())
@@ -26,6 +26,7 @@ void showGUI(Camera &camera, bool &demoMode)
             ImGui::Checkbox("Show Wireframe", &camera.wireframe);
             ImGui::Checkbox("Disable BackFaceCuling", &camera.backFaceCulling);
             ImGui::Checkbox("Draw Normals", &camera.drawNormals);
+            ImGui::Checkbox("Draw ZBuffer", &drawZBuffer);
             ImGui::Checkbox("Demo Mode", &demoMode);
             ImGui::End();
         }
@@ -56,16 +57,15 @@ void Program::update(void)
 
     Graphics *graphics = this->graphics.get();
     bool demoMode = false;
-
-    float zNear = 50;
+    bool drawZBuffer = false;
 
     Shape shape(1);
     Shape cross(1);
     Shape cube(1);
 
-    Shape::appendPiramid(shape, 60, 60, {0, -40, 0});
+    Shape::appendPiramid(shape, 60, 60, {0, -85, 0});
 
-    Shape::appendCube(shape, 45, {0, 0, 0});
+    Shape::appendCube(shape, 45, {0, -45, 0});
     Shape::appendCube(cross, 10, {0, 0, 0});
     Shape::appendCube(cross, 10, {23, 0, 0});
     Shape::appendCube(cross, 10, {-23, 0, 0});
@@ -166,7 +166,12 @@ void Program::update(void)
         cross.draw(graphics->imageData, camera);
         cube.draw(graphics->imageData, camera);
         printFPS();
-        showGUI(camera, demoMode);
+        showGUI(camera, demoMode, drawZBuffer);
+
+        if (drawZBuffer)
+        {
+            graphics->imageData.drawZBuffer({0});
+        }
 
         graphics->endFrame();
         glfwPollEvents();
