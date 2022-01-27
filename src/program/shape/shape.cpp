@@ -28,8 +28,9 @@ Shape::~Shape()
 
 bool Shape::isBackFace(PointF3 normal, Camera camera)
 {
-    auto angle = normal.dot(camera.getForwardVector());
-    return angle > 0;
+    auto angle = std::abs(acosf(normal.normalize().dot(camera.getForwardVector().normalize())));
+    std::cout << angle << std::endl;
+    return angle < M_PI_2;
 }
 
 bool Shape::sortTriangleZ(PointF3 a, PointF3 b)

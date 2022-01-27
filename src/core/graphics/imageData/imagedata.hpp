@@ -55,14 +55,14 @@ public:
     void drawZBuffer(PointI position);
     Color getPixel(PointU position);
     bool putPixelZbuffer(PointI point, int32_t color);
-    int32_t getPixelZBuffer(PointI position);
+    uint64_t getPixelZBuffer(PointI position);
 
     PointI size;
     int bufferSize;
     int elementCount;
 
     std::vector<Color> data;
-    std::vector<int32_t> zBuffer;
+    std::vector<uint64_t> zBuffer;
 
 private:
     uint32_t textureId;

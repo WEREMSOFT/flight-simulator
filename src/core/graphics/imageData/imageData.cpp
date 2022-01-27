@@ -51,13 +51,13 @@ Color ImageData::getPixel(PointU point)
     return this->data[position];
 }
 
-int32_t ImageData::getPixelZBuffer(PointI point)
+uint64_t ImageData::getPixelZBuffer(PointI point)
 {
     if (!(point.x > 0 &&
           point.y > 0 &&
           point.x < size.x &&
           point.y < size.y))
-        return INT32_MIN;
+        return 0;
     int position = point.x + point.y * this->size.x;
     return this->zBuffer[position];
 }
@@ -284,7 +284,7 @@ void ImageData::createTexture(void)
     Color initialColor = {0};
 
     data = std::vector<Color>(size.x * size.y, initialColor);
-    zBuffer = std::vector<int32_t>(size.x * size.y, INT32_MIN);
+    zBuffer = std::vector<uint64_t>(size.x * size.y, 0);
 
     glTexImage2D(GL_TEXTURE_2D,
                  0,

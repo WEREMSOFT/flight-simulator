@@ -1,67 +1,117 @@
 [
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/program/bouncingPoint/bouncingPoint.cpp -o src/program/bouncingPoint/bouncingPoint.opp",
-    "file": "src/program/bouncingPoint/bouncingPoint.opp"
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/program/object3D/object3d.cpp -o src/program/object3D/object3d.opp",
+    "file": "src/program/object3D/object3d.opp"
   },
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/program/program.cpp -o src/program/program.opp",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/program/program.cpp -o src/program/program.opp",
     "file": "src/program/program.opp"
   },
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/program/shape/shape.cpp -o src/program/shape/shape.opp",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/program/shape/shape.cpp -o src/program/shape/shape.opp",
     "file": "src/program/shape/shape.opp"
   },
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/main.cpp -o src/main.opp",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/program/camera/camera.cpp -o src/program/camera/camera.opp",
+    "file": "src/program/camera/camera.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/main.cpp -o src/main.opp",
     "file": "src/main.opp"
   },
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/shader/shader.cpp -o src/core/shader/shader.opp",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/imgui/imgui_draw.cpp -o src/imgui/imgui_draw.opp",
+    "file": "src/imgui/imgui_draw.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/imgui/imgui_widgets.cpp -o src/imgui/imgui_widgets.opp",
+    "file": "src/imgui/imgui_widgets.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/imgui/imgui_tables.cpp -o src/imgui/imgui_tables.opp",
+    "file": "src/imgui/imgui_tables.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/imgui/imgui_demo.cpp -o src/imgui/imgui_demo.opp",
+    "file": "src/imgui/imgui_demo.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/imgui/imgui_impl_opengl3.cpp -o src/imgui/imgui_impl_opengl3.opp",
+    "file": "src/imgui/imgui_impl_opengl3.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/imgui/imgui_impl_glfw.cpp -o src/imgui/imgui_impl_glfw.opp",
+    "file": "src/imgui/imgui_impl_glfw.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/imgui/imgui.cpp -o src/imgui/imgui.opp",
+    "file": "src/imgui/imgui.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/core/shader/shader.cpp -o src/core/shader/shader.opp",
     "file": "src/core/shader/shader.opp"
   },
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/fonts/fonts.cpp -o src/core/fonts/fonts.opp",
-    "file": "src/core/fonts/fonts.opp"
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/core/gameObject/gameObject.cpp -o src/core/gameObject/gameObject.opp",
+    "file": "src/core/gameObject/gameObject.opp"
   },
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/input/keyboard.cpp -o src/core/input/keyboard.opp",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/core/math/mathUtils.cpp -o src/core/math/mathUtils.opp",
+    "file": "src/core/math/mathUtils.opp"
+  },
+  {
+    "directory": ".",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/core/input/keyboard.cpp -o src/core/input/keyboard.opp",
     "file": "src/core/input/keyboard.opp"
   },
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/input/mouse.cpp -o src/core/input/mouse.opp",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/core/input/mouse.cpp -o src/core/input/mouse.opp",
     "file": "src/core/input/mouse.opp"
   },
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/graphics/graphics.cpp -o src/core/graphics/graphics.opp",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/core/graphics/graphics.cpp -o src/core/graphics/graphics.opp",
     "file": "src/core/graphics/graphics.opp"
   },
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/graphics/imageData/imageData.cpp -o src/core/graphics/imageData/imageData.opp",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/core/graphics/imageData/imageData.cpp -o src/core/graphics/imageData/imageData.opp",
     "file": "src/core/graphics/imageData/imageData.opp"
   },
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/graphics/sprite/sprite.cpp -o src/core/graphics/sprite/sprite.opp",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/core/graphics/sprite/sprite.cpp -o src/core/graphics/sprite/sprite.opp",
     "file": "src/core/graphics/sprite/sprite.opp"
   },
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -std=c++17 -Ilibs/include -Ilibs/GLAD/include src/core/graphics/sprite/animation/animation.cpp -o src/core/graphics/sprite/animation/animation.opp",
+    "command": "clang -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/core/graphics/sprite/animation/animation.cpp -o src/core/graphics/sprite/animation/animation.opp",
     "file": "src/core/graphics/sprite/animation/animation.opp"
   },
   {
     "directory": ".",
-    "command": "clang -c -g3 -O0 -Ilibs/include -Ilibs/GLAD/include libs/GLAD/src/glad.c -o libs/GLAD/src/glad.o",
+    "command": "clang -g3 -O0 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c libs/GLAD/src/glad.c -o libs/GLAD/src/glad.o",
     "file": "libs/GLAD/src/glad.o"
+  },
+  {
+    "directory": ".",
+    "command": "clang -g3 -O0 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -c src/core/fonts/fonts.c -o src/core/fonts/fonts.o",
+    "file": "src/core/fonts/fonts.o"
   }
 ]

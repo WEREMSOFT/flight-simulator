@@ -26,10 +26,10 @@ all: $(OBJ) $(OBJ_C) copy_assets $(SRC_H)
 	@touch $@
 
 %.opp: %.cpp
-	$(CC) -c $(FLAGS) $^ -o $@
+	$(CC) $(FLAGS) -c $^ -o $@
 
 %.o: %.c
-	$(CC) -c $(FLAGS_C) $^ -o $@
+	$(CC) $(FLAGS_C) -c $^ -o $@
 
 
 run_main: all

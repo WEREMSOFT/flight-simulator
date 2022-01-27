@@ -4,7 +4,7 @@
 class Camera : public Object3D
 {
 protected:
-    void recalculateTransformMatrix();
+    void recalculateTransformMatrix() override;
 
 public:
     float zNear;
