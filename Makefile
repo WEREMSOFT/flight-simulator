@@ -1,21 +1,36 @@
+SRC_SONAR := $(shell find src -path src/imgui -prune -o -name '*.cpp' -print)
+SRC_C_SONAR := $(shell find src -path src/imgui -prune -o -name '*.c' -print)
+OBJ_SONAR := $(patsubst %.cpp,%.opp,$(SRC_SONAR))
+OBJ_C_SONAR := $(patsubst %.c,%.o,$(SRC_C_SONAR))
+
 SRC := $(shell find src -name *.cpp)
 SRC_C := $(shell find libs -name *.c) $(shell find src -name *.c) 
 SRC_H := $(shell find src -name *.hpp) $(shell find src -name *.h)
 OBJ := $(patsubst %.cpp,%.opp,$(SRC))
 OBJ_C := $(patsubst %.c,%.o,$(SRC_C))
 CC := clang
+OLEVEL := -O0
+DEBUG_LEVEL := -g3
 INCLUDES := -Ilibs/include -Ilibs/GLAD/include
-FLAGS := -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option $(INCLUDES)
-FLAGS_RELEASE := -g0 -O4 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option $(INCLUDES)
-FLAGS_C := -g3 -O0 -Wall -Wno-missing-braces -Wno-unknown-warning-option $(INCLUDES)
-FLAGS_C_RELEASE := -g0 -O4 -Wno-missing-braces $(INCLUDES)
+FLAGS := $(DEBUG_LEVEL) $(OLEVEL) -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option $(INCLUDES)
+FLAGS_RELEASE := $(DEBUG_LEVEL) $(OLEVEL) -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option $(INCLUDES)
+FLAGS_C := $(DEBUG_LEVEL) $(OLEVEL) -Wall -Wno-missing-braces -Wno-unknown-warning-option $(INCLUDES)
+FLAGS_C_RELEASE := $(DEBUG_LEVEL) $(OLEVEL) -Wno-missing-braces $(INCLUDES)
 LIBS := -lstdc++ -lm -lglfw -ldl -lGL
 TARGET := bin/main.bin
 
 
 all: $(OBJ) $(OBJ_C) copy_assets $(SRC_H)
-#@echo $(OBJ) $(OBJ_C) $(SRC_C) $(SRC_H)
 	@$(CC) $(FLAGS) $(OBJ) $(OBJ_C) -o $(TARGET) $(LIBS)
+
+build_sonar: $(OBJ_SONAR) $(OBJ_C_SONAR) copy_assets $(SRC_H)
+	@echo done
+
+sonar: 
+	sonar-scanner -X -Dsonar.projectKey=flight-simulator -Dsonar.sources=./src -Dsonar.cfamily.build-wrapper-output=bw-output -Dsonar.host.url=http://localhost:9000 -Dsonar.login=7ba39dbe5850eea0a1e5195b6f14998719383566
+
+sonar_build_wrapper:
+	build-wrapper-linux-x86-64 --out-dir bw-output make build_sonar
 
 %.cpp: %.hpp
 	@echo "$@ updated"

@@ -12,10 +12,6 @@ ImageData::ImageData(PointI pSize)
     size = pSize;
 }
 
-ImageData::~ImageData()
-{
-}
-
 void ImageData::init()
 {
     createTexture();

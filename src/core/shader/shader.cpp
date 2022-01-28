@@ -26,7 +26,7 @@ Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath)
     if (!success)
     {
         char infoLog[512];
-        glGetProgramInfoLog(this->shaderProgram, 512, NULL, infoLog);
+        glGetProgramInfoLog(this->shaderProgram, 512, nullptr, infoLog);
         printf("%s::%s - Error linking shader program: %s\n", __FILE__, __func__, infoLog);
         exit(-1);
     }
@@ -66,7 +66,7 @@ uint32_t Shader::createFromFile(std::string fileName, uint32_t *vertexShader, in
 
     shaderCode.assign((std::istreambuf_iterator<char>(shaderFile)), std::istreambuf_iterator<char>());
 
-    glShaderSource(*vertexShader, 1, (const char **)&shaderCode, NULL);
+    glShaderSource(*vertexShader, 1, (const char **)&shaderCode, nullptr);
 
     glCompileShader(*vertexShader);
 
@@ -77,7 +77,7 @@ uint32_t Shader::createFromFile(std::string fileName, uint32_t *vertexShader, in
 
     if (!shaderCompilationSuccess)
     {
-        glGetShaderInfoLog(*vertexShader, 512, NULL, infoLog);
+        glGetShaderInfoLog(*vertexShader, 512, nullptr, infoLog);
         printf("%s::%s : vertex shader compilation failed. Error %s\n", __FILE__, __func__, infoLog);
         returnValue = -1;
         goto error_handler;

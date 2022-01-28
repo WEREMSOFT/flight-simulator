@@ -34,7 +34,7 @@ class ImageData
 {
 public:
     ImageData(PointI size);
-    ~ImageData();
+    ~ImageData() = default;
 
     void init(void);
     void updateTexture(void);

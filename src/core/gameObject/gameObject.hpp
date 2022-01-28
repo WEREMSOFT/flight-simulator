@@ -9,6 +9,6 @@ public:
     int32_t id;
     std::vector<GameObject> children;
     GameObject();
-    ~GameObject();
+    ~GameObject() = default;
     void update(double deltaTime);
 };

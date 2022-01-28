@@ -26,11 +26,10 @@ Shape::~Shape()
 {
 }
 
-bool Shape::isBackFace(PointF3 normal, Camera camera)
+bool Shape::isBackFace(PointF3 normal, PointF3 vector)
 {
-    auto angle = std::abs(acosf(normal.normalize().dot(camera.getForwardVector().normalize())));
-    std::cout << angle << std::endl;
-    return angle < M_PI_2;
+    auto angle = acosf(normal.normalize().dot(vector.normalize()));
+    return angle < 1.4f;
 }
 
 bool Shape::sortTriangleZ(PointF3 a, PointF3 b)
@@ -122,7 +121,7 @@ void Shape::draw(ImageData &pImageData, Camera camera)
         auto triangle = projectedVerticesLocal[i];
         auto transformedNormal = transformedNormals[localNormalIndex[i]];
         if (camera.backFaceCulling)
-            if (isBackFace(transformedNormal, camera))
+            if (isBackFace(transformedNormal, camera.getForwardVector()))
             {
                 continue;
             }
@@ -147,8 +146,8 @@ void Shape::draw(ImageData &pImageData, Camera camera)
         Color color = {0, 0, 255};
         auto component = transformedNormal.angleWith({1, 1, 1}) / ANGLE_RATIO;
         color = {static_cast<unsigned char>(component),
-                 static_cast<unsigned char>(0),
-                 static_cast<unsigned char>(255 - component)};
+                 static_cast<unsigned char>(component),
+                 static_cast<unsigned char>(component)};
 
         Triangle<int32_t> triangleI = {triangle, color};
 

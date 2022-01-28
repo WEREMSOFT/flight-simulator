@@ -8,7 +8,7 @@
 
 class Shape : public Object3D
 {
-    bool isBackFace(PointF3 normal, Camera camera);
+    bool isBackFace(PointF3 normal, PointF3 vector);
     static bool sortTriangleZ(PointF3 a, PointF3 b);
     void transform();
 

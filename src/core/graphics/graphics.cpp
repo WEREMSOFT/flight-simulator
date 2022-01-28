@@ -39,7 +39,7 @@ Graphics::Graphics(int32_t width, int32_t height) : imageData({width, height})
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    this->window = glfwCreateWindow(mode->width, mode->height, "Frame Buffer", monitor, NULL);
+    this->window = glfwCreateWindow(mode->width, mode->height, "Frame Buffer", monitor, nullptr);
     glfwMakeContextCurrent(this->window);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))

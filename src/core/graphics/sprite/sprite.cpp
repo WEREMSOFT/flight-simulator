@@ -8,7 +8,7 @@
 Sprite::Sprite(std::string fileName)
 {
     int nrChannels;
-    PointI p = { 0, 0, 0, 0 };
+    PointI p = {0, 0, 0, 0};
     imageData = std::make_unique<ImageData>(p);
 
     auto im = imageData.get();
@@ -21,7 +21,7 @@ Sprite::Sprite(std::string fileName)
 
     std::copy(vectorPointer, vectorPointer + im->elementCount, std::back_inserter(im->data));
 
-    if (vectorPointer == NULL)
+    if (vectorPointer == nullptr)
     {
         std::cerr << "Error loading file " << fileName << ". Aborting." << std::endl;
         exit(-1);
@@ -30,7 +30,7 @@ Sprite::Sprite(std::string fileName)
 
 Sprite::Sprite(PointI size)
 {
-    PointI p = { 0 };
+    PointI p = {0};
     imageData = std::make_unique<ImageData>(p);
     auto im = imageData.get();
 
