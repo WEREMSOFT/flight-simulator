@@ -2,6 +2,7 @@ SRC_SONAR := $(shell find src -path src/imgui -prune -o -name '*.cpp' -print)
 SRC_C_SONAR := $(shell find src -path src/imgui -prune -o -name '*.c' -print)
 OBJ_SONAR := $(patsubst %.cpp,%.opp,$(SRC_SONAR))
 OBJ_C_SONAR := $(patsubst %.c,%.o,$(SRC_C_SONAR))
+SRC_H_SONAR := $(shell find src -path src/imgui -prune -o -name '*.hpp' -print) $(shell find src -path src/imgui -prune -o -name '*.h' -print)
 
 SRC := $(shell find src -name *.cpp)
 SRC_C := $(shell find libs -name *.c) $(shell find src -name *.c) 
@@ -19,11 +20,10 @@ FLAGS_C_RELEASE := $(DEBUG_LEVEL) $(OLEVEL) -Wno-missing-braces $(INCLUDES)
 LIBS := -lstdc++ -lm -lglfw -ldl -lGL
 TARGET := bin/main.bin
 
-
 all: $(OBJ) $(OBJ_C) copy_assets $(SRC_H)
 	@$(CC) $(FLAGS) $(OBJ) $(OBJ_C) -o $(TARGET) $(LIBS)
 
-build_sonar: $(OBJ_SONAR) $(OBJ_C_SONAR) copy_assets $(SRC_H)
+build_sonar: $(OBJ_SONAR) $(OBJ_C_SONAR) $(SRC_H_SONAR)
 	@echo done
 
 sonar: 

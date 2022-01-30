@@ -45,7 +45,7 @@ void Shape::clipTriangle(TrianglesF &triangles, TriangleF triangle, float z, std
         if (vertex.z >= z)
             vertexInside++;
     }
-
+    // discard triangle
     if (vertexInside == 0)
         return;
 
@@ -251,10 +251,10 @@ void Shape::appendQuad(Shape &shape, float cubeSize, PointF3 position)
 {
     uint32_t vertexOffset = shape.vertices.size();
 
-    shape.vertices.emplace_back(position + (PointF3){-cubeSize, -cubeSize, cubeSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){cubeSize, -cubeSize, cubeSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){cubeSize, cubeSize, cubeSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){-cubeSize, cubeSize, cubeSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF3){-cubeSize, -cubeSize, 0, 1.f});
+    shape.vertices.emplace_back(position + (PointF3){cubeSize, -cubeSize, 0, 1.f});
+    shape.vertices.emplace_back(position + (PointF3){cubeSize, cubeSize, 0, 1.f});
+    shape.vertices.emplace_back(position + (PointF3){-cubeSize, cubeSize, 0, 1.f});
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 2, vertexOffset + 1}));
     shape.normals.emplace_back(

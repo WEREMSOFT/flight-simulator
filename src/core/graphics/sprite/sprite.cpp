@@ -12,7 +12,7 @@ Sprite::Sprite(std::string fileName)
     imageData = std::make_unique<ImageData>(p);
 
     auto im = imageData.get();
-    auto vectorPointer = (Color *)stbi_load(fileName.c_str(), &im->size.x, &im->size.y, &nrChannels, 0);
+    Color *vectorPointer = (Color *)stbi_load(fileName.c_str(), &im->size.x, &im->size.y, &nrChannels, 0);
 
     im->elementCount = im->size.x * im->size.y;
     im->bufferSize = im->elementCount * sizeof(char) * nrChannels;
@@ -26,6 +26,7 @@ Sprite::Sprite(std::string fileName)
         std::cerr << "Error loading file " << fileName << ". Aborting." << std::endl;
         exit(-1);
     }
+    free(vectorPointer);
 }
 
 Sprite::Sprite(PointI size)
