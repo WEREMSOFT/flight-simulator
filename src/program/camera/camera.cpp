@@ -4,7 +4,9 @@
 
 Camera::Camera(float pZNear)
 {
-    zNear = 50;
+    frustrum.x = -700;
+    frustrum.z = 50;
+    frustrum.w = 700;
 
     MathUtils::setMatrixAsIdentity(transformMatrix);
     MathUtils::setMatrixAsIdentity(rotationMatrix);

@@ -12,7 +12,7 @@ namespace MathUtils
     {
         PointF3 diff = linePoint - planePoint;
 
-        return (diff + planePoint) + lineVector.scale(-diff.dot(planeNormal) / lineVector.dot(planeNormal));
+        return linePoint + lineVector.scale(-diff.dot(planeNormal) / lineVector.dot(planeNormal));
     }
 
     void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[4])

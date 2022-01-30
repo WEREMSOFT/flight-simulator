@@ -37,6 +37,23 @@ bool Shape::sortTriangleZ(PointF3 a, PointF3 b)
     return a.z > b.z;
 }
 
+bool Shape::sortTriangleX(PointF3 a, PointF3 b)
+{
+    return a.x < b.x;
+}
+
+bool Shape::sortTriangleXRight(PointF3 a, PointF3 b)
+{
+    return a.x > b.x;
+}
+
+/*
+triangles is the destination array where the additional triangles are stored.
+triangle is the triangle to be clipped
+z is the value which the triangle will be clipped on the Z
+localNormalIndex is where the new normals will be stored
+normalIndex is the normalIndex of the triangle to be clipped. The resulting triangles will share the same normal.
+*/
 void Shape::clipTriangle(TrianglesF &triangles, TriangleF triangle, float z, std::vector<uint32_t> &localNormalIndex, int32_t normalIndex)
 {
     int vertexInside = 0;
@@ -59,6 +76,7 @@ void Shape::clipTriangle(TrianglesF &triangles, TriangleF triangle, float z, std
     if (vertexInside == 1)
     {
         std::sort(triangle.begin(), triangle.end(), Shape::sortTriangleZ);
+        // the normal of the zNear plane is hardcoded. Also the vector that locates the plane.
         triangle[1] = MathUtils::intersectionPoint((triangle[0] - triangle[1]), triangle[1], {0, 0, 1}, {0, 0, z});
         triangle[2] = MathUtils::intersectionPoint((triangle[0] - triangle[2]), triangle[2], {0, 0, 1}, {0, 0, z});
         triangles.emplace_back(triangle);
@@ -71,10 +89,108 @@ void Shape::clipTriangle(TrianglesF &triangles, TriangleF triangle, float z, std
         std::sort(triangle.begin(), triangle.end(), Shape::sortTriangleZ);
         TriangleF newTriangle = {0};
         newTriangle[0] = triangle[1];
-        newTriangle[1] = MathUtils::intersectionPoint((triangle[0] - triangle[2]), triangle[2], {0, 0, -1}, {0, 0, z});
+        newTriangle[1] = MathUtils::intersectionPoint((triangle[0] - triangle[2]), triangle[2], {0, 0, 1}, {0, 0, z});
         newTriangle[2] = MathUtils::intersectionPoint((triangle[1] - triangle[2]), triangle[1], {0, 0, 1}, {0, 0, z});
 
-        triangle[2] = MathUtils::intersectionPoint((triangle[0] - triangle[2]), triangle[2], {0, 0, -1}, {0, 0, z});
+        triangle[2] = MathUtils::intersectionPoint((triangle[0] - triangle[2]), triangle[2], {0, 0, 1}, {0, 0, z});
+        triangles.emplace_back(triangle);
+        localNormalIndex.emplace_back(normalIndex);
+
+        triangles.emplace_back(newTriangle);
+        localNormalIndex.emplace_back(normalIndex);
+
+        return;
+    }
+}
+
+void Shape::clipTriangleLeft(TrianglesF &triangles, TriangleF triangle, float x, std::vector<uint32_t> &localNormalIndex, int32_t normalIndex)
+{
+    int vertexInside = 0;
+    for (auto &vertex : triangle)
+    {
+        if (vertex.x < x)
+            vertexInside++;
+    }
+    // discard triangle
+    if (vertexInside == 0)
+        return;
+
+    if (vertexInside == 3)
+    {
+        triangles.emplace_back(triangle);
+        localNormalIndex.emplace_back(normalIndex);
+        return;
+    }
+
+    if (vertexInside == 1)
+    {
+        std::sort(triangle.begin(), triangle.end(), Shape::sortTriangleX);
+        // the normal of the zNear plane is hardcoded. Also the vector that locates the plane.
+        triangle[1] = MathUtils::intersectionPoint((triangle[0] - triangle[1]), triangle[1], {-1, 0, 0}, {x, 0, 0});
+        triangle[2] = MathUtils::intersectionPoint((triangle[0] - triangle[2]), triangle[2], {-1, 0, 0}, {x, 0, 0});
+        triangles.emplace_back(triangle);
+        localNormalIndex.emplace_back(normalIndex);
+        return;
+    }
+
+    if (vertexInside == 2)
+    {
+        std::sort(triangle.begin(), triangle.end(), Shape::sortTriangleX);
+        TriangleF newTriangle = {0};
+        newTriangle[0] = triangle[1];
+        newTriangle[1] = MathUtils::intersectionPoint((triangle[0] - triangle[2]), triangle[2], {-1, 0, 0}, {x, 0, 0});
+        newTriangle[2] = MathUtils::intersectionPoint((triangle[1] - triangle[2]), triangle[1], {-1, 0, 0}, {x, 0, 0});
+
+        triangle[2] = MathUtils::intersectionPoint((triangle[0] - triangle[2]), triangle[2], {-1, 0, 0}, {x, 0, 0});
+        triangles.emplace_back(triangle);
+        localNormalIndex.emplace_back(normalIndex);
+
+        triangles.emplace_back(newTriangle);
+        localNormalIndex.emplace_back(normalIndex);
+
+        return;
+    }
+}
+
+void Shape::clipTriangleRight(TrianglesF &triangles, TriangleF triangle, float x, std::vector<uint32_t> &localNormalIndex, int32_t normalIndex)
+{
+    int vertexInside = 0;
+    for (auto &vertex : triangle)
+    {
+        if (vertex.x > x)
+            vertexInside++;
+    }
+    // discard triangle
+    if (vertexInside == 0)
+        return;
+
+    if (vertexInside == 3)
+    {
+        triangles.emplace_back(triangle);
+        localNormalIndex.emplace_back(normalIndex);
+        return;
+    }
+
+    if (vertexInside == 1)
+    {
+        std::sort(triangle.begin(), triangle.end(), Shape::sortTriangleXRight);
+        // the normal of the zNear plane is hardcoded. Also the vector that locates the plane.
+        triangle[1] = MathUtils::intersectionPoint((triangle[0] - triangle[1]), triangle[1], {-1, 0, 0}, {x, 0, 0});
+        triangle[2] = MathUtils::intersectionPoint((triangle[0] - triangle[2]), triangle[2], {-1, 0, 0}, {x, 0, 0});
+        triangles.emplace_back(triangle);
+        localNormalIndex.emplace_back(normalIndex);
+        return;
+    }
+
+    if (vertexInside == 2)
+    {
+        std::sort(triangle.begin(), triangle.end(), Shape::sortTriangleXRight);
+        TriangleF newTriangle = {0};
+        newTriangle[0] = triangle[1];
+        newTriangle[1] = MathUtils::intersectionPoint((triangle[0] - triangle[2]), triangle[2], {-1, 0, 0}, {x, 0, 0});
+        newTriangle[2] = MathUtils::intersectionPoint((triangle[1] - triangle[2]), triangle[1], {-1, 0, 0}, {x, 0, 0});
+
+        triangle[2] = MathUtils::intersectionPoint((triangle[0] - triangle[2]), triangle[2], {-1, 0, 0}, {x, 0, 0});
         triangles.emplace_back(triangle);
         localNormalIndex.emplace_back(normalIndex);
 
@@ -94,8 +210,11 @@ void Shape::update(void)
 void Shape::draw(ImageData &pImageData, Camera camera)
 {
     TrianglesF clippedTriangles;
+    TrianglesF clippedTriangles2;
+
     TrianglesI projectedVerticesLocal;
     std::vector<uint32_t> localNormalIndex;
+    std::vector<uint32_t> localNormalIndex2;
     std::vector<PointF3> transformedVerticesLocal;
 
     transformedVerticesLocal.reserve(transformedVertices.size());
@@ -111,7 +230,20 @@ void Shape::draw(ImageData &pImageData, Camera camera)
         PointF3 p1 = {transformedVerticesLocal[index[0]].x, transformedVerticesLocal[index[0]].y, transformedVerticesLocal[index[0]].z};
         PointF3 p2 = {transformedVerticesLocal[index[1]].x, transformedVerticesLocal[index[1]].y, transformedVerticesLocal[index[1]].z};
         PointF3 p3 = {transformedVerticesLocal[index[2]].x, transformedVerticesLocal[index[2]].y, transformedVerticesLocal[index[2]].z};
-        clipTriangle(clippedTriangles, {p1, p2, p3}, camera.zNear, localNormalIndex, normalIndex[i]);
+        clipTriangleRight(clippedTriangles, {p1, p2, p3}, camera.frustrum.x, localNormalIndex, normalIndex[i]);
+    }
+
+    for (int i = 0; i < clippedTriangles.size(); i++)
+    {
+        clipTriangleLeft(clippedTriangles2, clippedTriangles[i], camera.frustrum.w, localNormalIndex2, localNormalIndex[i]);
+    }
+
+    clippedTriangles.clear();
+    localNormalIndex.clear();
+
+    for (int i = 0; i < clippedTriangles2.size(); i++)
+    {
+        clipTriangle(clippedTriangles, clippedTriangles2[i], camera.frustrum.z, localNormalIndex, localNormalIndex2[i]);
     }
 
     project(projectedVerticesLocal, clippedTriangles, 100);
