@@ -5,6 +5,7 @@
 #include "../../core/graphics/imageData/imagedata.hpp"
 #include "../camera/camera.hpp"
 #include "../object3D/object3d.hpp"
+#include <functional>
 
 class Shape : public Object3D
 {
@@ -33,9 +34,15 @@ public:
     void project(TrianglesI &pProjectedVertices, TrianglesF &triangles, float distance);
 
     void rasterizeTriangle(Triangle<int32_t> triangle, ImageData &pImageData);
-    void clipTriangle(TrianglesF &triangles, TriangleF triangle, float z, std::vector<uint32_t> &localNormalIndex, int32_t normalIndex);
-    void clipTriangleLeft(TrianglesF &triangles, TriangleF triangle, float x, std::vector<uint32_t> &localNormalIndex, int32_t normalIndex);
-    void clipTriangleRight(TrianglesF &triangles, TriangleF triangle, float x, std::vector<uint32_t> &localNormalIndex, int32_t normalIndex);
+    void clipTriangleGeneric(TrianglesF &triangles,
+                             TriangleF triangle,
+                             float boundary,
+                             std::vector<uint32_t> &localNormalIndex,
+                             int32_t normalIndex,
+                             std::function<bool(PointF3, float)> compareFunc,
+                             std::function<bool(PointF3, PointF3)> sortFunc,
+                             PointF3 planeNormal,
+                             PointF3 planePoint);
 
     static Shape createCube(float cubeSize, float zPosition);
     static Shape createPyramid(float baseSize = 50, float height = 50, float zPosition = 140);
