@@ -16,6 +16,7 @@ class Shape : public Object3D
     void transform();
 
 public:
+    Color difuseColor;
     std::vector<PointF3> vertices;
     std::vector<PointF3> normals;
     std::vector<std::array<uint32_t, 3>> vertexIndex;

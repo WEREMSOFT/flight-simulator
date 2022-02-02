@@ -39,8 +39,8 @@ public:
     void init(void);
     void updateTexture(void);
     bool putPixel(PointI point, Color color = {0xFF, 0xFF, 0xFF});
-    void drawCircle(PointI center, double radius, Color color = {0xFF, 0xFF, 0xFF});
-    void drawCircleFill(PointI center, double radius, Color color = {0xFF, 0xFF, 0xFF});
+    void drawCircle(PointI center, int radius, Color color = {0xFF, 0xFF, 0xFF});
+    void drawCircleFill(PointI center, int radius, Color color = {0xFF, 0xFF, 0xFF});
     void drawSquare(PointI topLeftCorner, PointI size, Color color = {0xFF, 0xFF, 0xFF});
     void clear(void);
     void clearZBuffer(void);

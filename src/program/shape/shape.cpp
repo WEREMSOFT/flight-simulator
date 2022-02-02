@@ -12,6 +12,7 @@
 
 Shape::Shape(int vertexNum)
 {
+    difuseColor = {0xFF, 0xFF, 0xFF};
     vertices.reserve(vertexNum);
     transformedVertices.reserve(vertexNum);
     projectedVertices.reserve(vertexNum);
@@ -107,6 +108,9 @@ void Shape::draw(ImageData &pImageData, Camera camera)
 
     transformedVerticesLocal.reserve(transformedVertices.size());
 
+    PointF3 normal = {1, 0, 0};
+    normal = normal.normalize();
+
     for (auto i = 0; i < transformedVertices.size(); i++)
     {
         MathUtils::multiplyVertexByMatrix(transformedVerticesLocal[i], transformedVertices[i], camera.transformMatrix);
@@ -123,7 +127,7 @@ void Shape::draw(ImageData &pImageData, Camera camera)
             { return a.x > b; },
             [](PointF3 a, PointF3 b) -> bool
             { return a.x > b.x; },
-            {-1, 0, 0},
+            normal,
             {camera.frustrum.x, 0, 0});
     }
 
@@ -182,10 +186,10 @@ void Shape::draw(ImageData &pImageData, Camera camera)
             continue;
         }
         Color color = {0, 0, 255};
-        auto component = transformedNormal.angleWith({1, 1, 1}) / ANGLE_RATIO;
-        color = {static_cast<unsigned char>(component),
-                 static_cast<unsigned char>(component),
-                 static_cast<unsigned char>(component)};
+        auto component = transformedNormal.angleWith({1, 1, 1}) / M_PI;
+        color = {static_cast<unsigned char>(difuseColor.r * component),
+                 static_cast<unsigned char>(difuseColor.g * component),
+                 static_cast<unsigned char>(difuseColor.b * component)};
 
         Triangle<int32_t> triangleI = {triangle, color};
 

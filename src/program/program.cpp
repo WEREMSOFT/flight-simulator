@@ -50,6 +50,32 @@ Program::~Program()
     std::cout << "destroying program" << std::endl;
 }
 
+void createHouse(Shape &house)
+{
+    house.difuseColor = {0xFF, 0, 0};
+    Shape::appendPiramid(house, 60, 60, {0, -85, 0});
+    Shape::appendCube(house, 45, {0, -45, 0});
+    house.translate({0, 50, 800.f});
+}
+
+void createCross(Shape &cross)
+{
+    cross.difuseColor = {0, 0xFF, 0};
+    Shape::appendCube(cross, 10, {0, 0, 0});
+    Shape::appendCube(cross, 10, {23, 0, 0});
+    Shape::appendCube(cross, 10, {-23, 0, 0});
+    Shape::appendCube(cross, 10, {0, 23, 0});
+    Shape::appendCube(cross, 10, {0, -23, 0});
+    cross.translate({800.f, 0, 0});
+}
+
+void createPyramid(Shape &pyramid)
+{
+    pyramid.difuseColor = {0xFF, 0, 0xFF};
+    Shape::appendPiramid(pyramid, 500, 300, {0});
+    pyramid.translate({0, 0, -800});
+}
+
 void Program::update(void)
 {
     GameObject parent;
@@ -59,32 +85,20 @@ void Program::update(void)
     bool demoMode = false;
     bool drawZBuffer = false;
 
-    Shape shape(1);
+    Shape house(1);
     Shape cross(1);
-    Shape cube(1);
+    Shape pyramidPurple(1);
 
-    Shape::appendPiramid(shape, 60, 60, {0, -85, 0});
-
-    Shape::appendCube(shape, 45, {0, -45, 0});
-    Shape::appendCube(cross, 10, {0, 0, 0});
-    Shape::appendCube(cross, 10, {23, 0, 0});
-    Shape::appendCube(cross, 10, {-23, 0, 0});
-    Shape::appendCube(cross, 10, {0, 23, 0});
-    Shape::appendCube(cross, 10, {0, -23, 0});
-
-    Shape::appendPiramid(cube, 60, 60, {0});
-
-    shape.translate({0, 0, 800.f});
-    cross.translate({800.f, 0, 0});
-    cube.translate({0, 0, -800});
+    createHouse(house);
+    createCross(cross);
+    createPyramid(pyramidPurple);
 
     Camera camera;
 
-    auto tempChecker = Sprite::createSplit({320, 240}, 115, {0x77, 0x77, 0xAA}, {0, 0x77, 0});
+    // auto tempChecker = Sprite::createSplit({320, 240}, 115, {0x77, 0x77, 0xAA}, {0, 0x77, 0});
+    auto tempChecker = Sprite::createSplit({320, 240}, 115, {0, 0, 0}, {0, 0, 0});
     auto checker = tempChecker.get();
-    float rotationZ = 0;
     float rotationX = 0;
-    float rotationY = 0;
     float cameraRotationY = 0;
 
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -135,19 +149,19 @@ void Program::update(void)
 
         if (glfwGetKey(graphics->window, GLFW_KEY_W))
         {
-            rotationX -= 1.5f * deltaTime;
+            rotationX += camera.speed * deltaTime;
+            camera.translate({0, rotationX, 0});
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_S))
         {
-            rotationX += 1.5f * deltaTime;
+            rotationX -= camera.speed * deltaTime;
+            camera.translate({0, rotationX, 0});
         }
 
-        if (demoMode)
+        if (glfwGetKey(graphics->window, GLFW_KEY_R))
         {
-            rotationX += 1.0f * deltaTime;
-            rotationY += 1.0f * deltaTime;
-            rotationZ += 1.0f * deltaTime;
+            camera.translate({0, 0, 0});
         }
 
         camera.rotate({0, cameraRotationY, 0});
@@ -155,16 +169,13 @@ void Program::update(void)
 
         checker->draw(graphics->imageData);
 
-        shape.rotate({rotationX, rotationY, rotationZ});
-        cross.rotate({rotationX, rotationY, rotationZ});
-
-        shape.update();
+        house.update();
         cross.update();
-        cube.update();
+        pyramidPurple.update();
 
-        shape.draw(graphics->imageData, camera);
+        house.draw(graphics->imageData, camera);
         cross.draw(graphics->imageData, camera);
-        cube.draw(graphics->imageData, camera);
+        pyramidPurple.draw(graphics->imageData, camera);
         printFPS();
         showGUI(camera, demoMode, drawZBuffer);
 

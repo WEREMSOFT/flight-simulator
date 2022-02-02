@@ -69,7 +69,8 @@ Graphics::Graphics(int32_t width, int32_t height) : imageData({width, height})
     this->shaderProgram = std::make_unique<Shader>("assets/shaders/default.vs", "assets/shaders/default.fs");
     this->shaderProgram.get()->use();
 
-    unsigned int VBO, EBO;
+    uint32_t VBO;
+    uint32_t EBO;
     glGenVertexArrays(1, &this->VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -83,7 +84,7 @@ Graphics::Graphics(int32_t width, int32_t height) : imageData({width, height})
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
     // texture coord attribute
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
@@ -117,7 +118,7 @@ void Graphics::endFrame(void)
     imageData.updateTexture();
     // render container
     glBindVertexArray(this->VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

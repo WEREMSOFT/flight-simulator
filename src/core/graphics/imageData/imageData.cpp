@@ -5,11 +5,10 @@
 #include <iostream>
 #include <limits>
 
-extern char fonts[][5];
+extern const char fonts[][5];
 
-ImageData::ImageData(PointI pSize)
+ImageData::ImageData(PointI pSize) : size(pSize)
 {
-    size = pSize;
 }
 
 void ImageData::init()
@@ -58,37 +57,37 @@ uint64_t ImageData::getPixelZBuffer(PointI point)
     return this->zBuffer[position];
 }
 
-void ImageData::drawCircle(PointI center, double radious, Color color)
+void ImageData::drawCircle(PointI center, int radius, Color color)
 {
-    for (int i = center.x - radious; i <= center.x + radious; i++)
+    for (int i = center.x - radius; i <= center.x + radius; i++)
     {
-        for (int j = center.y - radious; j <= center.y + radious; j++)
+        for (int j = center.y - radius; j <= center.y + radius; j++)
         {
-            if (floor(sqrt(pow(center.x - i, 2) + pow(center.y - j, 2))) == radious)
+            if (floor(sqrt(pow(center.x - i, 2) + pow(center.y - j, 2))) == radius)
                 this->putPixel({i, j}, color);
         }
     }
 }
 
-void ImageData::drawSquare(PointI topLeftCorner, PointI size, Color color)
+void ImageData::drawSquare(PointI topLeftCorner, PointI pSize, Color color)
 {
-    for (int i = topLeftCorner.x; i <= topLeftCorner.x + size.x; i++)
+    for (int i = topLeftCorner.x; i <= topLeftCorner.x + pSize.x; i++)
     {
-        for (int j = topLeftCorner.y; j <= topLeftCorner.y + size.y; j++)
+        for (int j = topLeftCorner.y; j <= topLeftCorner.y + pSize.y; j++)
         {
-            if (j == topLeftCorner.y || j == topLeftCorner.y + size.y || i == topLeftCorner.x || i == topLeftCorner.x + size.x)
+            if (j == topLeftCorner.y || j == topLeftCorner.y + pSize.y || i == topLeftCorner.x || i == topLeftCorner.x + pSize.x)
                 this->putPixel({i, j}, color);
         }
     }
 }
 
-void ImageData::drawCircleFill(PointI center, double radious, Color color)
+void ImageData::drawCircleFill(PointI center, int radius, Color color)
 {
-    for (int i = center.x - radious; i <= center.x + radious; i++)
+    for (int i = center.x - radius; i <= center.x + radius; i++)
     {
-        for (int j = center.y - radious; j <= center.y + radious; j++)
+        for (int j = center.y - radius; j <= center.y + radius; j++)
         {
-            if (floor(sqrt(pow(center.x - i, 2) + pow(center.y - j, 2))) == radious)
+            if (floor(sqrt(pow(center.x - i, 2) + pow(center.y - j, 2))) == radius)
                 this->putPixel({i, j}, color);
         }
     }
@@ -175,7 +174,6 @@ int32_t getZForTriangle(PointI position, std::array<PointI, 3> triangle)
     auto divisor = ((x - x1) * (y - y2) + (x - x2) * (y - y3) + (x - x3) * (y - y1) - (x - x1) * (y - y3) - (x - x2) * (y - y1) - (x - x3) * (y - y2));
 
     int32_t z = (z3 * (x - x1) * (y - y2) + z1 * (x - x2) * (y - y3) + z2 * (x - x3) * (y - y1) - z2 * (x - x1) * (y - y3) - z3 * (x - x2) * (y - y1) - z1 * (x - x3) * (y - y2)) / (divisor != 0 ? divisor : 1);
-    // auto z = (triangle[0].z + triangle[1].z + triangle[2].z) / 3;
     return z;
 }
 
