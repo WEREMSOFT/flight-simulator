@@ -69,6 +69,14 @@ void createCross(Shape &cross)
     cross.translate({800.f, 0, 0});
 }
 
+void createFloor(Shape &floor)
+{
+    floor.difuseColor = {0, 0x88, 0};
+    Shape::appendQuad(floor, 1000, {0});
+    floor.rotate({M_PI_2, 0, 0});
+    floor.translate({0, 101, 0});
+}
+
 void createPyramid(Shape &pyramid)
 {
     pyramid.difuseColor = {0xFF, 0, 0xFF};
@@ -88,10 +96,12 @@ void Program::update(void)
     Shape house(1);
     Shape cross(1);
     Shape pyramidPurple(1);
+    Shape floor(1);
 
     createHouse(house);
     createCross(cross);
     createPyramid(pyramidPurple);
+    createFloor(floor);
 
     Camera camera;
 
@@ -100,6 +110,7 @@ void Program::update(void)
     auto checker = tempChecker.get();
     float rotationX = 0;
     float cameraRotationY = 0;
+    float floorHeight = 0;
 
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
@@ -129,12 +140,12 @@ void Program::update(void)
 
         if (glfwGetKey(graphics->window, GLFW_KEY_Q))
         {
-            cameraRotationY -= 1.5f * deltaTime;
+            floorHeight += 10.f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_E))
         {
-            cameraRotationY += 1.5f * deltaTime;
+            floorHeight -= 10.f * deltaTime;
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_A))
@@ -150,19 +161,21 @@ void Program::update(void)
         if (glfwGetKey(graphics->window, GLFW_KEY_W))
         {
             rotationX += camera.speed * deltaTime;
-            camera.translate({0, rotationX, 0});
+            camera.translate({camera.position.x, rotationX, camera.position.z});
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_S))
         {
             rotationX -= camera.speed * deltaTime;
-            camera.translate({0, rotationX, 0});
+            camera.translate({camera.position.x, rotationX, camera.position.z});
         }
 
         if (glfwGetKey(graphics->window, GLFW_KEY_R))
         {
             camera.translate({0, 0, 0});
         }
+
+        floor.translate({0, floorHeight, 0});
 
         camera.rotate({0, cameraRotationY, 0});
         camera.update();
@@ -172,10 +185,12 @@ void Program::update(void)
         house.update();
         cross.update();
         pyramidPurple.update();
+        floor.update();
 
         house.draw(graphics->imageData, camera);
         cross.draw(graphics->imageData, camera);
         pyramidPurple.draw(graphics->imageData, camera);
+        floor.draw(graphics->imageData, camera);
         printFPS();
         showGUI(camera, demoMode, drawZBuffer);
 

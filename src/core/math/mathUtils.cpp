@@ -7,7 +7,6 @@ using TrianglesF = std::vector<TriangleF>;
 
 namespace MathUtils
 {
-
     PointF3 intersectionPoint(PointF3 lineVector, PointF3 linePoint, PointF3 planeNormal, PointF3 planePoint)
     {
         PointF3 diff = linePoint - planePoint;

@@ -20,6 +20,15 @@ public:
 
 namespace MathUtils
 {
+    template <typename T>
+    T map(T a, double end1, double end2)
+    {
+        long double ratio = end1 / end2;
+
+        T returnValue = a * ratio;
+
+        return returnValue;
+    };
     PointF3 intersectionPoint(PointF3 lineVector, PointF3 linePoint, PointF3 planeNormal, PointF3 planePoint);
     void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[4]);
     void setMatrixAsIdentity(PointF3 matrix[4]);

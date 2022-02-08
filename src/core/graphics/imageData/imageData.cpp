@@ -1,4 +1,5 @@
 #include "imagedata.hpp"
+#include "../../math/mathUtils.hpp"
 #include <cmath>
 #include <cstring>
 #include <array>
@@ -46,7 +47,7 @@ Color ImageData::getPixel(PointU point)
     return this->data[position];
 }
 
-uint64_t ImageData::getPixelZBuffer(PointI point)
+ZBufferT ImageData::getPixelZBuffer(PointI point)
 {
     if (!(point.x > 0 &&
           point.y > 0 &&
@@ -100,7 +101,7 @@ void ImageData::clear(void)
 
 void ImageData::clearZBuffer(void)
 {
-    std::fill(zBuffer.begin(), zBuffer.end(), INT32_MAX);
+    std::fill(zBuffer.begin(), zBuffer.end(), ZBUFFER_MAX);
 }
 
 void ImageData::clearTransparent(void)
@@ -154,26 +155,26 @@ void ImageData::printString(PointI topLeftCorner, const std::string &string, con
 
 // z = (z3(x-x1)(y-y2) + z1(x-x2)(y-y3) + z2(x-x3)(y-y1) - z2(x-x1)(y-y3) - z3(x-x2)(y-y1) - z1(x-x3)(y-y2)) / (  (x-x1)(y-y2) +   (x-x2)(y-y3) +   (x-x3)(y-y1) -   (x-x1)(y-y3) -   (x-x2)(y-y1) -   (x-x3)(y-y2))
 
-int32_t getZForTriangle(PointI position, std::array<PointI, 3> triangle)
+ZBufferT getZForTriangle(PointI position, std::array<PointI, 3> triangle)
 {
-    auto x1 = triangle[0].x;
-    auto x2 = triangle[1].x;
-    auto x3 = triangle[2].x;
+    double x1 = triangle[0].x;
+    double x2 = triangle[1].x;
+    double x3 = triangle[2].x;
 
-    auto y1 = triangle[0].y;
-    auto y2 = triangle[1].y;
-    auto y3 = triangle[2].y;
+    double y1 = triangle[0].y;
+    double y2 = triangle[1].y;
+    double y3 = triangle[2].y;
 
-    auto z1 = triangle[0].z;
-    auto z2 = triangle[1].z;
-    auto z3 = triangle[2].z;
+    double z1 = triangle[0].z;
+    double z2 = triangle[1].z;
+    double z3 = triangle[2].z;
 
-    auto x = position.x;
-    auto y = position.y;
+    double x = position.x;
+    double y = position.y;
 
-    auto divisor = ((x - x1) * (y - y2) + (x - x2) * (y - y3) + (x - x3) * (y - y1) - (x - x1) * (y - y3) - (x - x2) * (y - y1) - (x - x3) * (y - y2));
+    double divisor = ((x - x1) * (y - y2) + (x - x2) * (y - y3) + (x - x3) * (y - y1) - (x - x1) * (y - y3) - (x - x2) * (y - y1) - (x - x3) * (y - y2));
 
-    int32_t z = (z3 * (x - x1) * (y - y2) + z1 * (x - x2) * (y - y3) + z2 * (x - x3) * (y - y1) - z2 * (x - x1) * (y - y3) - z3 * (x - x2) * (y - y1) - z1 * (x - x3) * (y - y2)) / (divisor != 0 ? divisor : 1);
+    ZBufferT z = (z3 * (x - x1) * (y - y2) + z1 * (x - x2) * (y - y3) + z2 * (x - x3) * (y - y1) - z2 * (x - x1) * (y - y3) - z3 * (x - x2) * (y - y1) - z1 * (x - x3) * (y - y2)) / (divisor != 0 ? divisor : 1);
     return z;
 }
 
@@ -260,8 +261,13 @@ void ImageData::drawZBuffer(PointI position)
         for (int j = 0; j < size.y; j++)
         {
 
+            // ZBufferT pixel = getPixelZBuffer({i, j});
+            // Color *c1 = (Color *)&pixel;
             auto pixel = static_cast<unsigned char>(getPixelZBuffer({i, j}) * ratio);
-            this->putPixel({i, j}, {pixel, pixel, pixel});
+            // auto pixel = MathUtils::map<uint64_t>(getPixelZBuffer({i, j}), 0, 255, 0, UINT64_MAX);
+            // auto pixel = static_cast<unsigned char>(MathUtils::map<ZBufferT>(getPixelZBuffer({i, j}), 255, ZBUFFER_MAX));
+
+            this->putPixel({i, j}, (Color){pixel, pixel, pixel});
         }
     }
 }
@@ -278,7 +284,7 @@ void ImageData::createTexture(void)
     Color initialColor = {0};
 
     data = std::vector<Color>(size.x * size.y, initialColor);
-    zBuffer = std::vector<uint64_t>(size.x * size.y, 0);
+    zBuffer = std::vector<ZBufferT>(size.x * size.y, 0);
 
     glTexImage2D(GL_TEXTURE_2D,
                  0,
