@@ -155,25 +155,11 @@ void ImageData::printString(PointI topLeftCorner, const std::string &string, con
 
 ZBufferT getZForTriangle(PointI position, std::array<PointI, 3> triangle)
 {
-    ZBufferT x1 = triangle[0].x;
-    ZBufferT x2 = triangle[1].x;
-    ZBufferT x3 = triangle[2].x;
-
-    ZBufferT y1 = triangle[0].y;
-    ZBufferT y2 = triangle[1].y;
-    ZBufferT y3 = triangle[2].y;
-
-    ZBufferT z1 = triangle[0].z;
-    ZBufferT z2 = triangle[1].z;
-    ZBufferT z3 = triangle[2].z;
-
-    ZBufferT x = position.x;
-    ZBufferT y = position.y;
-
-    ZBufferT divisor = ((x - x1) * (y - y2) + (x - x2) * (y - y3) + (x - x3) * (y - y1) - (x - x1) * (y - y3) - (x - x2) * (y - y1) - (x - x3) * (y - y2));
-
-    ZBufferT z = ((z3 * (x - x1) * (y - y2) + z1 * (x - x2) * (y - y3) + z2 * (x - x3) * (y - y1) - z2 * (x - x1) * (y - y3) - z3 * (x - x2) * (y - y1) - z1 * (x - x3) * (y - y2)) / (divisor != 0 ? divisor : 1));
-    return z;
+    PointI planeNormalI = (triangle[0] - triangle[1]).cross(triangle[0] - triangle[2]);
+    PointF3 planeNormalF = {(float)planeNormalI.x, (float)planeNormalI.y, (float)planeNormalI.z};
+    PointF3 planePoint = {(float)triangle[0].x, (float)triangle[0].y, (float)triangle[0].z};
+    auto point = MathUtils::intersectionPoint({0, 0, 1}, {(float)position.x, (float)position.y, 0}, planeNormalF, planePoint);
+    return point.z;
 }
 
 void ImageData::drawLineZ(PointI pointA, PointI pointB, std::array<PointI, 3> triangle, Color color)
@@ -260,7 +246,8 @@ void ImageData::drawZBuffer(PointI position)
 
             // ZBufferT pixel = getPixelZBuffer({i, j});
             // Color *c1 = (Color *)&pixel;
-            auto pixel = static_cast<unsigned char>(getPixelZBuffer({i, j}));
+            auto z = getPixelZBuffer({i, j});
+            auto pixel = (unsigned char)(z);
             // auto pixel = MathUtils::map<uint64_t>(getPixelZBuffer({i, j}), 0, 255, 0, UINT64_MAX);
             // auto pixel = static_cast<unsigned char>(MathUtils::map<ZBufferT>(getPixelZBuffer({i, j}), 255, ZBUFFER_MAX));
 
