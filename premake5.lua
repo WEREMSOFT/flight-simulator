@@ -3,9 +3,9 @@ toolset "clang"
 configurations { "Debug", "Release" }
 
 project "SoftwareRenderer"
-    includedirs { "libs/include", "libs/GLAD/include" }
+    includedirs { "libs/include", "libs/GLAD/include", "libs" }
     kind "ConsoleApp"
-    links { "Fonts", "GLAD", "glfw", "GL", "dl" }
+    links { "imgui", "Fonts", "GLAD", "glfw", "GL", "dl" }
     language "C++"
     cppdialect "C++17"
     targetdir "bin/%{cfg.buildcfg}"
@@ -24,6 +24,13 @@ project "SoftwareRenderer"
         defines { "NDEBUG" }
         optimize "Speed"
 
+project "imgui"
+    kind "StaticLib"
+    language "C++"
+    cppdialect "C++17"
+    files { "libs/imgui/**.cpp", "libs/imgui/**.h"}
+    defines { "NDEBUG" }
+    optimize "Speed"
 
 project "GLAD"
     kind "StaticLib"

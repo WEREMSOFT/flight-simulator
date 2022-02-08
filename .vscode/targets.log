@@ -6,14 +6,13 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Feb  8 11:44:05 2022
+# Make data base, printed on Tue Feb  8 12:50:47 2022
 
 # Variables
 
 # environment
 GDK_BACKEND = x11
 # environment
- 
 LC_ALL = C
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
@@ -24,7 +23,7 @@ SNAP_INSTANCE_KEY =
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-8b31164e-d8b6-4911-9514-312c75001191.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-c85478ff-42ab-4b8c-92f5-84091ed6cc23.sock
 # environment
 LC_NAME = en_GB.UTF-8
 # environment
@@ -54,6 +53,7 @@ VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
 PWD = /home/werem/Documents/projects/cpp/framebuffer
 # automatic
+ 
 %D = $(patsubst %/,%,$(dir $%))
 # environment
 XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
@@ -115,8 +115,8 @@ VSCODE_VERBOSE_LOGGING = true
 VSCODE_PID = 363202
 # environment
 XDG_SESSION_TYPE = x11
-# makefile (from 'Makefile', line 22)
-PROJECTS := SoftwareRenderer GLAD Fonts
+# makefile (from 'Makefile', line 24)
+PROJECTS := SoftwareRenderer imgui GLAD Fonts
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
@@ -211,8 +211,9 @@ EMSDK = /home/werem/Documents/projects/c/emsdk
 SNAP_ARCH = amd64
 # makefile
 .DEFAULT_GOAL := all
+# makefile (from 'Makefile', line 13)
+imgui_config = debug
 # environment
- 
 DISPLAY = :1
 # environment
 USER = werem
@@ -220,7 +221,7 @@ USER = werem
 GTK_MODULES = gail:atk-bridge
 # default
 MAKE_VERSION := 4.3
-# makefile (from 'Makefile', line 13)
+# makefile (from 'Makefile', line 14)
 GLAD_config = debug
 # environment
 DISABLE_WAYLAND = 1
@@ -242,7 +243,7 @@ COLORTERM = truecolor
 GDK_PIXBUF_MODULE_FILE = /home/werem/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
 XDG_SESSION_CLASS = user
-# makefile (from 'Makefile', line 14)
+# makefile (from 'Makefile', line 15)
 Fonts_config = debug
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
@@ -297,7 +298,7 @@ LC_IDENTIFICATION = en_GB.UTF-8
 # environment
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # variable set hash-table stats:
-# Load=142/1024=14%, Rehash=0, Collisions=22/188=12%
+# Load=143/1024=14%, Rehash=0, Collisions=20/190=11%
 
 # Pattern-specific Variable Values
 
@@ -305,9 +306,9 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 
 # Directories
 
-# . (device 66309, inode 3021856): 18 files, no impossibilities.
+# . (device 66309, inode 3021856): 20 files, no impossibilities.
 
-# 18 files, no impossibilities in 1 directories.
+# 20 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -315,91 +316,16 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 
 # Files
 
-GLAD:
-#  Phony target (prerequisite of .PHONY).
-#  Implicit rule search has not been done.
-#  File does not exist.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 36):
-	@echo "==== Building GLAD ($(GLAD_config)) ===="
-	@${MAKE} --no-print-directory -C . -f GLAD.make config=$(GLAD_config)
-
-SoftwareRenderer: Fonts GLAD
-#  Phony target (prerequisite of .PHONY).
-#  Implicit rule search has not been done.
-#  File does not exist.
-#  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/7=0%
-#  recipe to execute (from 'Makefile', line 30):
-	@echo "==== Building SoftwareRenderer ($(SoftwareRenderer_config)) ===="
-	@${MAKE} --no-print-directory -C . -f SoftwareRenderer.make config=$(SoftwareRenderer_config)
-
-# Not a target:
-Makefile:
-#  Implicit rule search has been done.
-#  Last modified 2022-02-08 11:43:44.377583839
-#  File has been updated.
-#  Successfully updated.
-
- 
-clean:
-#  Phony target (prerequisite of .PHONY).
-#  Implicit rule search has not been done.
-#  File does not exist.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 47):
-	@${MAKE} --no-print-directory -C . -f SoftwareRenderer.make clean
-	@${MAKE} --no-print-directory -C . -f GLAD.make clean
-	@${MAKE} --no-print-directory -C . -f Fonts.make clean
-
-# Not a target:
-.DEFAULT:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-all: SoftwareRenderer GLAD Fonts
-#  Phony target (prerequisite of .PHONY).
-#  Command line target.
-#  Implicit rule search has not been done.
-#  File does not exist.
-#  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/7=0%
-
-help:
-#  Phony target (prerequisite of .PHONY).
-#  Implicit rule search has not been done.
-#  File does not exist.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 52):
-	@echo "Usage: make [config=name] [target]"
-	@echo ""
-	@echo "CONFIGURATIONS:"
-	@echo "  debug"
-	@echo "  release"
-	@echo ""
-	@echo "TARGETS:"
-	@echo "   all (default)"
-	@echo "   clean"
-	@echo "   SoftwareRenderer"
-	@echo "   GLAD"
-	@echo "   Fonts"
-	@echo ""
-	@echo "For more information, see https://github.com/premake/premake-core/wiki"
-
-Fonts:
+imgui:
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  Implicit/static pattern stem: ''
 #  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
+ 
 # automatic
-# @ := Fonts
+# @ := imgui
 # automatic
 # * := 
 # automatic
@@ -415,8 +341,94 @@ Fonts:
 # automatic
 # | := 
 # variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=10/15=67%
-#  recipe to execute (from 'Makefile', line 42):
+# Load=8/32=25%, Rehash=0, Collisions=2/15=13%
+#  recipe to execute (from 'Makefile', line 38):
+	@echo "==== Building imgui ($(imgui_config)) ===="
+	@${MAKE} --no-print-directory -C . -f imgui.make config=$(imgui_config)
+
+GLAD:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 44):
+	@echo "==== Building GLAD ($(GLAD_config)) ===="
+	@${MAKE} --no-print-directory -C . -f GLAD.make config=$(GLAD_config)
+
+SoftwareRenderer: imgui Fonts GLAD
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/7=0%
+#  recipe to execute (from 'Makefile', line 32):
+	@echo "==== Building SoftwareRenderer ($(SoftwareRenderer_config)) ===="
+	@${MAKE} --no-print-directory -C . -f SoftwareRenderer.make config=$(SoftwareRenderer_config)
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-08 12:39:21.08957547
+#  File has been updated.
+#  Successfully updated.
+
+clean:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 55):
+	@${MAKE} --no-print-directory -C . -f SoftwareRenderer.make clean
+	@${MAKE} --no-print-directory -C . -f imgui.make clean
+	@${MAKE} --no-print-directory -C . -f GLAD.make clean
+	@${MAKE} --no-print-directory -C . -f Fonts.make clean
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+all: SoftwareRenderer imgui GLAD Fonts
+#  Phony target (prerequisite of .PHONY).
+#  Command line target.
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/7=0%
+
+help:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 61):
+	@echo "Usage: make [config=name] [target]"
+	@echo ""
+	@echo "CONFIGURATIONS:"
+	@echo "  debug"
+	@echo "  release"
+	@echo ""
+	@echo "TARGETS:"
+	@echo "   all (default)"
+	@echo "   clean"
+	@echo "   SoftwareRenderer"
+	@echo "   imgui"
+	@echo "   GLAD"
+	@echo "   Fonts"
+	@echo ""
+	@echo "For more information, see https://github.com/premake/premake-core/wiki"
+
+Fonts:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 50):
 	@echo "==== Building Fonts ($(Fonts_config)) ===="
 	@${MAKE} --no-print-directory -C . -f Fonts.make config=$(Fonts_config)
 
@@ -426,25 +438,25 @@ Fonts:
 #  Modification time never checked.
 #  File has not been updated.
 
-.PHONY: all clean help SoftwareRenderer GLAD Fonts
+.PHONY: all clean help SoftwareRenderer imgui GLAD Fonts
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=10/1024=1%, Rehash=0, Collisions=0/38=0%
+# Load=11/1024=1%, Rehash=0, Collisions=0/43=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 29 / storage = 250 B / avg = 8 B
-# current buf: size = 8162 B / used = 250 B / count = 29 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 32 / storage = 277 B / avg = 8 B
+# current buf: size = 8162 B / used = 277 B / count = 32 / avg = 8 B
 
-# strcache performance: lookups = 53 / hit rate = 45%
+# strcache performance: lookups = 60 / hit rate = 46%
 # hash-table stats:
-# Load=29/8192=0%, Rehash=0, Collisions=0/53=0%
-# Finished Make data base on Tue Feb  8 11:44:05 2022
+# Load=32/8192=0%, Rehash=0, Collisions=0/60=0%
+# Finished Make data base on Tue Feb  8 12:50:47 2022
 
  

@@ -1,12 +1,12 @@
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
 #include "program.hpp"
 #include "../core/graphics/sprite/sprite.hpp"
 #include "shape/shape.hpp"
 #include <algorithm>
 #include <cmath>
 #include <vector>
-#include "../imgui/imgui.h"
-#include "../imgui/imgui_impl_glfw.h"
-#include "../imgui/imgui_impl_opengl3.h"
 #include "../core/gameObject/gameObject.hpp"
 
 void showGUI(Camera &camera, bool &demoMode, bool &drawZBuffer)
