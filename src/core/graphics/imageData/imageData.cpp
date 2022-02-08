@@ -29,7 +29,7 @@ bool ImageData::putPixel(PointI point, Color color)
     return true;
 }
 
-bool ImageData::putPixelZbuffer(PointI point, int32_t color)
+bool ImageData::putPixelZbuffer(PointI point, ZBufferT color)
 {
     if (!(point.x > 0 &&
           point.y > 0 &&
@@ -153,28 +153,26 @@ void ImageData::printString(PointI topLeftCorner, const std::string &string, con
     }
 }
 
-// z = (z3(x-x1)(y-y2) + z1(x-x2)(y-y3) + z2(x-x3)(y-y1) - z2(x-x1)(y-y3) - z3(x-x2)(y-y1) - z1(x-x3)(y-y2)) / (  (x-x1)(y-y2) +   (x-x2)(y-y3) +   (x-x3)(y-y1) -   (x-x1)(y-y3) -   (x-x2)(y-y1) -   (x-x3)(y-y2))
-
 ZBufferT getZForTriangle(PointI position, std::array<PointI, 3> triangle)
 {
-    double x1 = triangle[0].x;
-    double x2 = triangle[1].x;
-    double x3 = triangle[2].x;
+    ZBufferT x1 = triangle[0].x;
+    ZBufferT x2 = triangle[1].x;
+    ZBufferT x3 = triangle[2].x;
 
-    double y1 = triangle[0].y;
-    double y2 = triangle[1].y;
-    double y3 = triangle[2].y;
+    ZBufferT y1 = triangle[0].y;
+    ZBufferT y2 = triangle[1].y;
+    ZBufferT y3 = triangle[2].y;
 
-    double z1 = triangle[0].z;
-    double z2 = triangle[1].z;
-    double z3 = triangle[2].z;
+    ZBufferT z1 = triangle[0].z;
+    ZBufferT z2 = triangle[1].z;
+    ZBufferT z3 = triangle[2].z;
 
-    double x = position.x;
-    double y = position.y;
+    ZBufferT x = position.x;
+    ZBufferT y = position.y;
 
-    double divisor = ((x - x1) * (y - y2) + (x - x2) * (y - y3) + (x - x3) * (y - y1) - (x - x1) * (y - y3) - (x - x2) * (y - y1) - (x - x3) * (y - y2));
+    ZBufferT divisor = ((x - x1) * (y - y2) + (x - x2) * (y - y3) + (x - x3) * (y - y1) - (x - x1) * (y - y3) - (x - x2) * (y - y1) - (x - x3) * (y - y2));
 
-    ZBufferT z = (z3 * (x - x1) * (y - y2) + z1 * (x - x2) * (y - y3) + z2 * (x - x3) * (y - y1) - z2 * (x - x1) * (y - y3) - z3 * (x - x2) * (y - y1) - z1 * (x - x3) * (y - y2)) / (divisor != 0 ? divisor : 1);
+    ZBufferT z = ((z3 * (x - x1) * (y - y2) + z1 * (x - x2) * (y - y3) + z2 * (x - x3) * (y - y1) - z2 * (x - x1) * (y - y3) - z3 * (x - x2) * (y - y1) - z1 * (x - x3) * (y - y2)) / (divisor != 0 ? divisor : 1));
     return z;
 }
 
@@ -255,7 +253,6 @@ void ImageData::drawSquareFill(PointI topLeftCorner, PointI size, Color color)
 
 void ImageData::drawZBuffer(PointI position)
 {
-    auto ratio = 255.f / 1000.f;
     for (int i = 0; i < size.x; i++)
     {
         for (int j = 0; j < size.y; j++)
@@ -263,7 +260,7 @@ void ImageData::drawZBuffer(PointI position)
 
             // ZBufferT pixel = getPixelZBuffer({i, j});
             // Color *c1 = (Color *)&pixel;
-            auto pixel = static_cast<unsigned char>(getPixelZBuffer({i, j}) * ratio);
+            auto pixel = static_cast<unsigned char>(getPixelZBuffer({i, j}));
             // auto pixel = MathUtils::map<uint64_t>(getPixelZBuffer({i, j}), 0, 255, 0, UINT64_MAX);
             // auto pixel = static_cast<unsigned char>(MathUtils::map<ZBufferT>(getPixelZBuffer({i, j}), 255, ZBUFFER_MAX));
 

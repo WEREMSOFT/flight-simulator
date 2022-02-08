@@ -2,6 +2,21 @@ workspace "SoftwareRenderer"
 toolset "clang"
 configurations { "Debug", "Release" }
 
+project "run_main"
+kind "Makefile"
+buildcommands {
+    "make SoftwareRenderer",
+    "bin/%{cfg.buildcfg}/SoftwareRenderer"
+    }
+
+    rebuildcommands {
+    "%{cfg.buildcfg}/SoftwareRenderer"
+    }
+
+    cleancommands {
+    ""
+    }
+
 project "SoftwareRenderer"
     includedirs { "libs/include", "libs/GLAD/include", "libs" }
     kind "ConsoleApp"

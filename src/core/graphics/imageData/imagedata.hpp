@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <array>
-
+#include <float.h>
 #include "../../math/vector/vector3.hpp"
 
 typedef struct
@@ -30,8 +30,8 @@ typedef union
     float a[4];
 } Mat4Elem;
 
-typedef int32_t ZBufferT;
-#define ZBUFFER_MAX INT32_MAX
+typedef float ZBufferT;
+#define ZBUFFER_MAX FLT_MAX
 
 class ImageData
 {
@@ -57,7 +57,7 @@ public:
     void drawSquareFill(PointI topLeftCorner, PointI size, Color color = {0xFF, 0xFF, 0xFF});
     void drawZBuffer(PointI position);
     Color getPixel(PointU position);
-    bool putPixelZbuffer(PointI point, int32_t color);
+    bool putPixelZbuffer(PointI point, ZBufferT color);
     ZBufferT getPixelZBuffer(PointI position);
 
     PointI size;

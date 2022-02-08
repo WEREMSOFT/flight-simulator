@@ -6,5 +6,8 @@
             "binaryPath": "/home/werem/Documents/projects/cpp/framebuffer/bin/Debug/SoftwareRenderer",
             "binaryArgs": []
         }
-    ]
+    ],
+    "files.associations": {
+        "climits": "cpp"
+    }
 }
