@@ -1,0 +1,10 @@
+{
+    "makefile.extensionOutputFolder": "./.vscode",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/werem/Documents/projects/cpp/framebuffer/bin/Debug",
+            "binaryPath": "/home/werem/Documents/projects/cpp/framebuffer/bin/Debug/SoftwareRenderer",
+            "binaryArgs": []
+        }
+    ]
+}

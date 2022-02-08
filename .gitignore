@@ -1,7 +1,10 @@
 *.o
 *.opp
-.vscode
 bin
 build
 .scannerwork
+.vscode
 bw-output
+obj
+Makefile
+*.make
