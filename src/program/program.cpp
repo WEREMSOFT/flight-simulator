@@ -98,8 +98,8 @@ void Program::update(void)
     Shape pyramidPurple(1);
     Shape floor(1);
 
-    createHouse(house);
-    createCross(cross);
+    // createHouse(house);
+    // createCross(cross);
     createPyramid(pyramidPurple);
     createFloor(floor);
 
@@ -108,14 +108,14 @@ void Program::update(void)
     // auto tempChecker = Sprite::createSplit({320, 240}, 115, {0x77, 0x77, 0xAA}, {0, 0x77, 0});
     auto tempChecker = Sprite::createSplit({320, 240}, 115, {0, 0, 0}, {0, 0, 0});
     auto checker = tempChecker.get();
-    float rotationX = 0;
-    float cameraRotationY = 0;
-    float floorHeight = 0;
+    float rotationX = 185;
+    float cameraRotationY = 3.8;
+    float floorHeight = 30;
+    camera.translate({722, 185, -27});
 
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         graphics->newFrame();
-
         deltaTime = getDeltaTime();
 
         if (glfwGetKey(graphics->window, GLFW_KEY_UP))
@@ -176,19 +176,17 @@ void Program::update(void)
         }
 
         floor.translate({0, floorHeight, 0});
-
         camera.rotate({0, cameraRotationY, 0});
         camera.update();
-
         checker->draw(graphics->imageData);
 
-        house.update();
-        cross.update();
-        pyramidPurple.update();
+        // house.update();
+        // cross.update();
         floor.update();
+        pyramidPurple.update();
 
-        house.draw(graphics->imageData, camera);
-        cross.draw(graphics->imageData, camera);
+        // house.draw(graphics->imageData, camera);
+        // cross.draw(graphics->imageData, camera);
         pyramidPurple.draw(graphics->imageData, camera);
         floor.draw(graphics->imageData, camera);
         printFPS();

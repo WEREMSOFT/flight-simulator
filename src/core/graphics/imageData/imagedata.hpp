@@ -31,7 +31,7 @@ typedef union
 } Mat4Elem;
 
 typedef float ZBufferT;
-#define ZBUFFER_MAX FLT_MAX
+#define ZBUFFER_MAX 1000.f
 
 class ImageData
 {

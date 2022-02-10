@@ -257,29 +257,29 @@ void Shape::appendPiramid(Shape &shape, float baseSize, float height, PointF3 po
     shape.vertices.emplace_back(position + (PointF3){baseSize, 0, -baseSize, 1.f});
     shape.vertices.emplace_back(position + (PointF3){0, -height, 0, 1.f});
 
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 2, vertexOffset + 1}));
-    shape.normals.emplace_back((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 1]).cross((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 2])).normalize());
-    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 2, vertexOffset + 1}));
+    // shape.normals.emplace_back((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 1]).cross((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 2])).normalize());
+    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 3, vertexOffset + 2}));
-    shape.normals.emplace_back((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 2]).cross((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 3])).normalize());
-    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 3, vertexOffset + 2}));
+    // shape.normals.emplace_back((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 2]).cross((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 3])).normalize());
+    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 1, vertexOffset + 2}));
-    shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 2]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 1])).normalize());
-    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 1, vertexOffset + 2}));
+    // shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 2]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 1])).normalize());
+    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 0, vertexOffset + 1}));
     shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 1]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 0])).normalize());
     shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 3, vertexOffset + 0}));
-    shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 0]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 3])).normalize());
-    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 3, vertexOffset + 0}));
+    // shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 0]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 3])).normalize());
+    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 2, vertexOffset + 3}));
-    shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 3]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 2])).normalize());
-    shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 2, vertexOffset + 3}));
+    // shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 3]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 2])).normalize());
+    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
     shape.transformedNormals.resize(shape.normals.size());
 
@@ -497,13 +497,12 @@ void Shape::rasterizeTriangle(Triangle<int32_t> triangle, ImageData &pImageData)
 
     float dy = (float)(triangle.vertices[1].y - triangle.vertices[0].y);
     float dx = (float)(triangle.vertices[2].y - triangle.vertices[0].y);
-
     float incrementY = dy ? (float)(triangle.vertices[1].x - triangle.vertices[0].x) / dy : 0;
     float incrementXLimit = dx ? (float)(triangle.vertices[2].x - triangle.vertices[0].x) / dx : 0;
     float start = 0;
     float end = 0;
-
     int height = triangle.vertices[1].y - triangle.vertices[0].y;
+
     for (int i = 0; i < height; i++)
     {
         int localStart = floor(start);

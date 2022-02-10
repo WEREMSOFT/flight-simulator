@@ -165,9 +165,11 @@ ZBufferT getZForTriangle(PointI position, std::array<PointI, 3> triangle)
 void ImageData::drawLineZ(PointI pointA, PointI pointB, std::array<PointI, 3> triangle, Color color)
 {
 
-    int dx = abs(pointB.x - pointA.x), sx = pointA.x < pointB.x ? 1 : -1;
-    int dy = abs(pointB.y - pointA.y), sy = pointA.y < pointB.y ? 1 : -1;
-    int err = (dx > dy ? dx : -dy) / 2, e2;
+    int dx = abs(pointB.x - pointA.x);
+    int sx = pointA.x < pointB.x ? 1 : -1;
+    int sy = -1;
+    int err = dx > 0 ? dx / 2 : 0;
+    int e2 = 0;
 
     while (true)
     {
@@ -177,20 +179,25 @@ void ImageData::drawLineZ(PointI pointA, PointI pointB, std::array<PointI, 3> tr
         if (z < zBufferValue)
         {
             putPixelZbuffer(pointA, z);
-            if (!this->putPixel(pointA, color))
-                return;
+            if (zBufferValue != ZBUFFER_MAX)
+            {
+                this->putPixel(pointA, {0xFF, 0, 0});
+            }
+            else
+            {
+                this->putPixel(pointA, color);
+            }
         }
 
-        if (pointA.x == pointB.x && pointA.y == pointB.y)
+        if (pointA.x == pointB.x)
             break;
 
         e2 = err;
         if (e2 > -dx)
         {
-            err -= dy;
             pointA.x += sx;
         }
-        if (e2 < dy)
+        if (e2 < 0)
         {
             err += dx;
             pointA.y += sy;
@@ -207,8 +214,7 @@ void ImageData::drawLine(PointI pointA, PointI pointB, Color color)
 
     while (true)
     {
-        if (!this->putPixel(pointA, color))
-            return;
+        this->putPixel(pointA, color);
 
         if (pointA.x == pointB.x && pointA.y == pointB.y)
             break;
@@ -247,7 +253,8 @@ void ImageData::drawZBuffer(PointI position)
             // ZBufferT pixel = getPixelZBuffer({i, j});
             // Color *c1 = (Color *)&pixel;
             auto z = getPixelZBuffer({i, j});
-            auto pixel = (unsigned char)(z);
+            auto normalizedZ = z != ZBUFFER_MAX ? ZBUFFER_MAX - z / ZBUFFER_MAX * 230 : 0;
+            auto pixel = (unsigned char)(normalizedZ);
             // auto pixel = MathUtils::map<uint64_t>(getPixelZBuffer({i, j}), 0, 255, 0, UINT64_MAX);
             // auto pixel = static_cast<unsigned char>(MathUtils::map<ZBufferT>(getPixelZBuffer({i, j}), 255, ZBUFFER_MAX));
 
