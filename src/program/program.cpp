@@ -72,9 +72,9 @@ void createCross(Shape &cross)
 void createFloor(Shape &floor)
 {
     floor.difuseColor = {0, 0x88, 0};
-    Shape::appendQuad(floor, 1000, {0});
-    floor.rotate({M_PI_2, 0, 0});
-    floor.translate({0, 101, 0});
+    Shape::appendQuad(floor, 10000, {0});
+    floor.rotate({-M_PI_2, 0, 0});
+    floor.translate({0, 0, 0});
 }
 
 void createPyramid(Shape &pyramid)
@@ -98,8 +98,8 @@ void Program::update(void)
     Shape pyramidPurple(1);
     Shape floor(1);
 
-    // createHouse(house);
-    // createCross(cross);
+    createHouse(house);
+    createCross(cross);
     createPyramid(pyramidPurple);
     createFloor(floor);
 
@@ -111,7 +111,7 @@ void Program::update(void)
     float rotationX = 185;
     float cameraRotationY = 3.8;
     float floorHeight = 30;
-    camera.translate({722, 185, -27});
+    // camera.translate({568, 133, 197});
 
     while (glfwGetKey(graphics->window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
@@ -175,20 +175,20 @@ void Program::update(void)
             camera.translate({0, 0, 0});
         }
 
-        floor.translate({0, floorHeight, 0});
+        floor.translate({floor.position.x, floorHeight, floor.position.z});
         camera.rotate({0, cameraRotationY, 0});
         camera.update();
         checker->draw(graphics->imageData);
 
-        // house.update();
-        // cross.update();
+        house.update();
+        cross.update();
         floor.update();
         pyramidPurple.update();
 
-        // house.draw(graphics->imageData, camera);
-        // cross.draw(graphics->imageData, camera);
-        pyramidPurple.draw(graphics->imageData, camera);
         floor.draw(graphics->imageData, camera);
+        house.draw(graphics->imageData, camera);
+        cross.draw(graphics->imageData, camera);
+        pyramidPurple.draw(graphics->imageData, camera);
         printFPS();
         showGUI(camera, demoMode, drawZBuffer);
 

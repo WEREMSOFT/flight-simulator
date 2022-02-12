@@ -9,21 +9,21 @@
 
 class Shape : public Object3D
 {
-    bool isBackFace(PointF3 normal, PointF3 vector);
-    static bool sortTriangleZ(PointF3 a, PointF3 b);
-    static bool sortTriangleX(PointF3 a, PointF3 b);
-    static bool sortTriangleXRight(PointF3 a, PointF3 b);
+    bool isBackFace(PointF normal, PointF vector);
+    static bool sortTriangleZ(PointF a, PointF b);
+    static bool sortTriangleX(PointF a, PointF b);
+    static bool sortTriangleXRight(PointF a, PointF b);
     void transform();
 
 public:
     Color difuseColor;
-    std::vector<PointF3> vertices;
-    std::vector<PointF3> normals;
+    std::vector<PointF> vertices;
+    std::vector<PointF> normals;
     std::vector<std::array<uint32_t, 3>> vertexIndex;
     std::vector<uint32_t> normalIndex;
-    std::vector<PointF3> transformedVertices;
-    std::vector<PointF3> transformedNormals;
-    std::vector<PointF3> projectedVertices;
+    std::vector<PointF> transformedVertices;
+    std::vector<PointF> transformedNormals;
+    std::vector<PointF> projectedVertices;
 
     Shape(int vertexNum);
     ~Shape();
@@ -40,16 +40,16 @@ public:
                              float boundary,
                              std::vector<uint32_t> &localNormalIndex,
                              int32_t normalIndex,
-                             std::function<bool(PointF3, float)> compareFunc,
-                             std::function<bool(PointF3, PointF3)> sortFunc,
-                             PointF3 planeNormal,
-                             PointF3 planePoint);
+                             std::function<bool(PointF, float)> compareFunc,
+                             std::function<bool(PointF, PointF)> sortFunc,
+                             PointF planeNormal,
+                             PointF planePoint);
 
     static Shape createCube(float cubeSize, float zPosition);
     static Shape createPyramid(float baseSize = 50, float height = 50, float zPosition = 140);
-    static void appendPiramid(Shape &shape, float baseSize, float height, PointF3 zPosition);
-    static void appendCube(Shape &shape, float cubeSize, PointF3 zPosition);
-    static void appendQuad(Shape &shape, float cubeSize, PointF3 zPosition);
-    static void appendWall(Shape &shape, float size, PointF3 position);
-    static void appendCircle(Shape &shape, float radius, int sides, PointF3 position);
+    static void appendPiramid(Shape &shape, float baseSize, float height, PointF zPosition);
+    static void appendCube(Shape &shape, float cubeSize, PointF zPosition);
+    static void appendQuad(Shape &shape, float cubeSize, PointF zPosition);
+    static void appendWall(Shape &shape, float size, PointF position);
+    static void appendCircle(Shape &shape, float radius, int sides, PointF position);
 };

@@ -15,7 +15,7 @@ Camera::Camera(float pZNear)
 
 void Camera::moveForward(float deltaTime)
 {
-    PointF3 forwardVector = {-sinf(rotation.y), 0, cosf(rotation.y)};
+    PointF forwardVector = {-sinf(rotation.y), 0, cosf(rotation.y)};
     position = position - forwardVector.scale(deltaTime * speed);
     translate(position);
 }
@@ -23,7 +23,7 @@ void Camera::moveForward(float deltaTime)
 void Camera::strafe(float deltaTime)
 {
     float localRotation = rotation.y + M_PI / 2;
-    PointF3 strafeVector = {-sinf(localRotation), 0, cosf(localRotation)};
+    PointF strafeVector = {-sinf(localRotation), 0, cosf(localRotation)};
     position = position + strafeVector.scale(deltaTime * speed);
     translate(position);
 }
@@ -36,7 +36,7 @@ void Camera::recalculateTransformMatrix()
     MathUtils::multiplyMatrix(transformMatrix, scaleMatrix);
 }
 
-PointF3 Camera::getForwardVector()
+PointF Camera::getForwardVector()
 {
     return {-sinf(rotation.y), 0, cosf(rotation.y)};
 }

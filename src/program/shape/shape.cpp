@@ -27,7 +27,7 @@ Shape::~Shape()
 {
 }
 
-bool Shape::isBackFace(PointF3 normal, PointF3 vector)
+bool Shape::isBackFace(PointF normal, PointF vector)
 {
     auto angle = acosf(normal.normalize().dot(vector.normalize()));
     return angle < 1.4f;
@@ -38,10 +38,10 @@ void Shape::clipTriangleGeneric(TrianglesF &triangles,
                                 float boundary,
                                 std::vector<uint32_t> &localNormalIndex,
                                 int32_t normalIndex,
-                                std::function<bool(PointF3, float)> compareFunc,
-                                std::function<bool(PointF3, PointF3)> sortFunc,
-                                PointF3 planeNormal,
-                                PointF3 planePoint)
+                                std::function<bool(PointF, float)> compareFunc,
+                                std::function<bool(PointF, PointF)> sortFunc,
+                                PointF planeNormal,
+                                PointF planePoint)
 {
     int vertexInside = 0;
     for (auto &vertex : triangle)
@@ -85,8 +85,6 @@ void Shape::clipTriangleGeneric(TrianglesF &triangles,
 
         triangles.emplace_back(newTriangle);
         localNormalIndex.emplace_back(normalIndex);
-
-        return;
     }
 }
 
@@ -104,41 +102,42 @@ void Shape::draw(ImageData &pImageData, Camera camera)
     TrianglesI projectedVerticesLocal;
     std::vector<uint32_t> localNormalIndex;
     std::vector<uint32_t> localNormalIndex2;
-    std::vector<PointF3> transformedVerticesLocal;
+    std::vector<PointF> transformedVerticesLocal;
 
     transformedVerticesLocal.reserve(transformedVertices.size());
-
-    PointF3 normal = {1, 0, 0};
-    normal = normal.normalize();
 
     for (auto i = 0; i < transformedVertices.size(); i++)
     {
         MathUtils::multiplyVertexByMatrix(transformedVerticesLocal[i], transformedVertices[i], camera.transformMatrix);
     }
 
+    PointF normal = {1, 0, 0};
+    normal = normal.normalize();
     for (int i = 0; i < vertexIndex.size(); i++)
     {
         auto index = vertexIndex[i];
-        PointF3 p1 = {transformedVerticesLocal[index[0]].x, transformedVerticesLocal[index[0]].y, transformedVerticesLocal[index[0]].z};
-        PointF3 p2 = {transformedVerticesLocal[index[1]].x, transformedVerticesLocal[index[1]].y, transformedVerticesLocal[index[1]].z};
-        PointF3 p3 = {transformedVerticesLocal[index[2]].x, transformedVerticesLocal[index[2]].y, transformedVerticesLocal[index[2]].z};
+        PointF p1 = {transformedVerticesLocal[index[0]].x, transformedVerticesLocal[index[0]].y, transformedVerticesLocal[index[0]].z};
+        PointF p2 = {transformedVerticesLocal[index[1]].x, transformedVerticesLocal[index[1]].y, transformedVerticesLocal[index[1]].z};
+        PointF p3 = {transformedVerticesLocal[index[2]].x, transformedVerticesLocal[index[2]].y, transformedVerticesLocal[index[2]].z};
         clipTriangleGeneric(
-            clippedTriangles, {p1, p2, p3}, camera.frustrum.x, localNormalIndex, normalIndex[i], [](PointF3 a, float b) -> bool
+            clippedTriangles, {p1, p2, p3}, camera.frustrum.x, localNormalIndex, normalIndex[i], [](PointF a, float b) -> bool
             { return a.x > b; },
-            [](PointF3 a, PointF3 b) -> bool
+            [](PointF a, PointF b) -> bool
             { return a.x > b.x; },
             normal,
             {camera.frustrum.x, 0, 0});
     }
 
+    normal = {-1, 0, 0};
+    normal = normal.normalize();
     for (int i = 0; i < clippedTriangles.size(); i++)
     {
         clipTriangleGeneric(
-            clippedTriangles2, clippedTriangles[i], camera.frustrum.w, localNormalIndex2, localNormalIndex[i], [](PointF3 a, float b) -> bool
+            clippedTriangles2, clippedTriangles[i], camera.frustrum.w, localNormalIndex2, localNormalIndex[i], [](PointF a, float b) -> bool
             { return a.x < b; },
-            [](PointF3 a, PointF3 b) -> bool
+            [](PointF a, PointF b) -> bool
             { return a.x < b.x; },
-            {-1, 0, 0},
+            normal,
             {camera.frustrum.w, 0, 0});
     }
 
@@ -148,9 +147,9 @@ void Shape::draw(ImageData &pImageData, Camera camera)
     for (int i = 0; i < clippedTriangles2.size(); i++)
     {
         clipTriangleGeneric(
-            clippedTriangles, clippedTriangles2[i], camera.frustrum.z, localNormalIndex, localNormalIndex2[i], [](PointF3 a, float b) -> bool
+            clippedTriangles, clippedTriangles2[i], camera.frustrum.z, localNormalIndex, localNormalIndex2[i], [](PointF a, float b) -> bool
             { return a.z > b; },
-            [](PointF3 a, PointF3 b) -> bool
+            [](PointF a, PointF b) -> bool
             { return a.z > b.z; },
             {0, 0, 1},
             {0, 0, camera.frustrum.z});
@@ -248,38 +247,38 @@ Shape Shape::createPyramid(float baseSize, float height, float zPosition)
     return shape;
 }
 
-void Shape::appendPiramid(Shape &shape, float baseSize, float height, PointF3 position)
+void Shape::appendPiramid(Shape &shape, float baseSize, float height, PointF position)
 {
     uint32_t vertexOffset = shape.vertices.size();
-    shape.vertices.emplace_back(position + (PointF3){-baseSize, 0, -baseSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){-baseSize, 0, baseSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){baseSize, 0, baseSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){baseSize, 0, -baseSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){0, -height, 0, 1.f});
+    shape.vertices.emplace_back(position + (PointF){-baseSize, 0, -baseSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF){-baseSize, 0, baseSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF){baseSize, 0, baseSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF){baseSize, 0, -baseSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF){0, -height, 0, 1.f});
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 2, vertexOffset + 1}));
-    // shape.normals.emplace_back((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 1]).cross((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 2])).normalize());
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 2, vertexOffset + 1}));
+    shape.normals.emplace_back((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 1]).cross((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 2])).normalize());
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 3, vertexOffset + 2}));
-    // shape.normals.emplace_back((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 2]).cross((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 3])).normalize());
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 3, vertexOffset + 2}));
+    shape.normals.emplace_back((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 2]).cross((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 3])).normalize());
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 1, vertexOffset + 2}));
-    // shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 2]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 1])).normalize());
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 1, vertexOffset + 2}));
+    shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 2]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 1])).normalize());
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 0, vertexOffset + 1}));
     shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 1]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 0])).normalize());
     shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 3, vertexOffset + 0}));
-    // shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 0]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 3])).normalize());
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 3, vertexOffset + 0}));
+    shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 0]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 3])).normalize());
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
-    // shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 2, vertexOffset + 3}));
-    // shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 3]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 2])).normalize());
-    // shape.normalIndex.emplace_back(shape.normals.size() - 1);
+    shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 4, vertexOffset + 2, vertexOffset + 3}));
+    shape.normals.emplace_back((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 3]).cross((shape.vertices[vertexOffset + 4] - shape.vertices[vertexOffset + 2])).normalize());
+    shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
     shape.transformedNormals.resize(shape.normals.size());
 
@@ -289,14 +288,14 @@ void Shape::appendPiramid(Shape &shape, float baseSize, float height, PointF3 po
     shape.translate({0.f, 0.f, position.z});
 }
 
-void Shape::appendQuad(Shape &shape, float cubeSize, PointF3 position)
+void Shape::appendQuad(Shape &shape, float cubeSize, PointF position)
 {
     uint32_t vertexOffset = shape.vertices.size();
 
-    shape.vertices.emplace_back(position + (PointF3){-cubeSize, -cubeSize, 0, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){cubeSize, -cubeSize, 0, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){cubeSize, cubeSize, 0, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){-cubeSize, cubeSize, 0, 1.f});
+    shape.vertices.emplace_back(position + (PointF){-cubeSize, -cubeSize, 0, 1.f});
+    shape.vertices.emplace_back(position + (PointF){cubeSize, -cubeSize, 0, 1.f});
+    shape.vertices.emplace_back(position + (PointF){cubeSize, cubeSize, 0, 1.f});
+    shape.vertices.emplace_back(position + (PointF){-cubeSize, cubeSize, 0, 1.f});
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 2, vertexOffset + 1}));
     shape.normals.emplace_back(
@@ -309,20 +308,19 @@ void Shape::appendQuad(Shape &shape, float cubeSize, PointF3 position)
     shape.normalIndex.emplace_back(shape.normals.size() - 1);
 
     shape.transformedNormals.resize(shape.normals.size());
-
     shape.transformedVertices.resize(shape.vertices.size());
     shape.projectedVertices.resize(shape.vertices.size());
 
     shape.translate({0.f, 0.f, position.z});
 }
-void Shape::appendWall(Shape &shape, float size, PointF3 position)
+void Shape::appendWall(Shape &shape, float size, PointF position)
 {
     uint32_t vertexOffset = shape.vertices.size();
 
-    shape.vertices.emplace_back(position + (PointF3){-size, -size, 0, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){size, -size, 0, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){size, size, 0, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){-size, size, 0, 1.f});
+    shape.vertices.emplace_back(position + (PointF){-size, -size, 0, 1.f});
+    shape.vertices.emplace_back(position + (PointF){size, -size, 0, 1.f});
+    shape.vertices.emplace_back(position + (PointF){size, size, 0, 1.f});
+    shape.vertices.emplace_back(position + (PointF){-size, size, 0, 1.f});
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 2, vertexOffset + 1}));
     shape.normals.emplace_back((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 1]).cross((shape.vertices[vertexOffset + 0] - shape.vertices[vertexOffset + 2])).normalize());
@@ -338,19 +336,19 @@ void Shape::appendWall(Shape &shape, float size, PointF3 position)
 
     shape.translate({0.f, 0.f, position.z});
 }
-void Shape::appendCube(Shape &shape, float cubeSize, PointF3 position)
+void Shape::appendCube(Shape &shape, float cubeSize, PointF position)
 {
     uint32_t vertexOffset = shape.vertices.size();
 
-    shape.vertices.emplace_back(position + (PointF3){-cubeSize, -cubeSize, cubeSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){cubeSize, -cubeSize, cubeSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){cubeSize, cubeSize, cubeSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){-cubeSize, cubeSize, cubeSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF){-cubeSize, -cubeSize, cubeSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF){cubeSize, -cubeSize, cubeSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF){cubeSize, cubeSize, cubeSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF){-cubeSize, cubeSize, cubeSize, 1.f});
 
-    shape.vertices.emplace_back(position + (PointF3){-cubeSize, -cubeSize, -cubeSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){cubeSize, -cubeSize, -cubeSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){cubeSize, cubeSize, -cubeSize, 1.f});
-    shape.vertices.emplace_back(position + (PointF3){-cubeSize, cubeSize, -cubeSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF){-cubeSize, -cubeSize, -cubeSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF){cubeSize, -cubeSize, -cubeSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF){cubeSize, cubeSize, -cubeSize, 1.f});
+    shape.vertices.emplace_back(position + (PointF){-cubeSize, cubeSize, -cubeSize, 1.f});
 
     shape.vertexIndex.emplace_back(std::array<uint32_t, 3>({vertexOffset + 0, vertexOffset + 2, vertexOffset + 1}));
     shape.normals.emplace_back(
@@ -540,14 +538,14 @@ void Shape::rasterizeTriangle(Triangle<int32_t> triangle, ImageData &pImageData)
     return;
 }
 
-void Shape::appendCircle(Shape &shape, float radius, int sides, PointF3 position)
+void Shape::appendCircle(Shape &shape, float radius, int sides, PointF position)
 {
     float phaseIncrement = 3.1416 / sides;
     float phase = 0;
     shape.vertices.emplace_back(position);
     for (int i = 0; i < sides; i++)
     {
-        PointF3 vertex = {static_cast<float>(sin(phase) * radius), 0, static_cast<float>(cos(phase) * radius)};
+        PointF vertex = {static_cast<float>(sin(phase) * radius), 0, static_cast<float>(cos(phase) * radius)};
         phase += phaseIncrement;
         shape.vertices.emplace_back(vertex);
     }

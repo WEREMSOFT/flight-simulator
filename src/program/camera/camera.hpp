@@ -8,7 +8,7 @@ protected:
     void recalculateTransformMatrix() override;
 
 public:
-    PointF3 frustrum;
+    PointF frustrum;
     bool wireframe = false;
     bool drawNormals = false;
     bool backFaceCulling = true;
@@ -16,5 +16,5 @@ public:
     Camera(float zNear = 50);
     void moveForward(float deltaTime);
     void strafe(float deltaTime);
-    PointF3 getForwardVector();
+    PointF getForwardVector();
 };

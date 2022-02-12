@@ -3,18 +3,18 @@
 class Object3D
 {
 protected:
-    PointF3 translationMatrix[4] = {0};
-    PointF3 rotationMatrix[4] = {0};
-    PointF3 scaleMatrix[4] = {0};
+    PointF translationMatrix[4] = {0};
+    PointF rotationMatrix[4] = {0};
+    PointF scaleMatrix[4] = {0};
     virtual void recalculateTransformMatrix();
 
 public:
-    PointF3 position = {0};
-    PointF3 rotation = {0};
-    PointF3 transformMatrix[4] = {0};
+    PointF position = {0};
+    PointF rotation = {0};
+    PointF transformMatrix[4] = {0};
     Object3D();
-    void translate(PointF3);
-    void scale(PointF3);
-    void rotate(PointF3 rotation);
+    void translate(PointF);
+    void scale(PointF);
+    void rotate(PointF rotation);
     virtual void update(void);
 };

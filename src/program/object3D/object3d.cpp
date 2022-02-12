@@ -8,7 +8,7 @@ Object3D::Object3D()
     MathUtils::setMatrixAsIdentity(translationMatrix);
 }
 
-void Object3D::translate(PointF3 translation)
+void Object3D::translate(PointF translation)
 {
     this->position = translation;
     translationMatrix[0] = {1, 0, 0, 0};
@@ -17,7 +17,7 @@ void Object3D::translate(PointF3 translation)
     translationMatrix[3] = {translation.x, translation.y, translation.z, 1};
 }
 
-void Object3D::scale(PointF3 scale)
+void Object3D::scale(PointF scale)
 {
     MathUtils::setMatrixAsIdentity(scaleMatrix);
     scaleMatrix[0].x = scale.x;
@@ -34,24 +34,24 @@ void Object3D::recalculateTransformMatrix()
     MathUtils::multiplyMatrix(transformMatrix, translationMatrix);
 }
 
-void Object3D::rotate(PointF3 pRotation)
+void Object3D::rotate(PointF pRotation)
 {
     rotation = pRotation;
-    PointF3 rotationMatrixX[4] = {0};
+    PointF rotationMatrixX[4] = {0};
 
     rotationMatrixX[0] = {1, 0, 0, 0};
     rotationMatrixX[1] = {0, cosf(rotation.x), sinf(rotation.x), 0};
     rotationMatrixX[2] = {0, -sinf(rotation.x), cosf(rotation.x), 0};
     rotationMatrixX[3] = {0, 0, 0, 1};
 
-    PointF3 rotationMatrixY[4] = {0};
+    PointF rotationMatrixY[4] = {0};
 
     rotationMatrixY[0] = {cosf(rotation.y), 0, -sinf(rotation.y), 0};
     rotationMatrixY[1] = {0, 1, 0, 0};
     rotationMatrixY[2] = {sinf(rotation.y), 0, cosf(rotation.y), 0};
     rotationMatrixY[3] = {0, 0, 0, 1};
 
-    PointF3 rotationMatrixZ[4] = {0};
+    PointF rotationMatrixZ[4] = {0};
 
     rotationMatrixZ[0] = {cosf(rotation.z), sinf(rotation.z), 0, 0};
     rotationMatrixZ[1] = {-sinf(rotation.z), cosf(rotation.z), 0, 0};

@@ -1,20 +1,20 @@
 #include "mathUtils.hpp"
 
 using TriangleI = std::array<PointI, 3>;
-using TriangleF = std::array<PointF3, 3>;
+using TriangleF = std::array<PointF, 3>;
 using TrianglesI = std::vector<TriangleI>;
 using TrianglesF = std::vector<TriangleF>;
 
 namespace MathUtils
 {
-    PointF3 intersectionPoint(PointF3 lineVector, PointF3 linePoint, PointF3 planeNormal, PointF3 planePoint)
+    PointF intersectionPoint(PointF lineVector, PointF linePoint, PointF planeNormal, PointF planePoint)
     {
-        PointF3 diff = linePoint - planePoint;
+        PointF diff = linePoint - planePoint;
 
         return linePoint + lineVector.scale(-diff.dot(planeNormal) / lineVector.dot(planeNormal));
     }
 
-    void multiplyVertexByMatrix(PointF3 &vertDestination, PointF3 &vertSource, PointF3 mat[4])
+    void multiplyVertexByMatrix(PointF &vertDestination, PointF &vertSource, PointF mat[4])
     {
         vertDestination.x = vertSource.x * mat[0].x +
                             vertSource.y * mat[1].x +
@@ -37,7 +37,7 @@ namespace MathUtils
                             vertSource.w * mat[3].w;
     }
 
-    void setMatrixAsIdentity(PointF3 matrix[4])
+    void setMatrixAsIdentity(PointF matrix[4])
     {
         for (int i = 0; i < 4; i++)
         {
@@ -49,7 +49,7 @@ namespace MathUtils
         matrix[3].w = 1.0;
     }
 
-    void copyMatrix(PointF3 destination[4], PointF3 source[4])
+    void copyMatrix(PointF destination[4], PointF source[4])
     {
         for (int i = 0; i < 4; i++)
         {
@@ -57,9 +57,9 @@ namespace MathUtils
         }
     }
 
-    void multiplyMatrix(PointF3 mat1[4], PointF3 mat2[4])
+    void multiplyMatrix(PointF mat1[4], PointF mat2[4])
     {
-        PointF3 returnValue[4] = {0};
+        PointF returnValue[4] = {0};
         setMatrixAsIdentity(returnValue);
 
         for (int i = 0; i < 4; i++)

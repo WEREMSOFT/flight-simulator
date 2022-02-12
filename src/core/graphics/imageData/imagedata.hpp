@@ -19,19 +19,18 @@ struct Point2
     T x, y;
 };
 
-typedef Point3<float> PointF3;
+typedef Point3<float> PointF;
 typedef Point3<int32_t> PointI;
 typedef Point2<uint32_t> PointU;
-typedef Point2<float> PointF;
 
 typedef union
 {
-    PointF3 p;
+    PointF p;
     float a[4];
 } Mat4Elem;
 
-typedef float ZBufferT;
-#define ZBUFFER_MAX 1000.f
+typedef double ZBufferT;
+#define ZBUFFER_MAX 100000.f
 
 class ImageData
 {

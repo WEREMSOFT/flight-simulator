@@ -156,10 +156,10 @@ void ImageData::printString(PointI topLeftCorner, const std::string &string, con
 ZBufferT getZForTriangle(PointI position, std::array<PointI, 3> triangle)
 {
     PointI planeNormalI = (triangle[0] - triangle[1]).cross(triangle[0] - triangle[2]);
-    PointF3 planeNormalF = {(float)planeNormalI.x, (float)planeNormalI.y, (float)planeNormalI.z};
-    PointF3 planePoint = {(float)triangle[0].x, (float)triangle[0].y, (float)triangle[0].z};
+    PointF planeNormalF = {(float)planeNormalI.x, (float)planeNormalI.y, (float)planeNormalI.z};
+    PointF planePoint = {(float)triangle[0].x, (float)triangle[0].y, (float)triangle[0].z};
     auto point = MathUtils::intersectionPoint({0, 0, 1}, {(float)position.x, (float)position.y, 0}, planeNormalF, planePoint);
-    return point.z;
+    return -10.f * 1.f / point.z;
 }
 
 void ImageData::drawLineZ(PointI pointA, PointI pointB, std::array<PointI, 3> triangle, Color color)
@@ -179,14 +179,14 @@ void ImageData::drawLineZ(PointI pointA, PointI pointB, std::array<PointI, 3> tr
         if (z < zBufferValue)
         {
             putPixelZbuffer(pointA, z);
-            if (zBufferValue != ZBUFFER_MAX)
-            {
-                this->putPixel(pointA, {0xFF, 0, 0});
-            }
-            else
-            {
-                this->putPixel(pointA, color);
-            }
+            // if (zBufferValue != ZBUFFER_MAX)
+            // {
+            // this->putPixel(pointA, {0xFF, 0, 0});
+            // }
+            // else
+            // {
+            this->putPixel(pointA, color);
+            // }
         }
 
         if (pointA.x == pointB.x)
@@ -253,7 +253,8 @@ void ImageData::drawZBuffer(PointI position)
             // ZBufferT pixel = getPixelZBuffer({i, j});
             // Color *c1 = (Color *)&pixel;
             auto z = getPixelZBuffer({i, j});
-            auto normalizedZ = z != ZBUFFER_MAX ? ZBUFFER_MAX - z / ZBUFFER_MAX * 230 : 0;
+            // auto normalizedZ = z != ZBUFFER_MAX ? ZBUFFER_MAX - z / ZBUFFER_MAX * 230 : 0;
+            auto normalizedZ = z * 30000.f;
             auto pixel = (unsigned char)(normalizedZ);
             // auto pixel = MathUtils::map<uint64_t>(getPixelZBuffer({i, j}), 0, 255, 0, UINT64_MAX);
             // auto pixel = static_cast<unsigned char>(MathUtils::map<ZBufferT>(getPixelZBuffer({i, j}), 255, ZBUFFER_MAX));
