@@ -155,6 +155,26 @@ void Shape::draw(ImageData &pImageData, Camera camera)
             {0, 0, camera.frustrum.z});
     }
 
+    clippedTriangles2.clear();
+    localNormalIndex2.clear();
+
+    normal = {0, 0, -1};
+    normal = normal.normalize();
+
+    for (int i = 0; i < clippedTriangles.size(); i++)
+    {
+        clipTriangleGeneric(
+            clippedTriangles2, clippedTriangles[i], 1000, localNormalIndex2, localNormalIndex[i], [](PointF a, float b) -> bool
+            { return a.z < b; },
+            [](PointF a, PointF b) -> bool
+            { return a.z < b.z; },
+            normal,
+            {0, 0, 1000});
+    }
+
+    clippedTriangles = clippedTriangles2;
+    localNormalIndex = localNormalIndex2;
+
     project(projectedVerticesLocal, clippedTriangles, 100);
 
     for (int i = 0; i < projectedVerticesLocal.size(); i++)
