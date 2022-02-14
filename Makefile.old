@@ -12,7 +12,7 @@ OBJ_C := $(patsubst %.c,%.o,$(SRC_C))
 CC := clang
 OLEVEL := -O0
 DEBUG_LEVEL := -g3
-INCLUDES := -Ilibs/include -Ilibs/GLAD/include
+INCLUDES := -Ilibs/include -Ilibs/GLAD/include -Ilibs
 FLAGS := $(DEBUG_LEVEL) $(OLEVEL) -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option $(INCLUDES)
 FLAGS_RELEASE := $(DEBUG_LEVEL) $(OLEVEL) -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option $(INCLUDES)
 FLAGS_C := $(DEBUG_LEVEL) $(OLEVEL) -Wall -Wno-missing-braces -Wno-unknown-warning-option $(INCLUDES)

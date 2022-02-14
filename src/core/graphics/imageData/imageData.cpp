@@ -159,7 +159,7 @@ ZBufferT getZForTriangle(PointI position, std::array<PointI, 3> triangle)
     PointF planeNormalF = {(float)planeNormalI.x, (float)planeNormalI.y, (float)planeNormalI.z};
     PointF planePoint = {(float)triangle[0].x, (float)triangle[0].y, (float)triangle[0].z};
     auto point = MathUtils::intersectionPoint({0, 0, 1}, {(float)position.x, (float)position.y, 0}, planeNormalF, planePoint);
-    return -10.f * 1.f / point.z;
+    return -1.f / point.z;
 }
 
 void ImageData::drawLineZ(PointI pointA, PointI pointB, std::array<PointI, 3> triangle, Color color)

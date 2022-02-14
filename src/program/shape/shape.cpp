@@ -138,7 +138,7 @@ void Shape::draw(ImageData &pImageData, Camera camera)
             [](PointF a, PointF b) -> bool
             { return a.x < b.x; },
             normal,
-            {camera.frustrum.w, 0, 0});
+            {camera.frustrum.w - 30, 0, 0});
     }
 
     clippedTriangles.clear();

@@ -6,32 +6,45 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Feb  8 12:50:47 2022
+# Make data base, printed on Mon Feb 14 20:56:17 2022
 
 # Variables
 
+# makefile (from 'Makefile', line 10)
+OBJ := src/program/object3D/object3d.opp src/program/program.opp src/program/shape/shape.opp src/program/camera/camera.opp src/main.opp src/core/shader/shader.opp src/core/gameObject/gameObject.opp src/core/math/mathUtils.opp src/core/input/keyboard.opp src/core/input/mouse.opp src/core/graphics/graphics.opp src/core/graphics/imageData/imageData.opp src/core/graphics/sprite/sprite.opp src/core/graphics/sprite/animation/animation.opp
 # environment
 GDK_BACKEND = x11
 # environment
 LC_ALL = C
+# makefile (from 'Makefile', line 7)
+SRC := src/program/object3D/object3d.cpp src/program/program.cpp src/program/shape/shape.cpp src/program/camera/camera.cpp src/main.cpp src/core/shader/shader.cpp src/core/gameObject/gameObject.cpp src/core/math/mathUtils.cpp src/core/input/keyboard.cpp src/core/input/mouse.cpp src/core/graphics/graphics.cpp src/core/graphics/imageData/imageData.cpp src/core/graphics/sprite/sprite.cpp src/core/graphics/sprite/animation/animation.cpp
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
 SSH_AGENT_LAUNCHER = gnome-keyring
 # environment
+ 
 SNAP_INSTANCE_KEY = 
+# makefile (from 'Makefile', line 8)
+SRC_C := libs/GLAD/src/glad.c src/core/fonts/fonts.c 
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-c85478ff-42ab-4b8c-92f5-84091ed6cc23.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ed02a945-81d2-4670-9f3b-167724e66bfc.sock
+# makefile (from 'Makefile', line 19)
+FLAGS_C_RELEASE := -g3 -O0 -Wno-missing-braces -Ilibs/include -Ilibs/GLAD/include -Ilibs
 # environment
 LC_NAME = en_GB.UTF-8
 # environment
 LC_NUMERIC = en_GB.UTF-8
 # environment
 VSCODE_CWD = /home/werem/Documents/projects/cpp/framebuffer
+# makefile (from 'Makefile', line 13)
+OLEVEL := -O0
 # environment
 WINDOWPATH = 3
+# makefile (from 'Makefile', line 20)
+LIBS := -lstdc++ -lm -lglfw -ldl -lGL
 # environment
 LC_ADDRESS = en_GB.UTF-8
 # default
@@ -45,7 +58,7 @@ QT_ACCESSIBILITY = 1
 # environment
 SNAP_INSTANCE_NAME = code
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/86/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/88/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
@@ -53,8 +66,9 @@ VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
 PWD = /home/werem/Documents/projects/cpp/framebuffer
 # automatic
- 
 %D = $(patsubst %/,%,$(dir $%))
+# makefile (from 'Makefile', line 9)
+SRC_H := src/program/program.hpp src/program/object3D/object3d.hpp src/program/shape/shape.hpp src/program/camera/camera.hpp src/core/shader/shader.hpp src/core/gameObject/gameObject.hpp src/core/math/vector/vector3.hpp src/core/math/mathUtils.hpp src/core/input/mouse.hpp src/core/input/keyboard.hpp src/core/input/input.hpp src/core/graphics/graphics.hpp src/core/graphics/imageData/imagedata.hpp src/core/graphics/sprite/sprite.hpp src/core/graphics/sprite/animation/animation.hpp 
 # environment
 XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
@@ -66,7 +80,7 @@ VSCODE_LOG_STACK = false
 # automatic
 %F = $(notdir $%)
 # environment
-VSCODE_CODE_CACHE_PATH = /home/werem/.config/Code/CachedData/5554b12acf27056905806867f251c859323ff7e9
+VSCODE_CODE_CACHE_PATH = /home/werem/.config/Code/CachedData/f80445acd5a3dadef24aa209168452a3d97cc326
 # environment
 LANG = C
 # environment
@@ -79,10 +93,16 @@ XAUTHORITY = /run/user/1000/gdm/Xauthority
 GNOME_TERMINAL_SERVICE = :1.147
 # makefile
 MAKEFLAGS = pqrR
+# makefile (from 'Makefile', line 11)
+OBJ_C := libs/GLAD/src/glad.o src/core/fonts/fonts.o
+# makefile (from 'Makefile', line 1)
+SRC_SONAR := src/program/object3D/object3d.cpp src/program/program.cpp src/program/shape/shape.cpp src/program/camera/camera.cpp src/main.cpp src/core/shader/shader.cpp src/core/gameObject/gameObject.cpp src/core/math/mathUtils.cpp src/core/input/keyboard.cpp src/core/input/mouse.cpp src/core/graphics/graphics.cpp src/core/graphics/imageData/imageData.cpp src/core/graphics/sprite/sprite.cpp src/core/graphics/sprite/animation/animation.cpp
 # makefile
 CURDIR := /home/werem/Documents/projects/cpp/framebuffer
 # environment
 VSCODE_PIPE_LOGGING = true
+# makefile (from 'Makefile', line 3)
+OBJ_SONAR := src/program/object3D/object3d.opp src/program/program.opp src/program/shape/shape.opp src/program/camera/camera.opp src/main.opp src/core/shader/shader.opp src/core/gameObject/gameObject.opp src/core/math/mathUtils.opp src/core/input/keyboard.opp src/core/input/mouse.opp src/core/graphics/graphics.opp src/core/graphics/imageData/imageData.opp src/core/graphics/sprite/sprite.opp src/core/graphics/sprite/animation/animation.opp
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
@@ -112,19 +132,25 @@ SNAP_REEXEC =
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 363202
+VSCODE_PID = 747973
+# makefile (from 'Makefile', line 2)
+SRC_C_SONAR := src/core/fonts/fonts.c
 # environment
 XDG_SESSION_TYPE = x11
-# makefile (from 'Makefile', line 24)
-PROJECTS := SoftwareRenderer imgui GLAD Fonts
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
+# makefile (from 'Makefile', line 16)
+FLAGS := -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -Ilibs
+# makefile (from 'Makefile', line 15)
+INCLUDES := -Ilibs/include -Ilibs/GLAD/include -Ilibs
 # environment
 SESSION_MANAGER = local/werem-ubuntu:@/tmp/.ICE-unix/327066,unix/werem-ubuntu:/tmp/.ICE-unix/327066
 # automatic
 *F = $(notdir $*)
 # environment
 EM_CONFIG = /home/werem/Documents/projects/c/emsdk/.emscripten
+# makefile (from 'Makefile', line 5)
+SRC_H_SONAR := src/program/program.hpp src/program/object3D/object3d.hpp src/program/shape/shape.hpp src/program/camera/camera.hpp src/core/shader/shader.hpp src/core/gameObject/gameObject.hpp src/core/math/vector/vector3.hpp src/core/math/mathUtils.hpp src/core/input/mouse.hpp src/core/input/keyboard.hpp src/core/input/input.hpp src/core/graphics/graphics.hpp src/core/graphics/imageData/imagedata.hpp src/core/graphics/sprite/sprite.hpp src/core/graphics/sprite/animation/animation.hpp 
 # environment
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
@@ -174,9 +200,9 @@ SNAP_USER_COMMON = /home/werem/snap/code/common
 # environment
 LC_TIME = en_GB.UTF-8
 # environment
-SNAP = /snap/code/86
+SNAP = /snap/code/88
 # environment
-SNAP_REVISION = 86
+SNAP_REVISION = 88
 # environment
 SNAP_REAL_HOME = /home/werem
 # environment
@@ -189,6 +215,8 @@ LC_TELEPHONE = en_GB.UTF-8
 LESSCLOSE = /usr/bin/lesspipe %s %s
 # automatic
 ?F = $(notdir $?)
+# makefile (from 'Makefile', line 4)
+OBJ_C_SONAR := src/core/fonts/fonts.o
 # environment
 XDG_CURRENT_DESKTOP = Unity
 # environment
@@ -201,8 +229,8 @@ DESKTOP_SESSION = ubuntu
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # 'override' directive
 GNUMAKEFLAGS := 
-# makefile (from 'Makefile', line 12)
-SoftwareRenderer_config = debug
+# makefile (from 'Makefile', line 17)
+FLAGS_RELEASE := -g3 -O0 -std=c++17 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -Ilibs
 # environment
 LOGNAME = werem
 # environment
@@ -211,8 +239,6 @@ EMSDK = /home/werem/Documents/projects/c/emsdk
 SNAP_ARCH = amd64
 # makefile
 .DEFAULT_GOAL := all
-# makefile (from 'Makefile', line 13)
-imgui_config = debug
 # environment
 DISPLAY = :1
 # environment
@@ -221,12 +247,12 @@ USER = werem
 GTK_MODULES = gail:atk-bridge
 # default
 MAKE_VERSION := 4.3
-# makefile (from 'Makefile', line 14)
-GLAD_config = debug
+# 'override' directive
+.SHELLSTATUS := 0
 # environment
 DISABLE_WAYLAND = 1
 # environment
-SNAP_DATA = /var/snap/code/86
+SNAP_DATA = /var/snap/code/88
 # environment
 SNAP_CONTEXT = h4wL14zIwIUYEIcldVrf76QB3ApT0ed1ZQ8FoCpU2EHQNDi8oYCf
 # environment
@@ -235,6 +261,8 @@ LC_MEASUREMENT = en_GB.UTF-8
 LC_PAPER = en_GB.UTF-8
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
+# makefile (from 'Makefile', line 18)
+FLAGS_C := -g3 -O0 -Wall -Wno-missing-braces -Wno-unknown-warning-option -Ilibs/include -Ilibs/GLAD/include -Ilibs
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
@@ -243,8 +271,6 @@ COLORTERM = truecolor
 GDK_PIXBUF_MODULE_FILE = /home/werem/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
 XDG_SESSION_CLASS = user
-# makefile (from 'Makefile', line 15)
-Fonts_config = debug
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
 # environment
@@ -252,15 +278,16 @@ HOME = /home/werem
 # environment
 QT_IM_MODULE = ibus
 # environment
+ 
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-c2d9916e-1.64.0-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-c2d9916e-1.64.2-main.sock
 # environment
 TERM = xterm-256color
 # environment
 SNAP_NAME = code
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/86/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/88/usr/share/glib-2.0/schemas
 # environment
 IM_CONFIG_PHASE = 1
 # environment
@@ -269,26 +296,28 @@ PAPERSIZE = a4
 .RECIPEPREFIX := 
 # automatic
 <F = $(notdir $<)
-# makefile (from 'Makefile', line 4)
-config = debug
 # environment
-SNAP_VERSION = 5554b12a
+SNAP_VERSION = f80445ac
 # default
 SUFFIXES := 
-# makefile (from 'Makefile', line 8)
-SILENT = @
+# makefile (from 'Makefile', line 21)
+TARGET := bin/main.bin
 # environment
 VSCODE_CLI = 1
 # environment
 ELECTRON_NO_ATTACH_CONSOLE = 1
+# makefile (from 'Makefile', line 14)
+DEBUG_LEVEL := -g3
 # environment
 VTE_VERSION = 6203
 # environment
 SNAP_COMMON = /var/snap/code/common
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
+# makefile (from 'Makefile', line 12)
+CC := clang
 # environment
-SNAP_USER_DATA = /home/werem/snap/code/86
+SNAP_USER_DATA = /home/werem/snap/code/88
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
@@ -298,7 +327,7 @@ LC_IDENTIFICATION = en_GB.UTF-8
 # environment
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # variable set hash-table stats:
-# Load=143/1024=14%, Rehash=0, Collisions=20/190=11%
+# Load=157/1024=15%, Rehash=0, Collisions=24/249=10%
 
 # Pattern-specific Variable Values
 
@@ -306,84 +335,277 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 
 # Directories
 
-# . (device 66309, inode 3021856): 20 files, no impossibilities.
+# src/core/shader (device 66309, inode 3021858): 2 files, no impossibilities so far.
+# src/core/graphics/imageData (device 66309, inode 3021878): 5 files, 1 impossibilities.
+# src/program/shape (device 66309, inode 3031146): 5 files, no impossibilities so far.
+# src/core/math (device 66309, inode 3031287): 6 files, no impossibilities so far.
+# libs/GLAD/src (device 66309, inode 3021934): 3 files, 1 impossibilities.
+# src/program/object3D (device 66309, inode 3031292): 1 files, no impossibilities so far.
+# src/core/graphics/sprite/animation (device 66309, inode 3031137): 5 files, no impossibilities.
+# src/program (device 66309, inode 3021887): 6 files, no impossibilities so far.
+# src/core/gameObject (device 66309, inode 3031264): 5 files, no impossibilities so far.
+# src (device 66309, inode 3021907): 6 files, 1 impossibilities.
+# . (device 66309, inode 3021856): 24 files, no impossibilities.
+# src/core/graphics (device 66309, inode 3021873): 5 files, no impossibilities so far.
+# src/core/input (device 66309, inode 3021865): 9 files, no impossibilities so far.
+# src/core/graphics/sprite (device 66309, inode 3031136): 6 files, no impossibilities.
+# src/program/camera (device 66309, inode 3031289): 3 files, no impossibilities so far.
 
-# 20 files, no impossibilities in 1 directories.
+# 91 files, 3 impossibilities in 15 directories.
 
 # Implicit Rules
 
-# No implicit rules.
+%.cpp: %.hpp
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
 
+%.c: %.h
+#  recipe to execute (from 'Makefile', line 40):
+	@echo "$@ updated"
+	@touch $@
+
+%.opp: %.cpp
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+%.o: %.c
+#  recipe to execute (from 'Makefile', line 47):
+	$(CC) $(FLAGS_C) -c $^ -o $@
+
+# 4 implicit rules, 0 (0.0%) terminal.
 # Files
 
-imgui:
-#  Phony target (prerequisite of .PHONY).
-#  Implicit rule search has not been done.
-#  Implicit/static pattern stem: ''
-#  File does not exist.
+src/core/input/keyboard.opp: src/core/input/keyboard.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/input/keyboard'
+#  Last modified 2022-02-14 20:30:40.147363858
 #  File has been updated.
-#  Needs to be updated (-q is set).
- 
-# automatic
-# @ := imgui
-# automatic
-# * := 
-# automatic
-# < := 
-# automatic
-# + := 
-# automatic
-# % := 
-# automatic
-# ^ := 
-# automatic
-# ? := 
-# automatic
-# | := 
-# variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=2/15=13%
-#  recipe to execute (from 'Makefile', line 38):
-	@echo "==== Building imgui ($(imgui_config)) ===="
-	@${MAKE} --no-print-directory -C . -f imgui.make config=$(imgui_config)
-
-GLAD:
-#  Phony target (prerequisite of .PHONY).
-#  Implicit rule search has not been done.
-#  File does not exist.
-#  File has not been updated.
+#  Successfully updated.
 #  recipe to execute (from 'Makefile', line 44):
-	@echo "==== Building GLAD ($(GLAD_config)) ===="
-	@${MAKE} --no-print-directory -C . -f GLAD.make config=$(GLAD_config)
+	$(CC) $(FLAGS) -c $^ -o $@
 
-SoftwareRenderer: imgui Fonts GLAD
-#  Phony target (prerequisite of .PHONY).
-#  Implicit rule search has not been done.
-#  File does not exist.
+src/program/object3D/object3d.cpp: src/program/object3D/object3d.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/program/object3D/object3d'
+#  Last modified 2022-02-13 16:57:08.346476246
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/7=0%
-#  recipe to execute (from 'Makefile', line 32):
-	@echo "==== Building SoftwareRenderer ($(SoftwareRenderer_config)) ===="
-	@${MAKE} --no-print-directory -C . -f SoftwareRenderer.make config=$(SoftwareRenderer_config)
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
+
+src/core/graphics/sprite/sprite.opp: src/core/graphics/sprite/sprite.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/graphics/sprite/sprite'
+#  Last modified 2022-02-14 20:30:43.863270887
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+# Not a target:
+src/program/object3D/object3d.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-10 22:41:50.042723538
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+src/program/shape/shape.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-10 22:41:49.702750639
+#  File has been updated.
+#  Successfully updated.
+
+src/core/graphics/graphics.opp: src/core/graphics/graphics.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/graphics/graphics'
+#  Last modified 2022-02-14 20:30:41.115339641
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+# Not a target:
+src/core/input/mouse.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2021-09-04 07:51:40.704677676
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+src/core/math/vector/vector3.hpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+src/program/shape/shape.cpp: src/program/shape/shape.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/program/shape/shape'
+#  Last modified 2022-02-12 02:02:36.748162295
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
+
+src/core/input/mouse.opp: src/core/input/mouse.cpp
+#  Implicit rule search has been done.
+ 
+#  Implicit/static pattern stem: 'src/core/input/mouse'
+#  Last modified 2022-02-14 20:30:40.303359955
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+# Not a target:
+libs/GLAD/src/glad.c:
+#  Implicit rule search has been done.
+#  Last modified 2021-09-12 18:05:42.204836277
+#  File has been updated.
+#  Successfully updated.
+
+src/core/math/mathUtils.opp: src/core/math/mathUtils.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/math/mathUtils'
+#  Last modified 2022-02-14 20:30:39.991367761
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+build_sonar: src/program/object3D/object3d.opp src/program/program.opp src/program/shape/shape.opp src/program/camera/camera.opp src/main.opp src/core/shader/shader.opp src/core/gameObject/gameObject.opp src/core/math/mathUtils.opp src/core/input/keyboard.opp src/core/input/mouse.opp src/core/graphics/graphics.opp src/core/graphics/imageData/imageData.opp src/core/graphics/sprite/sprite.opp src/core/graphics/sprite/animation/animation.opp src/core/fonts/fonts.o src/program/program.hpp src/program/object3D/object3d.hpp src/program/shape/shape.hpp src/program/camera/camera.hpp src/core/shader/shader.hpp src/core/gameObject/gameObject.hpp src/core/math/vector/vector3.hpp src/core/math/mathUtils.hpp src/core/input/mouse.hpp src/core/input/keyboard.hpp src/core/input/input.hpp src/core/graphics/graphics.hpp src/core/graphics/imageData/imagedata.hpp src/core/graphics/sprite/sprite.hpp src/core/graphics/sprite/animation/animation.hpp
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 27):
+	@echo done
+
+run_main: all
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 51):
+	$(TARGET)
+
+src/core/graphics/imageData/imageData.opp: src/core/graphics/imageData/imageData.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/graphics/imageData/imageData'
+#  Last modified 2022-02-14 20:30:42.007317322
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-02-08 12:39:21.08957547
+#  Last modified 2022-02-14 20:30:09.952119346
+#  File has been updated.
+#  Successfully updated.
+
+src/program/object3D/object3d.opp: src/program/object3D/object3d.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/program/object3D/object3d'
+#  Last modified 2022-02-14 20:30:33.339534191
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+# Not a target:
+src/core/math/mathUtils.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-10 22:41:49.594759248
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+src/main.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-22 23:54:05.690931651
 #  File has been updated.
 #  Successfully updated.
 
 clean:
-#  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
-#  File does not exist.
+#  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 55):
-	@${MAKE} --no-print-directory -C . -f SoftwareRenderer.make clean
-	@${MAKE} --no-print-directory -C . -f imgui.make clean
-	@${MAKE} --no-print-directory -C . -f GLAD.make clean
-	@${MAKE} --no-print-directory -C . -f Fonts.make clean
+#  recipe to execute (from 'Makefile', line 54):
+	rm -rf $(TARGET)
+	rm -rf $(OBJ)
+	rm -rf $(OBJ_C)
+
+copy_assets:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 59):
+	@cp -r assets bin
+
+src/core/shader/shader.opp: src/core/shader/shader.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/shader/shader'
+#  Last modified 2022-02-14 20:30:38.803397484
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+src/core/shader/shader.cpp: src/core/shader/shader.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/shader/shader'
+#  Last modified 2022-01-28 23:45:28.077441596
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
+
+src/core/gameObject/gameObject.opp: src/core/gameObject/gameObject.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/gameObject/gameObject'
+#  Last modified 2022-02-14 20:30:39.371383273
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+# Not a target:
+src/core/graphics/imageData/imagedata.hpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+src/core/gameObject/gameObject.cpp: src/core/gameObject/gameObject.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/gameObject/gameObject'
+#  Last modified 2022-01-28 23:32:35.727854933
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
+ 
+
+sonar:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 30):
+	sonar-scanner -X -Dsonar.projectKey=flight-simulator -Dsonar.sources=./src -Dsonar.cfamily.build-wrapper-output=bw-output -Dsonar.host.url=http://localhost:9000 -Dsonar.login=7ba39dbe5850eea0a1e5195b6f14998719383566
+
+src/core/graphics/graphics.cpp: src/core/graphics/graphics.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/graphics/graphics'
+#  Last modified 2022-02-08 12:44:44.941409053
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
 
 # Not a target:
 .DEFAULT:
@@ -391,72 +613,256 @@ clean:
 #  Modification time never checked.
 #  File has not been updated.
 
-all: SoftwareRenderer imgui GLAD Fonts
-#  Phony target (prerequisite of .PHONY).
+src/core/graphics/sprite/animation/animation.cpp: src/core/graphics/sprite/animation/animation.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/graphics/sprite/animation/animation'
+#  Last modified 2022-01-22 13:27:04.13416473
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
+
+# Not a target:
+src/core/input/keyboard.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2021-09-04 07:56:04.285861536
+#  File has been updated.
+#  Successfully updated.
+
+all: src/program/object3D/object3d.opp src/program/program.opp src/program/shape/shape.opp src/program/camera/camera.opp src/main.opp src/core/shader/shader.opp src/core/gameObject/gameObject.opp src/core/math/mathUtils.opp src/core/input/keyboard.opp src/core/input/mouse.opp src/core/graphics/graphics.opp src/core/graphics/imageData/imageData.opp src/core/graphics/sprite/sprite.opp src/core/graphics/sprite/animation/animation.opp libs/GLAD/src/glad.o src/core/fonts/fonts.o copy_assets src/program/program.hpp src/program/object3D/object3d.hpp src/program/shape/shape.hpp src/program/camera/camera.hpp src/core/shader/shader.hpp src/core/gameObject/gameObject.hpp src/core/math/vector/vector3.hpp src/core/math/mathUtils.hpp src/core/input/mouse.hpp src/core/input/keyboard.hpp src/core/input/input.hpp src/core/graphics/graphics.hpp src/core/graphics/imageData/imagedata.hpp src/core/graphics/sprite/sprite.hpp src/core/graphics/sprite/animation/animation.hpp
 #  Command line target.
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/7=0%
-
-help:
-#  Phony target (prerequisite of .PHONY).
-#  Implicit rule search has not been done.
-#  File does not exist.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 61):
-	@echo "Usage: make [config=name] [target]"
-	@echo ""
-	@echo "CONFIGURATIONS:"
-	@echo "  debug"
-	@echo "  release"
-	@echo ""
-	@echo "TARGETS:"
-	@echo "   all (default)"
-	@echo "   clean"
-	@echo "   SoftwareRenderer"
-	@echo "   imgui"
-	@echo "   GLAD"
-	@echo "   Fonts"
-	@echo ""
-	@echo "For more information, see https://github.com/premake/premake-core/wiki"
-
-Fonts:
-#  Phony target (prerequisite of .PHONY).
-#  Implicit rule search has not been done.
-#  File does not exist.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 50):
-	@echo "==== Building Fonts ($(Fonts_config)) ===="
-	@${MAKE} --no-print-directory -C . -f Fonts.make config=$(Fonts_config)
+# Load=0/32=0%, Rehash=0, Collisions=0/5=0%
+#  recipe to execute (from 'Makefile', line 24):
+	@$(CC) $(FLAGS) $(OBJ) $(OBJ_C) -o $(TARGET) $(LIBS)
 
 # Not a target:
-.SUFFIXES:
+src/core/graphics/sprite/sprite.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2021-12-30 13:33:33.88027355
+#  File has been updated.
+#  Successfully updated.
+
+src/program/program.opp: src/program/program.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/program/program'
+#  Last modified 2022-02-14 20:30:34.607502465
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+sonar_build_wrapper:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 33):
+	build-wrapper-linux-x86-64 --out-dir bw-output make build_sonar
+
+libs/GLAD/src/glad.o: libs/GLAD/src/glad.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'libs/GLAD/src/glad'
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := libs/GLAD/src/glad.o
+# automatic
+# * := libs/GLAD/src/glad
+# automatic
+# < := libs/GLAD/src/glad.c
+# automatic
+# + := libs/GLAD/src/glad.c
+# automatic
+# % := 
+# automatic
+# ^ := libs/GLAD/src/glad.c
+# automatic
+# ? := libs/GLAD/src/glad.c
+# automatic
+# | := 
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=2/15=13%
+#  recipe to execute (from 'Makefile', line 47):
+	$(CC) $(FLAGS_C) -c $^ -o $@
+
+src/program/shape/shape.opp: src/program/shape/shape.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/program/shape/shape'
+#  Last modified 2022-02-14 20:30:36.319459632
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+src/core/graphics/sprite/sprite.cpp: src/core/graphics/sprite/sprite.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/graphics/sprite/sprite'
+#  Last modified 2022-01-30 00:55:12.399319865
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
+
+# Not a target:
+src/core/gameObject/gameObject.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-28 23:31:50.15080241
+#  File has been updated.
+#  Successfully updated.
+
+src/program/camera/camera.cpp: src/program/camera/camera.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/program/camera/camera'
+#  Last modified 2022-02-13 16:59:55.354614093
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
+
+src/core/graphics/sprite/animation/animation.opp: src/core/graphics/sprite/animation/animation.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/graphics/sprite/animation/animation'
+#  Last modified 2022-02-14 20:30:43.907269785
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+# Not a target:
+src/core/graphics/sprite/animation/animation.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-22 13:26:36.065489007
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+src/core/input/input.hpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
-.PHONY: all clean help SoftwareRenderer imgui GLAD Fonts
+src/main.opp: src/main.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/main'
+#  Last modified 2022-02-14 20:30:38.175413196
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+# Not a target:
+src/program/camera/camera.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-10 22:41:50.386696157
+#  File has been updated.
+#  Successfully updated.
+
+src/core/math/mathUtils.cpp: src/core/math/mathUtils.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/math/mathUtils'
+#  Last modified 2022-02-10 22:41:50.494687561
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
+
+# Not a target:
+src/core/fonts/fonts.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+
+src/core/input/keyboard.cpp: src/core/input/keyboard.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/input/keyboard'
+#  Last modified 2021-09-04 07:57:50.96392822
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
+
+# Not a target:
+src/core/graphics/graphics.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-02 23:20:58.505873096
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+src/program/program.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-22 13:26:36.057488813
+#  File has been updated.
+#  Successfully updated.
+
+src/program/camera/camera.opp: src/program/camera/camera.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/program/camera/camera'
+#  Last modified 2022-02-14 20:30:37.111439817
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 44):
+	$(CC) $(FLAGS) -c $^ -o $@
+
+src/core/input/mouse.cpp: src/core/input/mouse.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/core/input/mouse'
+#  Last modified 2021-09-04 07:58:41.568905111
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
+
+# Not a target:
+src/core/shader/shader.hpp:
+#  Implicit rule search has been done.
+ 
+#  Last modified 2021-09-12 17:36:17.621957175
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+src/core/graphics/imageData/imageData.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-11 01:37:41.344101578
+#  File has been updated.
+#  Successfully updated.
+
+src/program/program.cpp: src/program/program.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'src/program/program'
+#  Last modified 2022-02-11 01:58:19.559691658
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 36):
+	@echo "$@ updated"
+	@touch $@
 
 # files hash-table stats:
-# Load=11/1024=1%, Rehash=0, Collisions=0/43=0%
+# Load=56/1024=5%, Rehash=0, Collisions=6/218=3%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 32 / storage = 277 B / avg = 8 B
-# current buf: size = 8162 B / used = 277 B / count = 32 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 164 / storage = 3020 B / avg = 18 B
+# current buf: size = 8162 B / used = 3020 B / count = 164 / avg = 18 B
 
-# strcache performance: lookups = 60 / hit rate = 46%
+# strcache performance: lookups = 289 / hit rate = 43%
 # hash-table stats:
-# Load=32/8192=0%, Rehash=0, Collisions=0/60=0%
-# Finished Make data base on Tue Feb  8 12:50:47 2022
+# Load=164/8192=2%, Rehash=0, Collisions=2/289=1%
+# Finished Make data base on Mon Feb 14 20:56:17 2022
 
  
